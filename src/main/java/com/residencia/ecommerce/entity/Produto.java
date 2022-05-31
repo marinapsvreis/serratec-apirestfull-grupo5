@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -33,9 +35,10 @@ public class Produto {
 	private Double valorUnitario;
 	@Column(name = "imagem")
 	private String nomeImagemProduto;
-	/*@ManyToOne
+
+	@ManyToOne
 	@JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria")
-	private Integer idCategoriaProduto;*/
+	private Categoria categoria;
 
 	public Integer getIdProduto() {
 		return idProduto;
@@ -93,12 +96,12 @@ public class Produto {
 		this.nomeImagemProduto = nomeImagemProduto;
 	}
 
-	/*public Integer getIdCategoriaProduto() {
-		return idCategoriaProduto;
+	public Categoria getCategoria() {
+		return categoria;
 	}
 
-	public void setIdCategoriaProduto(Integer idCategoriaProduto) {
-		this.idCategoriaProduto = idCategoriaProduto;
-	}*/
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
+	}
 
 }

@@ -29,10 +29,9 @@ public class Pedido {
 	@Column(name = "status")
 	private Boolean status;
 
-	// Descomentar essas linhas e seus getters e setters quanto a classe cliente for implementada
-//	@ManyToOne
-//	@JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
-//	private Cliente cliente;
+	@ManyToOne
+	@JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
+	private Cliente cliente;
 
 	public Integer getIdPedido() {
 		return idPedido;
@@ -74,11 +73,11 @@ public class Pedido {
 		this.status = status;
 	}
 
-//	public Cliente getCliente() {
-//		return cliente;
-//	}
-//
-//	public void setCliente(Cliente cliente) {
-//		this.cliente = cliente;
-//	}
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
 }

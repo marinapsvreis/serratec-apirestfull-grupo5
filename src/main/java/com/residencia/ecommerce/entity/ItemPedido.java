@@ -32,13 +32,13 @@ public class ItemPedido {
 	@Column(name = "valor_liquido")
 	private Double valorLiquidoItemPedido;
 
-	//@ManyToOne
-	//@JoinColumn(name = "id_pedido", referencedColumnName = "id_pedido")
-	//private Integer idPedido;
-	
-	//@ManyToOne
-	//@JoinColumn(name = "id_produto", referencedColumnName = "id_produto")
-	//private Integer idProduto;
+	@ManyToOne
+	@JoinColumn(name = "id_pedido", referencedColumnName = "id_pedido")
+	private Pedido pedido;
+
+	@ManyToOne
+	@JoinColumn(name = "id_produto", referencedColumnName = "id_produto")
+	private Produto produto;
 
 	public Integer getIdItemPedido() {
 		return idItemPedido;
@@ -88,20 +88,20 @@ public class ItemPedido {
 		this.valorLiquidoItemPedido = valorLiquidoItemPedido;
 	}
 
-//	public Integer getIdPedido() {
-//		return idPedido;
-//	}
-//
-//	public void setIdPedido(Integer idPedido) {
-//		this.idPedido = idPedido;
-//	}
-//
-//	public Integer getIdProduto() {
-//		return idProduto;
-//	}
-//
-//	public void setIdProduto(Integer idProduto) {
-//		this.idProduto = idProduto;
-//	}
+	public Pedido getPedido() {
+		return pedido;
+	}
+
+	public void setPedido(Pedido pedido) {
+		this.pedido = pedido;
+	}
+
+	public Produto getProduto() {
+		return produto;
+	}
+
+	public void setProduto(Produto produto) {
+		this.produto = produto;
+	}
 
 }
