@@ -11,6 +11,7 @@ public class ProdutoDTO {
 	private Date dataCadastroProduto;
 	private Double valorUnitario;
 	private String nomeImagemProduto;
+	private Integer idCategoria;
 
 	public Integer getIdProduto() {
 		return idProduto;
@@ -66,6 +67,14 @@ public class ProdutoDTO {
 
 	public void setNomeImagemProduto(String nomeImagemProduto) {
 		this.nomeImagemProduto = nomeImagemProduto;
+	}
+
+	public Integer getIdCategoria() {
+		return idCategoria;
+	}
+
+	public void setIdCategoria(Integer idCategoria) {
+		this.idCategoria = idCategoria;
 	}
 
 }
