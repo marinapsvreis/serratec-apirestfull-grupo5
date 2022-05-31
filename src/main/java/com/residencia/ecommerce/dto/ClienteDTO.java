@@ -10,7 +10,8 @@ public class ClienteDTO {
 	private String cpf;
 	private String telefone;
 	private Date dataNascimento;
-
+	private Integer idEndereco;
+	
 	public Integer getIdCliente() {
 		return idCliente;
 	}
@@ -58,5 +59,15 @@ public class ClienteDTO {
 	public void setDataNascimento(Date dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
+
+	public Integer getIdEndereco() {
+		return idEndereco;
+	}
+
+	public void setIdEndereco(Integer idEndereco) {
+		this.idEndereco = idEndereco;
+	}
+	
+	
 
 }

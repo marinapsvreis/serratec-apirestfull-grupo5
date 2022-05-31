@@ -58,5 +58,6 @@ public class PedidoDTO {
 	public void setIdCliente(Integer idCliente) {
 		this.idCliente = idCliente;
 	}
+	
 
 }

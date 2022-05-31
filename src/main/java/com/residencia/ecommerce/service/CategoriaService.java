@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.residencia.ecommerce.dto.CategoriaDTO;
 import com.residencia.ecommerce.entity.Categoria;
 import com.residencia.ecommerce.repository.CategoriaRepository;
 
@@ -32,4 +33,23 @@ public class CategoriaService {
 	public void deleteCategoriaById(Integer id) {
 		categoriaRepository.deleteById(id);
 	}
-}
+	
+	private Categoria toEntity(CategoriaDTO categoriaDTO) {
+		Categoria categoria = new Categoria();
+		
+		categoria.setDescricaoCategoria(categoriaDTO.getDescricaoCategoria());
+		categoria.setNomeCategoria(categoriaDTO.getNomeCategoria());
+		
+		return categoria;
+	}
+	
+	private CategoriaDTO toDTO(Categoria categoria) {
+		CategoriaDTO categoriaDTO = new CategoriaDTO();
+		
+		categoriaDTO.setIdCategoria(categoria.getIdCategoria());
+		categoriaDTO.setDescricaoCategoria(categoria.getDescricaoCategoria());
+		categoriaDTO.setNomeCategoria(categoria.getNomeCategoria());
+		
+		return categoriaDTO;
+	}
+} 

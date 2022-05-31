@@ -1,11 +1,11 @@
 package com.residencia.ecommerce.dto;
 
 public class CategoriaDTO {
-
 	private Integer idCategoria;
 	private String nomeCategoria;
 	private String descricaoCategoria;
 
+	
 	public Integer getIdCategoria() {
 		return idCategoria;
 	}
