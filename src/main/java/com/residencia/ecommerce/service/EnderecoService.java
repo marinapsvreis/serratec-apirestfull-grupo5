@@ -1,10 +1,14 @@
 package com.residencia.ecommerce.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import com.residencia.ecommerce.dto.ConsultaCepDTO;
 import com.residencia.ecommerce.dto.EnderecoDTO;
 import com.residencia.ecommerce.entity.Endereco;
 import com.residencia.ecommerce.repository.EnderecoRepository;
@@ -34,7 +38,31 @@ public class EnderecoService {
 	public void deleteByIdEndereco(Integer idEndereco) {
 		enderecoRepository.deleteById(idEndereco);
 	}
+	
+	//api externa
+	public ConsultaCepDTO consultarCep(String cep) {
+        RestTemplate restTemplate = new RestTemplate();
+        String uri = "https://viacep.com.br/ws/{cep}/json/";
 
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("cep", cep);
+
+        ConsultaCepDTO cadastroCepDTO = restTemplate.getForObject(uri,ConsultaCepDTO.class, params);
+
+        return cadastroCepDTO;
+    }
+	
+	//DTO
+	public Endereco saveEnderecoDTO(String cep, Integer numero) {
+		String cepFormatado = cep.replaceAll("[.-]", "");
+		ConsultaCepDTO cepDTO = consultarCep(cepFormatado);
+		Endereco endereco = cepDTOtoEndereco(cepDTO);
+		endereco.setNumero(numero);
+		
+		return enderecoRepository.save(endereco);
+	}
+	
+	//conversão
 	private Endereco toEntity(EnderecoDTO enderecoDTO) {
 		Endereco endereco = new Endereco();
 
@@ -60,6 +88,18 @@ public class EnderecoService {
 		enderecoDTO.setRua(endereco.getRua());
 
 		return enderecoDTO;
+	}
+	
+	private Endereco cepDTOtoEndereco(ConsultaCepDTO cepDTO) {
+		Endereco endereco = new Endereco();
+		endereco.setBairro(cepDTO.getBairro());
+		endereco.setCep(cepDTO.getCep());
+		endereco.setCidade(cepDTO.getLocalidade());
+		endereco.setComplemento(cepDTO.getComplemento());
+		endereco.setRua(cepDTO.getLogradouro());
+		endereco.setUf(cepDTO.getUf());
+		
+		return endereco;
 	}
 
 }

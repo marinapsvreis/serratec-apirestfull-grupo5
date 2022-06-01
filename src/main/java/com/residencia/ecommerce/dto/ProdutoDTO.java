@@ -8,9 +8,12 @@ public class ProdutoDTO {
 	private String nomeProduto;
 	private String descricaoProduto;
 	private Integer qtdEstoqueProduto;
-	private Date dataCadastroProduto;
+	
+	private Date dataCadastroProduto = new Date();
+	
 	private Double valorUnitario;
 	private String nomeImagemProduto;
+	private Integer idCategoria;
 
 	public Integer getIdProduto() {
 		return idProduto;
@@ -66,6 +69,14 @@ public class ProdutoDTO {
 
 	public void setNomeImagemProduto(String nomeImagemProduto) {
 		this.nomeImagemProduto = nomeImagemProduto;
+	}
+
+	public Integer getIdCategoria() {
+		return idCategoria;
+	}
+
+	public void setIdCategoria(Integer idCategoria) {
+		this.idCategoria = idCategoria;
 	}
 
 }

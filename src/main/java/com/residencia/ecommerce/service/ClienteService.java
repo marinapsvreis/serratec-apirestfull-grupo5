@@ -1,24 +1,30 @@
 package com.residencia.ecommerce.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.residencia.ecommerce.dto.ClienteDTO;
 import com.residencia.ecommerce.entity.Cliente;
+import com.residencia.ecommerce.entity.Endereco;
 import com.residencia.ecommerce.repository.ClienteRepository;
+import com.residencia.ecommerce.repository.EnderecoRepository;
 
 @Service
 public class ClienteService {
 	@Autowired
 	ClienteRepository clienteRepository;
+	
+	@Autowired
+	EnderecoRepository enderecoRepository;
 
 	public List<Cliente> findAllCliente() {
 		return clienteRepository.findAll();
 	}
 
-	public Cliente findByIdCliente(Integer idCliente) {
+	public Cliente findClienteById(Integer idCliente) {
 		return clienteRepository.findById(idCliente).isPresent() ? clienteRepository.findById(idCliente).get() : null;
 	}
 
@@ -37,7 +43,7 @@ public class ClienteService {
 		return clienteRepository.save(cliente);
 	}
 
-	public void deleteByIdCliente(Integer idCliente) {
+	public void deleteClienteById(Integer idCliente) {
 		clienteRepository.deleteById(idCliente);
 	}
 
@@ -67,5 +73,21 @@ public class ClienteService {
 		clienteDTO.setTelefone(cliente.getTelefone());
 		
 		return clienteDTO;
+	}
+	
+	//endereço
+	public Boolean atualizarEnderecoCliente(Integer idCliente, Integer idEndereco){
+		
+		if(clienteRepository.findById(idCliente).isPresent() == true) {
+			Cliente cliente = clienteRepository.findById(idCliente).get();
+			Endereco endereco = enderecoRepository.findById(idEndereco).get();
+			cliente.setEndereco(endereco);
+			clienteRepository.save(cliente);
+			return true;
+		}
+		else {
+			enderecoRepository.deleteById(idEndereco);
+			return false;
+		}
 	}
 }
