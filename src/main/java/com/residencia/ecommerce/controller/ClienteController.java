@@ -20,35 +20,37 @@ import com.residencia.ecommerce.service.ClienteService;
 @RestController
 @RequestMapping("/cliente")
 public class ClienteController {
-	 @Autowired
-	    private ClienteService clienteService;
+	@Autowired
+	private ClienteService clienteService;
 
-	    @GetMapping
-	    public ResponseEntity <List<Cliente>> findAllCliente(){
-	        List<Cliente> clienteList = clienteService.findAllCliente();
-	        return new ResponseEntity<>(clienteList, HttpStatus.OK);
-	    }
+	@GetMapping
+	public ResponseEntity<List<Cliente>> findAllCliente() {
+		List<Cliente> clienteList = clienteService.findAllCliente();
+		return new ResponseEntity<>(clienteList, HttpStatus.OK);
+	}
 
-	    @GetMapping("/{idCliente}")
-	    public ResponseEntity<Cliente> findClienteById(@PathVariable Integer idCliente){
-	        Cliente cliente = clienteService.findByIdCliente(idCliente);
-	        return new ResponseEntity<>(cliente, HttpStatus.OK);
-	    }
-	    @PostMapping
-	    public ResponseEntity<Cliente> saveCliente(@RequestBody Cliente cliente){
-	        clienteService.updateCliente(cliente);
-	    return new ResponseEntity<>(clienteService.saveCliente(cliente), HttpStatus.OK);
-	    }
+	@GetMapping("/{idCliente}")
+	public ResponseEntity<Cliente> findClienteById(@PathVariable Integer idCliente) {
+		Cliente cliente = clienteService.findByIdCliente(idCliente);
+		return new ResponseEntity<>(cliente, HttpStatus.OK);
+	}
 
-	    @PutMapping
-	    public ResponseEntity<Cliente> updateCliente(@PathVariable Cliente Cliente){
-	        Cliente clienteAtualizado = clienteService.updateCliente(Cliente);
-	        return new ResponseEntity<>(clienteAtualizado, HttpStatus.OK);
-	    }
+	@PostMapping
+	public ResponseEntity<Cliente> saveCliente(@RequestBody Cliente cliente) {
+		clienteService.updateCliente(cliente);
+		return new ResponseEntity<>(clienteService.saveCliente(cliente), HttpStatus.OK);
+	}
 
-	    @DeleteMapping("/{id}")
-	    public ResponseEntity<String> deleteCliente(Integer idCliente){
-	        clienteService.deleteByIdCliente(idCliente);
-	        return new ResponseEntity<>("", HttpStatus.OK);
-	    }
+	@PutMapping
+	public ResponseEntity<Cliente> updateCliente(@PathVariable Cliente Cliente) {
+		Cliente clienteAtualizado = clienteService.updateCliente(Cliente);
+		return new ResponseEntity<>(clienteAtualizado, HttpStatus.OK);
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<String> deleteCliente(Integer idCliente) {
+		clienteService.deleteByIdCliente(idCliente);
+		return new ResponseEntity<>("", HttpStatus.OK);
+	}
+
 }

@@ -7,12 +7,17 @@ import org.springframework.stereotype.Service;
 
 import com.residencia.ecommerce.dto.ClienteDTO;
 import com.residencia.ecommerce.entity.Cliente;
+import com.residencia.ecommerce.entity.Endereco;
 import com.residencia.ecommerce.repository.ClienteRepository;
+import com.residencia.ecommerce.repository.EnderecoRepository;
 
 @Service
 public class ClienteService {
 	@Autowired
 	ClienteRepository clienteRepository;
+	
+	@Autowired
+	EnderecoRepository enderecoRepository;
 
 	public List<Cliente> findAllCliente() {
 		return clienteRepository.findAll();
@@ -60,5 +65,18 @@ public class ClienteService {
 		clienteDTO.setTelefone(cliente.getTelefone());
 		
 		return clienteDTO;
+	}
+	
+	//endereço
+	public void atualizarEnderecoCliente(Integer idCliente, Integer idEndereco)  {
+		if(clienteRepository.findById(idCliente).isPresent()) {
+			Cliente cliente = clienteRepository.findById(idCliente).get();
+			Endereco endereco = enderecoRepository.findById(idEndereco).get();
+			cliente.setEndereco(endereco);
+			clienteRepository.save(cliente);
+			System.out.println("Sucesso!");
+		}else {
+			System.out.println("Não foi possível encontrar o cliente com o id " + idCliente);
+		}
 	}
 }
