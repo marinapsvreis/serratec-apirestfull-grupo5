@@ -1,5 +1,6 @@
 package com.residencia.ecommerce.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,20 +15,29 @@ public class CategoriaService {
 	@Autowired
 	CategoriaRepository categoriaRepository;
 
-	public List<Categoria> findAllCategoria() {
-		return categoriaRepository.findAll();
+	public List<CategoriaDTO> findAllCategoria() {		
+		List<Categoria> categoriaEntityList = categoriaRepository.findAll();
+		List<CategoriaDTO> categoriaDTOList = new ArrayList();
+		
+		for(Categoria categoria : categoriaEntityList) {
+			categoriaDTOList.add(toDTO(categoria));
+		}	
+		
+		return categoriaDTOList;
 	}
 
-	public Categoria findCategoriaById(Integer id) {
-		return categoriaRepository.findById(id).isPresent() ? categoriaRepository.findById(id).get() : null;
+	public CategoriaDTO findCategoriaById(Integer idCategoria) {
+		return categoriaRepository.findById(idCategoria).isPresent() ? 
+				toDTO(categoriaRepository.findById(idCategoria).get()) 
+				: null;
 	}
 
-	public Categoria saveCategoria(Categoria categoria) {
-		return categoriaRepository.save(categoria);
+	public Categoria saveCategoriaDTO(CategoriaDTO categoriaDTO) {
+		return categoriaRepository.save(toEntity(categoriaDTO));
 	}
 
-	public Categoria updateCategoria(Categoria categoria) {
-		return categoriaRepository.save(categoria);
+	public CategoriaDTO updateCategoria(Categoria categoria) {
+		return toDTO(categoriaRepository.save(categoria));
 	}
 
 	public void deleteCategoriaById(Integer id) {
