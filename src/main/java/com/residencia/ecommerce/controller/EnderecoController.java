@@ -53,6 +53,7 @@ public class EnderecoController {
 
 	@PutMapping
 	public ResponseEntity<EnderecoDTO> updateEndereco(@RequestBody EnderecoDTO enderecoDTO) {
+		System.out.println(enderecoDTO);
 		return new ResponseEntity<>(enderecoService.updateEnderecoDTO(enderecoDTO), HttpStatus.OK);
 	}
 

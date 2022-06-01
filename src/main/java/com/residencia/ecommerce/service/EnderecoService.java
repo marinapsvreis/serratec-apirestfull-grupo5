@@ -41,7 +41,6 @@ public class EnderecoService {
 	}
 
 	public EnderecoDTO updateEnderecoDTO(EnderecoDTO enderecoDTO) {
-		enderecoDTO.setCep(enderecoDTO.getCep().replaceAll("[.-]", ""));
 		return toDTO(enderecoRepository.save(toEntity(enderecoDTO)));
 	}
 
@@ -76,6 +75,7 @@ public class EnderecoService {
 	private Endereco toEntity(EnderecoDTO enderecoDTO) {
 		Endereco endereco = new Endereco();
 
+		endereco.setIdEndereco(enderecoDTO.getIdEndereco());
 		endereco.setBairro(enderecoDTO.getBairro());
 		endereco.setCep(enderecoDTO.getCep());
 		endereco.setCidade(enderecoDTO.getCidade());
