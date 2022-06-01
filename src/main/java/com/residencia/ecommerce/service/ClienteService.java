@@ -22,8 +22,15 @@ public class ClienteService {
 		return clienteRepository.findById(idCliente).isPresent() ? clienteRepository.findById(idCliente).get() : null;
 	}
 
-	public Cliente saveCliente(Cliente cliente) {
-		return clienteRepository.save(cliente);
+	public Cliente saveCliente(Cliente cliente) throws Exception {
+		List<Cliente> clienteCpf = clienteRepository.findByCpf(cliente.getCpf());
+		if (clienteCpf.isEmpty()) {
+			clienteRepository.save(cliente);
+		} else {
+			throw new Exception("Ja existe um cliente cadrastado com o CPF utilizado");
+		}
+
+		return null;
 	}
 
 	public Cliente updateCliente(Cliente cliente) {
