@@ -59,7 +59,9 @@ public class ClienteService {
 	}
 
 	public ClienteDTO updateCliente(ClienteDTO clienteDTO) {
-		return toDTO(clienteRepository.save(toEntity(clienteDTO)));
+		Cliente cliente = toEntity(clienteDTO);
+		atualizarEnderecoCliente(cliente.getIdCliente(), clienteDTO.getIdEndereco());
+		return toDTO(clienteRepository.save(cliente));
 	}
 
 	public void deleteClienteById(Integer idCliente) {
@@ -89,6 +91,9 @@ public class ClienteService {
 		cliente.setEmail(clienteDTO.getEmail());
 		cliente.setNomeCompleto(clienteDTO.getNomeCompleto());
 		cliente.setTelefone(clienteDTO.getTelefone());
+		if(clienteDTO.getIdEndereco() != null) {
+			cliente.setEndereco(enderecoService.toEntity(enderecoService.findByIdEndereco(clienteDTO.getIdEndereco())));
+		}
 
 		return cliente;
 	}
