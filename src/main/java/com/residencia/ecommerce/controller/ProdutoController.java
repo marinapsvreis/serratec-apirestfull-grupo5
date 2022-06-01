@@ -30,15 +30,13 @@ public class ProdutoController {
 	private ProdutoService produtoService;
 	
 	@GetMapping
-	public ResponseEntity <List<Produto>> findAllProduto(){
-		List<Produto> produtoList = produtoService.findAllProduto();
-		return new ResponseEntity<>(produtoList, HttpStatus.OK);
+	public ResponseEntity <List<ProdutoDTO>> findAllProduto(){
+		return new ResponseEntity<>(produtoService.findAllProduto(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/{idProduto}")
-	public ResponseEntity<Produto> findProdutoById(@PathVariable Integer idProduto){
-		Produto produto = produtoService.findByIdProduto(idProduto);
-		return new ResponseEntity<>(produto, HttpStatus.OK);
+	public ResponseEntity<ProdutoDTO> findProdutoById(@PathVariable Integer idProduto){
+		return new ResponseEntity<>(produtoService.findByIdProduto(idProduto), HttpStatus.OK);
 	}
 	
 	@PostMapping
@@ -49,14 +47,12 @@ public class ProdutoController {
 	
 	@PostMapping(value = "/com-foto", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<Produto> saveProdutoComFoto(@RequestPart("produto") String produtoDTO, @RequestPart("file") MultipartFile file){
-		Produto novoProduto = produtoService.saveProdutoComFoto(produtoDTO , file);
-		return new ResponseEntity<>(novoProduto, HttpStatus.CREATED);
+		return new ResponseEntity<>(produtoService.saveProdutoComFoto(produtoDTO , file), HttpStatus.CREATED);
 	}
 	
 	@PutMapping
-	public ResponseEntity<Produto> updateProduto(@PathVariable Integer idProduto, @RequestBody Produto produto){
-		Produto produtoAtualizado = produtoService.updateProduto(produto);
-		return new ResponseEntity<>(produtoAtualizado, HttpStatus.OK);
+	public ResponseEntity<ProdutoDTO> updateProduto(@RequestBody ProdutoDTO produtoDTO){
+		return new ResponseEntity<>(produtoService.updateProdutoDTO(produtoDTO), HttpStatus.OK);
 	}
 	
 	@DeleteMapping

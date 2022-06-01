@@ -2,6 +2,7 @@ package com.residencia.ecommerce.service;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +31,21 @@ public class ProdutoService {
 	@Value("${pasta.arquivos.imagem}")
     private Path path;
 	
-	public List<Produto> findAllProduto(){
-		return produtoRepository.findAll();
+	public List<ProdutoDTO> findAllProduto(){
+		List<Produto> produtoListEntity = produtoRepository.findAll();
+		List<ProdutoDTO> produtoListDTO = new ArrayList();
+		
+		for(Produto produto : produtoListEntity) {
+			produtoListDTO.add(toDTO(produto));
+		}
+		
+		return produtoListDTO;
 	}
 	
-	public Produto findByIdProduto(Integer idProduto) {
-		return produtoRepository.findById(idProduto).isPresent() ? produtoRepository.findById(idProduto).get() : null;
+	public ProdutoDTO findByIdProduto(Integer idProduto) {
+		return produtoRepository.findById(idProduto).isPresent() ?
+				toDTO(produtoRepository.findById(idProduto).get()) 
+				: null;
 	}
 	
 	public Produto saveProdutoDTO(ProdutoDTO produtoDTO) throws DescricaoProdutoException {
@@ -45,8 +55,9 @@ public class ProdutoService {
 			return produtoRepository.save(toEntity(produtoDTO));		
 	}
 	
-	public Produto updateProduto(Produto produto) {
-		return produtoRepository.save(produto);
+	public ProdutoDTO updateProdutoDTO(ProdutoDTO produtoDTO) {
+		Produto produto = produtoRepository.save(toEntity(produtoDTO));
+		return toDTO(produto);
 	}
 	
 	public void deleteByIdProduto(Integer idProduto) {
@@ -56,7 +67,7 @@ public class ProdutoService {
 	private Produto toEntity(ProdutoDTO produtoDTO) {
 		Produto produto = new Produto();
 		
-		produto.setCategoria(categoriaService.findCategoriaById(produtoDTO.getIdCategoria()));
+		produto.setCategoria(categoriaService.toEntity(categoriaService.findCategoriaById(produtoDTO.getIdCategoria())));
 		produto.setDataCadastroProduto(produtoDTO.getDataCadastroProduto());
 		produto.setDescricaoProduto(produtoDTO.getDescricaoProduto());
 		produto.setNomeImagemProduto(produtoDTO.getNomeImagemProduto());

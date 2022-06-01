@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
@@ -22,6 +23,7 @@ public class Produto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_produto")
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Integer idProduto;
 	@Column(name = "nome")
 	private String nomeProduto;
@@ -30,7 +32,8 @@ public class Produto {
 	@Column(name = "qtd_estoque")
 	private Integer qtdEstoqueProduto;
 	@Column(name = "data_cadastro")
-	private Date dataCadastroProduto;
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	private Date dataCadastroProduto = new Date();
 	@Column(name = "valor_unitario")
 	private Double valorUnitario;
 	@Column(name = "imagem")

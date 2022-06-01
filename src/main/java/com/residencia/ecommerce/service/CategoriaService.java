@@ -44,7 +44,7 @@ public class CategoriaService {
 		categoriaRepository.deleteById(id);
 	}
 	
-	private Categoria toEntity(CategoriaDTO categoriaDTO) {
+	public Categoria toEntity(CategoriaDTO categoriaDTO) {
 		Categoria categoria = new Categoria();
 		
 		categoria.setDescricaoCategoria(categoriaDTO.getDescricaoCategoria());
@@ -53,7 +53,7 @@ public class CategoriaService {
 		return categoria;
 	}
 	
-	private CategoriaDTO toDTO(Categoria categoria) {
+	public CategoriaDTO toDTO(Categoria categoria) {
 		CategoriaDTO categoriaDTO = new CategoriaDTO();
 		
 		categoriaDTO.setIdCategoria(categoria.getIdCategoria());
