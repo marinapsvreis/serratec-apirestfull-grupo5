@@ -1,15 +1,18 @@
 package com.residencia.ecommerce.dto;
 
+import java.math.BigDecimal;
+
 public class ItemPedidoDTO {
 
 	private Integer idItemPedido;
-	private Integer quantidadeItemPedido;
-	private Integer precoVendaItemPedido;
-	private Double percentualDescontoItemPedido;
-	private Double valorBrutoItemPedido;
-	private Double valorLiquidoItemPedido;
 	private Integer idPedido;
 	private Integer idProduto;
+	private Integer quantidadeItemPedido;
+	private BigDecimal percentualDescontoItemPedido;
+
+	private Integer precoVendaItemPedido;
+	private BigDecimal valorBrutoItemPedido;
+	private BigDecimal valorLiquidoItemPedido;
 
 	public Integer getIdItemPedido() {
 		return idItemPedido;
@@ -35,27 +38,27 @@ public class ItemPedidoDTO {
 		this.precoVendaItemPedido = precoVendaItemPedido;
 	}
 
-	public Double getPercentualDescontoItemPedido() {
+	public BigDecimal getPercentualDescontoItemPedido() {
 		return percentualDescontoItemPedido;
 	}
 
-	public void setPercentualDescontoItemPedido(Double percentualDescontoItemPedido) {
+	public void setPercentualDescontoItemPedido(BigDecimal percentualDescontoItemPedido) {
 		this.percentualDescontoItemPedido = percentualDescontoItemPedido;
 	}
 
-	public Double getValorBrutoItemPedido() {
+	public BigDecimal getValorBrutoItemPedido() {
 		return valorBrutoItemPedido;
 	}
 
-	public void setValorBrutoItemPedido(Double valorBrutoItemPedido) {
+	public void setValorBrutoItemPedido(BigDecimal valorBrutoItemPedido) {
 		this.valorBrutoItemPedido = valorBrutoItemPedido;
 	}
 
-	public Double getValorLiquidoItemPedido() {
+	public BigDecimal getValorLiquidoItemPedido() {
 		return valorLiquidoItemPedido;
 	}
 
-	public void setValorLiquidoItemPedido(Double valorLiquidoItemPedido) {
+	public void setValorLiquidoItemPedido(BigDecimal valorLiquidoItemPedido) {
 		this.valorLiquidoItemPedido = valorLiquidoItemPedido;
 	}
 

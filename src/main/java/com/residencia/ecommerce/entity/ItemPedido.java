@@ -1,5 +1,7 @@
 package com.residencia.ecommerce.entity;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,11 +28,11 @@ public class ItemPedido {
 	@Column(name = "preco_venda")
 	private Integer precoVendaItemPedido;
 	@Column(name = "percentual_desconto")
-	private Double percentualDescontoItemPedido;
+	private BigDecimal percentualDescontoItemPedido;
 	@Column(name = "valor_bruto")
-	private Double valorBrutoItemPedido;
+	private BigDecimal valorBrutoItemPedido;
 	@Column(name = "valor_liquido")
-	private Double valorLiquidoItemPedido;
+	private BigDecimal valorLiquidoItemPedido;
 
 	@ManyToOne
 	@JoinColumn(name = "id_pedido", referencedColumnName = "id_pedido")
@@ -64,27 +66,27 @@ public class ItemPedido {
 		this.precoVendaItemPedido = precoVendaItemPedido;
 	}
 
-	public Double getPercentualDescontoItemPedido() {
+	public BigDecimal getPercentualDescontoItemPedido() {
 		return percentualDescontoItemPedido;
 	}
 
-	public void setPercentualDescontoItemPedido(Double percentualDescontoItemPedido) {
+	public void setPercentualDescontoItemPedido(BigDecimal percentualDescontoItemPedido) {
 		this.percentualDescontoItemPedido = percentualDescontoItemPedido;
 	}
 
-	public Double getValorBrutoItemPedido() {
+	public BigDecimal getValorBrutoItemPedido() {
 		return valorBrutoItemPedido;
 	}
 
-	public void setValorBrutoItemPedido(Double valorBrutoItemPedido) {
+	public void setValorBrutoItemPedido(BigDecimal valorBrutoItemPedido) {
 		this.valorBrutoItemPedido = valorBrutoItemPedido;
 	}
 
-	public Double getValorLiquidoItemPedido() {
+	public BigDecimal getValorLiquidoItemPedido() {
 		return valorLiquidoItemPedido;
 	}
 
-	public void setValorLiquidoItemPedido(Double valorLiquidoItemPedido) {
+	public void setValorLiquidoItemPedido(BigDecimal valorLiquidoItemPedido) {
 		this.valorLiquidoItemPedido = valorLiquidoItemPedido;
 	}
 

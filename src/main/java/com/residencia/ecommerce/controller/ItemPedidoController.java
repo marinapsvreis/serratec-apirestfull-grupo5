@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.residencia.ecommerce.dto.ItemPedidoDTO;
 import com.residencia.ecommerce.entity.ItemPedido;
 import com.residencia.ecommerce.service.ItemPedidoService;
 
@@ -25,27 +26,23 @@ public class ItemPedidoController {
 	private ItemPedidoService itemPedidoService;
 	
 	@GetMapping
-	public ResponseEntity <List<ItemPedido>> findAllItemPedido(){
-		List<ItemPedido> itemPedidoList = itemPedidoService.findAllItemPedido();
-		return new ResponseEntity<>(itemPedidoList, HttpStatus.OK);
+	public ResponseEntity <List<ItemPedidoDTO>> findAllItemPedido(){
+		return new ResponseEntity<>(itemPedidoService.findAllItemPedido(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/{idItemPedido}")
-	public ResponseEntity<ItemPedido> findItemPedidoById(@PathVariable Integer idItemPedido){
-		ItemPedido itemPedido = itemPedidoService.findByIdItemPedido(idItemPedido);
-		return new ResponseEntity<>(itemPedido, HttpStatus.OK);
+	public ResponseEntity<ItemPedidoDTO> findItemPedidoById(@PathVariable Integer idItemPedido){
+		return new ResponseEntity<>(itemPedidoService.findByIdItemPedido(idItemPedido), HttpStatus.OK);
 	}
 	
 	@PostMapping
-	public ResponseEntity<ItemPedido> saveItemPedido(@RequestBody ItemPedido itemPedido){
-		itemPedidoService.updateItemPedido(itemPedido);
-		return new ResponseEntity<>(itemPedidoService.saveItemPedido(itemPedido), HttpStatus.OK);
+	public ResponseEntity<ItemPedidoDTO> saveItemPedido(@RequestBody ItemPedidoDTO itemPedidoDTO){
+		return new ResponseEntity<>(itemPedidoService.updateItemPedido(itemPedidoDTO), HttpStatus.OK);
 	}
 	
 	@PutMapping
-	public ResponseEntity<ItemPedido> updateItemPedido(@PathVariable Integer idItemPedido, @RequestBody ItemPedido itemPedido){
-		ItemPedido itemPedidoAtualizado = itemPedidoService.updateItemPedido(itemPedido);
-		return new ResponseEntity<>(itemPedidoAtualizado, HttpStatus.OK);
+	public ResponseEntity<ItemPedidoDTO> updateItemPedido(@RequestBody ItemPedidoDTO itemPedidoDTO){
+		return new ResponseEntity<>(itemPedidoService.updateItemPedido(itemPedidoDTO), HttpStatus.OK);
 	}
 	
 	@DeleteMapping

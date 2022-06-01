@@ -1,5 +1,6 @@
 package com.residencia.ecommerce.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -34,7 +35,7 @@ public class Produto {
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Date dataCadastroProduto = new Date();
 	@Column(name = "valor_unitario")
-	private Double valorUnitario;
+	private BigDecimal valorUnitario;
 	@Column(name = "imagem")
 	private String nomeImagemProduto;
 
@@ -82,11 +83,11 @@ public class Produto {
 		this.dataCadastroProduto = dataCadastroProduto;
 	}
 
-	public Double getValorUnitario() {
+	public BigDecimal getValorUnitario() {
 		return valorUnitario;
 	}
 
-	public void setValorUnitario(Double valorUnitario) {
+	public void setValorUnitario(BigDecimal valorUnitario) {
 		this.valorUnitario = valorUnitario;
 	}
 

@@ -1,5 +1,6 @@
 package com.residencia.ecommerce.dto;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class ProdutoDTO {
@@ -9,7 +10,7 @@ public class ProdutoDTO {
 	private String descricaoProduto;
 	private Integer qtdEstoqueProduto;
 	private Date dataCadastroProduto;
-	private Double valorUnitario;
+	private BigDecimal valorUnitario;
 	private String nomeImagemProduto;
 	private Integer idCategoria;
 
@@ -53,11 +54,11 @@ public class ProdutoDTO {
 		this.dataCadastroProduto = dataCadastroProduto;
 	}
 
-	public Double getValorUnitario() {
+	public BigDecimal getValorUnitario() {
 		return valorUnitario;
 	}
 
-	public void setValorUnitario(Double valorUnitario) {
+	public void setValorUnitario(BigDecimal valorUnitario) {
 		this.valorUnitario = valorUnitario;
 	}
 

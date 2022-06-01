@@ -1,5 +1,6 @@
 package com.residencia.ecommerce.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,20 +16,29 @@ public class ItemPedidoService {
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
 	
-	public List<ItemPedido> findAllItemPedido(){
-		return itemPedidoRepository.findAll();
+	public List<ItemPedidoDTO> findAllItemPedido(){
+		List<ItemPedido> listItemPedidoEntity = itemPedidoRepository.findAll();
+		List<ItemPedidoDTO> listItemPedidoDTO = new ArrayList<>();
+		
+		for(ItemPedido itemPedido : listItemPedidoEntity) {
+			listItemPedidoDTO.add(toDTO(itemPedido));
+		}
+		
+		return listItemPedidoDTO;
 	}
 	
-	public ItemPedido findByIdItemPedido(Integer idItemPedido) {
-		return itemPedidoRepository.findById(idItemPedido).isPresent() ? itemPedidoRepository.findById(idItemPedido).get() : null;
+	public ItemPedidoDTO findByIdItemPedido(Integer idItemPedido) {
+		return itemPedidoRepository.findById(idItemPedido).isPresent() ?
+				toDTO(itemPedidoRepository.findById(idItemPedido).get()) 
+				: null;
 	}
 	
-	public ItemPedido saveItemPedido(ItemPedido itemPedido) {
-		return itemPedidoRepository.save(itemPedido);
+	public ItemPedidoDTO saveItemPedido(ItemPedidoDTO itemPedidoDTO) {
+		return toDTO(itemPedidoRepository.save(toEntity(itemPedidoDTO)));
 	}
 	
-	public ItemPedido updateItemPedido(ItemPedido itemPedido) {
-		return itemPedidoRepository.save(itemPedido);
+	public ItemPedidoDTO updateItemPedido(ItemPedidoDTO itemPedidoDTO) {
+		return toDTO(itemPedidoRepository.save(toEntity(itemPedidoDTO)));
 	}
 	
 	public void deleteByIdItemPedido(Integer idItemPedido) {

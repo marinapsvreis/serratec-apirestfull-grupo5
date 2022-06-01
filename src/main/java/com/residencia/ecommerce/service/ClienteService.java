@@ -82,7 +82,7 @@ public class ClienteService {
 		}
 	}
 	
-	private Cliente toEntity(ClienteDTO clienteDTO) {
+	public Cliente toEntity(ClienteDTO clienteDTO) {
 		Cliente cliente = new Cliente();
 
 		cliente.setIdCliente(clienteDTO.getIdCliente());
@@ -98,7 +98,7 @@ public class ClienteService {
 		return cliente;
 	}
 
-	private ClienteDTO toDTO(Cliente cliente) {
+	public ClienteDTO toDTO(Cliente cliente) {
 		ClienteDTO clienteDTO = new ClienteDTO();
 
 		clienteDTO.setIdCliente(cliente.getIdCliente());

@@ -1,5 +1,6 @@
 package com.residencia.ecommerce.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,21 +14,33 @@ import com.residencia.ecommerce.repository.PedidoRepository;
 public class PedidoService {
 	@Autowired
 	PedidoRepository pedidoRepository;
+	
+	@Autowired
+	ClienteService clienteService;
 
-	public List<Pedido> findAllPedido() {
-		return pedidoRepository.findAll();
+	public List<PedidoDTO> findAllPedido() {
+		List<Pedido> listPedidoEntity = pedidoRepository.findAll();
+		List<PedidoDTO> listPedidoDTO = new ArrayList<>();
+		
+		for(Pedido pedido : listPedidoEntity) {
+			listPedidoDTO.add(toDTO(pedido));
+		}
+		
+		return listPedidoDTO;
 	}
 
-	public Pedido findPedidoById(Integer id) {
-		return pedidoRepository.findById(id).isPresent() ? pedidoRepository.findById(id).get() : null;
+	public PedidoDTO findPedidoById(Integer idPedido) {
+		return pedidoRepository.findById(idPedido).isPresent() ?
+				toDTO(pedidoRepository.findById(idPedido).get()) 
+				: null;
 	}
 
-	public Pedido savePedido(Pedido pedido) {
-		return pedidoRepository.save(pedido);
+	public PedidoDTO savePedido(PedidoDTO pedidoDTO) {
+		return toDTO(pedidoRepository.save(toEntity(pedidoDTO)));
 	}
 
-	public Pedido updatePedido(Pedido pedido) {
-		return pedidoRepository.save(pedido);
+	public PedidoDTO updatePedido(PedidoDTO pedidoDTO) {
+		return toDTO(pedidoRepository.save(toEntity(pedidoDTO)));
 	}
 
 	public void deletePedidoById(Integer id) {
@@ -37,7 +50,8 @@ public class PedidoService {
 	private Pedido toEntity(PedidoDTO pedidoDTO) {
 		Pedido pedido = new Pedido();
 		
-		//pedido.getCliente(pedidoDTO.getIdCliente())
+		pedido.setCliente(clienteService.toEntity(clienteService.findClienteById(pedidoDTO.getIdCliente())));
+		pedido.setIdPedido(pedidoDTO.getIdPedido());
 		pedido.setDataEnvio(pedidoDTO.getDataEnvio());
 		pedido.setDataEntrega(pedidoDTO.getDataEnvio());
 		pedido.setDataPedido(pedidoDTO.getDataPedido());
@@ -53,7 +67,8 @@ public class PedidoService {
 		pedidoDTO.setDataEnvio(pedido.getDataEnvio());
 		pedidoDTO.setDataEntrega(pedido.getDataEnvio());
 		pedidoDTO.setDataPedido(pedido.getDataPedido());
-		pedidoDTO.setStatus(pedido.getStatus());	
+		pedidoDTO.setStatus(pedido.getStatus());
+		pedidoDTO.setIdCliente(pedido.getCliente().getIdCliente());
 		
 		return pedidoDTO;
 	}
