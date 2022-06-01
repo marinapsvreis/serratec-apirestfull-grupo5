@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.residencia.ecommerce.dto.CategoriaDTO;
 import com.residencia.ecommerce.entity.Categoria;
+import com.residencia.ecommerce.entity.Produto;
 import com.residencia.ecommerce.repository.CategoriaRepository;
 
 @Service
@@ -25,8 +26,7 @@ public class CategoriaService {
 		
 		return categoriaDTOList;
 	}
-
-	public CategoriaDTO findCategoriaById(Integer idCategoria) {
+	public CategoriaDTO findCategoriaByIdDTO(Integer idCategoria) {
 		return categoriaRepository.findById(idCategoria).isPresent() ? 
 				toDTO(categoriaRepository.findById(idCategoria).get()) 
 				: null;
@@ -36,8 +36,8 @@ public class CategoriaService {
 		return categoriaRepository.save(toEntity(categoriaDTO));
 	}
 
-	public CategoriaDTO updateCategoria(Categoria categoria) {
-		return toDTO(categoriaRepository.save(categoria));
+	public CategoriaDTO updateCategoria(CategoriaDTO categoriaDTO) {		
+		return toDTO(categoriaRepository.save(toEntity(categoriaDTO)));
 	}
 
 	public void deleteCategoriaById(Integer id) {
@@ -47,6 +47,7 @@ public class CategoriaService {
 	public Categoria toEntity(CategoriaDTO categoriaDTO) {
 		Categoria categoria = new Categoria();
 		
+		categoria.setIdCategoria(categoriaDTO.getIdCategoria());
 		categoria.setDescricaoCategoria(categoriaDTO.getDescricaoCategoria());
 		categoria.setNomeCategoria(categoriaDTO.getNomeCategoria());
 		

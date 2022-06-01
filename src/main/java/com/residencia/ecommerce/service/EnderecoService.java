@@ -1,5 +1,6 @@
 package com.residencia.ecommerce.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,21 +19,30 @@ public class EnderecoService {
 	@Autowired
 	EnderecoRepository enderecoRepository;
 
-	public List<Endereco> findAllEndereco() {
-		return enderecoRepository.findAll();
+	public List<EnderecoDTO> findAllEndereco() {
+		List<Endereco> listEnderecoEntity = enderecoRepository.findAll();
+		List<EnderecoDTO> listEnderecoDTO = new ArrayList<>();
+		
+		for(Endereco endereco : listEnderecoEntity) {
+			listEnderecoDTO.add(toDTO(endereco));
+		}
+		
+		return listEnderecoDTO;
 	}
 
-	public Endereco findByIdEndereco(Integer idEndereco) {
-		return enderecoRepository.findById(idEndereco).isPresent() ? enderecoRepository.findById(idEndereco).get()
+	public EnderecoDTO findByIdEndereco(Integer idEndereco) {
+		return enderecoRepository.findById(idEndereco).isPresent() ?
+				toDTO(enderecoRepository.findById(idEndereco).get())
 				: null;
 	}
 
-	public Endereco saveEndereco(Endereco endereco) {
-		return enderecoRepository.save(endereco);
+	public EnderecoDTO saveEndereco(EnderecoDTO enderecoDTO) {
+		return toDTO(enderecoRepository.save(toEntity(enderecoDTO)));
 	}
 
-	public Endereco updateEndereco(Endereco endereco) {
-		return enderecoRepository.save(endereco);
+	public EnderecoDTO updateEnderecoDTO(EnderecoDTO enderecoDTO) {
+		enderecoDTO.setCep(enderecoDTO.getCep().replaceAll("[.-]", ""));
+		return toDTO(enderecoRepository.save(toEntity(enderecoDTO)));
 	}
 
 	public void deleteByIdEndereco(Integer idEndereco) {
@@ -53,13 +63,13 @@ public class EnderecoService {
     }
 	
 	//DTO
-	public Endereco saveEnderecoDTO(String cep, Integer numero) {
+	public EnderecoDTO saveEnderecoDTO(String cep, Integer numero) {
 		String cepFormatado = cep.replaceAll("[.-]", "");
 		ConsultaCepDTO cepDTO = consultarCep(cepFormatado);
 		Endereco endereco = cepDTOtoEndereco(cepDTO);
 		endereco.setNumero(numero);
 		
-		return enderecoRepository.save(endereco);
+		return toDTO(enderecoRepository.save(endereco));
 	}
 	
 	//conversão
@@ -90,7 +100,7 @@ public class EnderecoService {
 		return enderecoDTO;
 	}
 	
-	private Endereco cepDTOtoEndereco(ConsultaCepDTO cepDTO) {
+	public Endereco cepDTOtoEndereco(ConsultaCepDTO cepDTO) {
 		Endereco endereco = new Endereco();
 		endereco.setBairro(cepDTO.getBairro());
 		endereco.setCep(cepDTO.getCep());

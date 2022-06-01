@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.residencia.ecommerce.dto.ClienteDTO;
+import com.residencia.ecommerce.dto.ConsultaCepDTO;
 import com.residencia.ecommerce.entity.Cliente;
 import com.residencia.ecommerce.entity.Endereco;
 import com.residencia.ecommerce.exception.CpfClienteException;
@@ -20,6 +21,9 @@ public class ClienteService {
 
 	@Autowired
 	EnderecoRepository enderecoRepository;
+	
+	@Autowired 
+	EnderecoService enderecoService;
 
 	public List<Cliente> findAllCliente() {
 		return clienteRepository.findAll();
@@ -29,9 +33,9 @@ public class ClienteService {
 		return clienteRepository.findById(idCliente).isPresent() ? clienteRepository.findById(idCliente).get() : null;
 	}
 
-	public Cliente saveCliente(Cliente cliente) throws Exception {
-		List<Cliente> clienteCpf = clienteRepository.findByCpf(cliente.getCpf());
-		List<Cliente> clienteEmail = clienteRepository.findByEmail(cliente.getEmail());
+	public ClienteDTO saveCliente(ClienteDTO clienteDTO) throws Exception {
+		List<Cliente> clienteCpf = clienteRepository.findByCpf(clienteDTO.getCpf());
+		List<Cliente> clienteEmail = clienteRepository.findByEmail(clienteDTO.getEmail());
 
 		if (!clienteCpf.isEmpty()) {
 			throw new CpfClienteException("CPF ja foi registrado");
@@ -39,7 +43,8 @@ public class ClienteService {
 			throw new EmailClienteException("Email ja foi registrado");
 		}
 		else {
-			return clienteRepository.save(cliente);
+			Cliente cliente = toEntity(clienteDTO);			
+			return toDTO(clienteRepository.save(cliente));
 		}
 	}
 
@@ -54,11 +59,10 @@ public class ClienteService {
 	private Cliente toEntity(ClienteDTO clienteDTO) {
 		Cliente cliente = new Cliente();
 
+		cliente.setIdCliente(clienteDTO.getIdCliente());
 		cliente.setCpf(clienteDTO.getCpf());
 		cliente.setDataNascimento(clienteDTO.getDataNascimento());
 		cliente.setEmail(clienteDTO.getEmail());
-
-		// cliente.setEndereco(clienteDTO.ge());
 		cliente.setNomeCompleto(clienteDTO.getNomeCompleto());
 		cliente.setTelefone(clienteDTO.getTelefone());
 
@@ -72,9 +76,12 @@ public class ClienteService {
 		clienteDTO.setCpf(cliente.getCpf());
 		clienteDTO.setDataNascimento(cliente.getDataNascimento());
 		clienteDTO.setEmail(cliente.getEmail());
-		clienteDTO.setIdEndereco(cliente.getEndereco().getIdEndereco());
 		clienteDTO.setNomeCompleto(cliente.getNomeCompleto());
 		clienteDTO.setTelefone(cliente.getTelefone());
+		if(cliente.getEndereco() != null) {
+			clienteDTO.setIdEndereco(cliente.getEndereco().getIdEndereco());
+		}
+		
 
 		return clienteDTO;
 	}

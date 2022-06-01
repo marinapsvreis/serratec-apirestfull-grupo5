@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.residencia.ecommerce.dto.CategoriaDTO;
-import com.residencia.ecommerce.entity.Categoria;
 import com.residencia.ecommerce.service.CategoriaService;
 
 @RestController
@@ -31,7 +30,7 @@ public class CategoriaController {
 
 	@GetMapping("/{idCategoria}")
 	public ResponseEntity<CategoriaDTO> findCategoriaById(@PathVariable Integer idCategoria) {
-		return new ResponseEntity<>(categoriaService.findCategoriaById(idCategoria), HttpStatus.OK);
+		return new ResponseEntity<>(categoriaService.findCategoriaByIdDTO(idCategoria), HttpStatus.OK);
 	}
 
 	@PostMapping
@@ -41,8 +40,8 @@ public class CategoriaController {
 	}
 
 	@PutMapping
-	public ResponseEntity<CategoriaDTO> updateCategoriaDTO(@RequestBody Categoria categoria) {
-		return new ResponseEntity<>(categoriaService.updateCategoria(categoria), HttpStatus.OK);
+	public ResponseEntity<CategoriaDTO> updateCategoriaDTO(@RequestBody CategoriaDTO categoriaDTO) {
+		return new ResponseEntity<>(categoriaService.updateCategoria(categoriaDTO), HttpStatus.OK);
 	}
 
 

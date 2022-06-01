@@ -11,7 +11,7 @@ public class ClienteDTO {
 	private String telefone;
 	private Date dataNascimento;
 	private Integer idEndereco;
-	
+
 	public Integer getIdCliente() {
 		return idCliente;
 	}
@@ -67,7 +67,5 @@ public class ClienteDTO {
 	public void setIdEndereco(Integer idEndereco) {
 		this.idEndereco = idEndereco;
 	}
-	
-	
 
 }

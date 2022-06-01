@@ -23,7 +23,6 @@ public class Produto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_produto")
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Integer idProduto;
 	@Column(name = "nome")
 	private String nomeProduto;

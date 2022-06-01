@@ -56,8 +56,7 @@ public class ProdutoService {
 	}
 	
 	public ProdutoDTO updateProdutoDTO(ProdutoDTO produtoDTO) {
-		Produto produto = produtoRepository.save(toEntity(produtoDTO));
-		return toDTO(produto);
+		return toDTO(produtoRepository.save(toEntity(produtoDTO)));
 	}
 	
 	public void deleteByIdProduto(Integer idProduto) {
@@ -67,7 +66,9 @@ public class ProdutoService {
 	private Produto toEntity(ProdutoDTO produtoDTO) {
 		Produto produto = new Produto();
 		
-		produto.setCategoria(categoriaService.toEntity(categoriaService.findCategoriaById(produtoDTO.getIdCategoria())));
+		
+		produto.setCategoria(categoriaService.toEntity(categoriaService.findCategoriaByIdDTO(produtoDTO.getIdCategoria())));
+		produto.setIdProduto(produtoDTO.getIdProduto());
 		produto.setDataCadastroProduto(produtoDTO.getDataCadastroProduto());
 		produto.setDescricaoProduto(produtoDTO.getDescricaoProduto());
 		produto.setNomeImagemProduto(produtoDTO.getNomeImagemProduto());

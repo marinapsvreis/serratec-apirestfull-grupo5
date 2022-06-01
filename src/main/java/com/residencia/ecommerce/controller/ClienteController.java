@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.residencia.ecommerce.dto.ClienteDTO;
 import com.residencia.ecommerce.entity.Cliente;
 import com.residencia.ecommerce.service.ClienteService;
 
@@ -36,8 +37,8 @@ public class ClienteController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Cliente> saveCliente(@RequestBody Cliente cliente) throws Exception {
-		return new ResponseEntity<>(clienteService.saveCliente(cliente), HttpStatus.CREATED);
+	public ResponseEntity<ClienteDTO> saveCliente(@RequestBody ClienteDTO clienteDTO) throws Exception {
+		return new ResponseEntity<>(clienteService.saveCliente(clienteDTO), HttpStatus.CREATED);
 	}
 
 	@PutMapping
