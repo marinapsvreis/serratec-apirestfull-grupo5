@@ -8,7 +8,9 @@ public class ProdutoDTO {
 	private String nomeProduto;
 	private String descricaoProduto;
 	private Integer qtdEstoqueProduto;
-	private Date dataCadastroProduto;
+	
+	private Date dataCadastroProduto = new Date();
+	
 	private Double valorUnitario;
 	private String nomeImagemProduto;
 	private Integer idCategoria;

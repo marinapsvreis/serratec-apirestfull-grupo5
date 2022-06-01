@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.residencia.ecommerce.dto.ProdutoDTO;
 import com.residencia.ecommerce.entity.Produto;
+import com.residencia.ecommerce.exception.DescricaoProdutoException;
 import com.residencia.ecommerce.repository.ProdutoRepository;
 
 @Service
@@ -37,12 +38,12 @@ public class ProdutoService {
 		return produtoRepository.findById(idProduto).isPresent() ? produtoRepository.findById(idProduto).get() : null;
 	}
 	
-	public Produto saveProduto(Produto produto) {
-		return produtoRepository.save(produto);
-	}
-	
-	public Produto saveProdutoDTO(ProdutoDTO produtoDTO) {
-		return produtoRepository.save(toEntity(produtoDTO));
+	public Produto saveProdutoDTO(ProdutoDTO produtoDTO) throws DescricaoProdutoException {
+		if(!produtoRepository.findByDescricaoProduto(produtoDTO.getDescricaoProduto()).isEmpty()) {
+			throw new DescricaoProdutoException("Essa descrição ja foi utilizada em outro produto");
+		}
+			return produtoRepository.save(toEntity(produtoDTO));
+		
 	}
 	
 	public Produto updateProduto(Produto produto) {

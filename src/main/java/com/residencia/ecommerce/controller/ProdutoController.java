@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.residencia.ecommerce.dto.ProdutoDTO;
 import com.residencia.ecommerce.entity.Produto;
+import com.residencia.ecommerce.exception.DescricaoProdutoException;
 import com.residencia.ecommerce.service.ProdutoService;
 
 @RestController
@@ -41,7 +42,7 @@ public class ProdutoController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<ProdutoDTO> saveProdutoDTO(@RequestBody ProdutoDTO produtoDTO){
+	public ResponseEntity<ProdutoDTO> saveProdutoDTO(@RequestBody ProdutoDTO produtoDTO) throws DescricaoProdutoException{
 		produtoService.saveProdutoDTO(produtoDTO);
 		return new ResponseEntity<>(produtoDTO, HttpStatus.CREATED);
 	}
