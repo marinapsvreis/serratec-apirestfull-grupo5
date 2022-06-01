@@ -48,4 +48,13 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorResponse error = new ErrorResponse(httpStatus.value(), "Ja foi registrado um cliente com o CPF informado", details);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+    
+    @ExceptionHandler(EmailClienteException.class)
+    public final ResponseEntity<Object> handleEmailClienteException(EmailClienteException ex, WebRequest request) {
+        List<String> details = new ArrayList<>();
+        details.add(ex.getLocalizedMessage());
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        ErrorResponse error = new ErrorResponse(httpStatus.value(), "Ja foi registrado um cliente com o email informado", details);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
 }

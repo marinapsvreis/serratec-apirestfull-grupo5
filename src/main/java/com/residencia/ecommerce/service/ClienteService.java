@@ -1,15 +1,15 @@
 package com.residencia.ecommerce.service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
-import com.residencia.ecommerce.exception.CpfClienteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.residencia.ecommerce.dto.ClienteDTO;
 import com.residencia.ecommerce.entity.Cliente;
 import com.residencia.ecommerce.entity.Endereco;
+import com.residencia.ecommerce.exception.CpfClienteException;
+import com.residencia.ecommerce.exception.EmailClienteException;
 import com.residencia.ecommerce.repository.ClienteRepository;
 import com.residencia.ecommerce.repository.EnderecoRepository;
 
@@ -17,7 +17,7 @@ import com.residencia.ecommerce.repository.EnderecoRepository;
 public class ClienteService {
 	@Autowired
 	ClienteRepository clienteRepository;
-	
+
 	@Autowired
 	EnderecoRepository enderecoRepository;
 
@@ -31,9 +31,14 @@ public class ClienteService {
 
 	public Cliente saveCliente(Cliente cliente) throws Exception {
 		List<Cliente> clienteCpf = clienteRepository.findByCpf(cliente.getCpf());
+		List<Cliente> clienteEmail = clienteRepository.findByEmail(cliente.getEmail());
+
 		if (!clienteCpf.isEmpty()) {
 			throw new CpfClienteException("CPF ja foi registrado");
-		} else {
+		} else if (!clienteEmail.isEmpty()) {
+			throw new EmailClienteException("Email ja foi registrado");
+		}
+		else {
 			return clienteRepository.save(cliente);
 		}
 	}
@@ -53,10 +58,10 @@ public class ClienteService {
 		cliente.setDataNascimento(clienteDTO.getDataNascimento());
 		cliente.setEmail(clienteDTO.getEmail());
 
-		//cliente.setEndereco(clienteDTO.ge());
+		// cliente.setEndereco(clienteDTO.ge());
 		cliente.setNomeCompleto(clienteDTO.getNomeCompleto());
 		cliente.setTelefone(clienteDTO.getTelefone());
-		
+
 		return cliente;
 	}
 
@@ -70,21 +75,20 @@ public class ClienteService {
 		clienteDTO.setIdEndereco(cliente.getEndereco().getIdEndereco());
 		clienteDTO.setNomeCompleto(cliente.getNomeCompleto());
 		clienteDTO.setTelefone(cliente.getTelefone());
-		
+
 		return clienteDTO;
 	}
-	
-	//endereço
-	public Boolean atualizarEnderecoCliente(Integer idCliente, Integer idEndereco){
-		
-		if(clienteRepository.findById(idCliente).isPresent() == true) {
+
+	// endereço
+	public Boolean atualizarEnderecoCliente(Integer idCliente, Integer idEndereco) {
+
+		if (clienteRepository.findById(idCliente).isPresent() == true) {
 			Cliente cliente = clienteRepository.findById(idCliente).get();
 			Endereco endereco = enderecoRepository.findById(idEndereco).get();
 			cliente.setEndereco(endereco);
 			clienteRepository.save(cliente);
 			return true;
-		}
-		else {
+		} else {
 			enderecoRepository.deleteById(idEndereco);
 			return false;
 		}

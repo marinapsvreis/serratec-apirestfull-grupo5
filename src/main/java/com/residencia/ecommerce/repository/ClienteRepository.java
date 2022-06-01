@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     List<Cliente> findByCpf(String cpf);
+    List<Cliente> findByEmail(String email);
 }
