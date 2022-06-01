@@ -42,8 +42,7 @@ public class ProdutoService {
 		if(!produtoRepository.findByDescricaoProduto(produtoDTO.getDescricaoProduto()).isEmpty()) {
 			throw new DescricaoProdutoException("Essa descrição ja foi utilizada em outro produto");
 		}
-			return produtoRepository.save(toEntity(produtoDTO));
-		
+			return produtoRepository.save(toEntity(produtoDTO));		
 	}
 	
 	public Produto updateProduto(Produto produto) {

@@ -26,9 +26,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public final ResponseEntity<Object> handleUserNotFoundException(DescricaoProdutoException ex, WebRequest request) {
       List<String> details = new ArrayList<>();
       details.add(ex.getLocalizedMessage());
-      HttpStatus httpStatus = HttpStatus.NOT_FOUND;
+      HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
       ErrorResponse error = new ErrorResponse(httpStatus.value(), "Descrição de produtos não podem se repetir", details);
-      return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
    
 }
