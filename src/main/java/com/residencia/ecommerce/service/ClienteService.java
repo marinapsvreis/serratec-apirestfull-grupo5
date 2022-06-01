@@ -1,6 +1,7 @@
 package com.residencia.ecommerce.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class ClienteService {
 		return clienteRepository.findAll();
 	}
 
-	public Cliente findByIdCliente(Integer idCliente) {
+	public Cliente findClienteById(Integer idCliente) {
 		return clienteRepository.findById(idCliente).isPresent() ? clienteRepository.findById(idCliente).get() : null;
 	}
 
@@ -35,7 +36,7 @@ public class ClienteService {
 		return clienteRepository.save(cliente);
 	}
 
-	public void deleteByIdCliente(Integer idCliente) {
+	public void deleteClienteById(Integer idCliente) {
 		clienteRepository.deleteById(idCliente);
 	}
 
@@ -68,15 +69,18 @@ public class ClienteService {
 	}
 	
 	//endereço
-	public void atualizarEnderecoCliente(Integer idCliente, Integer idEndereco)  {
-		if(clienteRepository.findById(idCliente).isPresent()) {
+	public Boolean atualizarEnderecoCliente(Integer idCliente, Integer idEndereco){
+		
+		if(clienteRepository.findById(idCliente).isPresent() == true) {
 			Cliente cliente = clienteRepository.findById(idCliente).get();
 			Endereco endereco = enderecoRepository.findById(idEndereco).get();
 			cliente.setEndereco(endereco);
 			clienteRepository.save(cliente);
-			System.out.println("Sucesso!");
-		}else {
-			System.out.println("Não foi possível encontrar o cliente com o id " + idCliente);
+			return true;
+		}
+		else {
+			enderecoRepository.deleteById(idEndereco);
+			return false;
 		}
 	}
 }

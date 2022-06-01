@@ -30,5 +30,14 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
       ErrorResponse error = new ErrorResponse(httpStatus.value(), "Descrição de produtos não podem se repetir", details);
       return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(NoSuchElementFoundException.class)
+    public final ResponseEntity<Object> handleUserNotFoundException(NoSuchElementFoundException ex, WebRequest request) {
+      List<String> details = new ArrayList<>();
+      details.add(ex.getLocalizedMessage());
+      HttpStatus httpStatus = HttpStatus.NOT_FOUND;
+      ErrorResponse error = new ErrorResponse(httpStatus.value(), "Registro Não Encontrado", details);
+      return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
    
 }

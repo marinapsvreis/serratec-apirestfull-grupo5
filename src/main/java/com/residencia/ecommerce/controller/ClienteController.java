@@ -31,7 +31,7 @@ public class ClienteController {
 
 	@GetMapping("/{idCliente}")
 	public ResponseEntity<Cliente> findClienteById(@PathVariable Integer idCliente) {
-		Cliente cliente = clienteService.findByIdCliente(idCliente);
+		Cliente cliente = clienteService.findClienteById(idCliente);
 		return new ResponseEntity<>(cliente, HttpStatus.OK);
 	}
 
@@ -49,7 +49,7 @@ public class ClienteController {
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteCliente(Integer idCliente) {
-		clienteService.deleteByIdCliente(idCliente);
+		clienteService.deleteClienteById(idCliente);
 		return new ResponseEntity<>("", HttpStatus.OK);
 	}
 

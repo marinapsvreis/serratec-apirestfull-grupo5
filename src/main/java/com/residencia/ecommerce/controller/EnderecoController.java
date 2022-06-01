@@ -1,6 +1,7 @@
 package com.residencia.ecommerce.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.residencia.ecommerce.entity.Endereco;
+import com.residencia.ecommerce.exception.NoSuchElementFoundException;
 import com.residencia.ecommerce.service.ClienteService;
 import com.residencia.ecommerce.service.EnderecoService;
 
@@ -47,10 +49,15 @@ public class EnderecoController {
 	}
 
 	@PostMapping("/salvar")
-	public ResponseEntity<Endereco> salvarEnderecoViaCep(@RequestParam Integer idCliente, @RequestParam String cep, @RequestParam Integer numero) {
+	public ResponseEntity<Endereco> salvarEnderecoViaCep(@RequestParam Integer idCliente, @RequestParam String cep, @RequestParam Integer numero){
 		Endereco endereco = enderecoService.saveEnderecoDTO(cep, numero);
-		clienteService.atualizarEnderecoCliente(idCliente, endereco.getIdEndereco());
-		return new ResponseEntity<>(endereco, HttpStatus.CREATED);
+		System.out.println("Entrando no método");
+		Boolean status = clienteService.atualizarEnderecoCliente(idCliente, endereco.getIdEndereco());
+		if(!status) {
+			throw new NoSuchElementFoundException("Não foi possível encontrar o cliente com o id " + idCliente);
+		}else {
+			return new ResponseEntity<>(endereco, HttpStatus.CREATED);
+		}
 	}
 
 	@PutMapping
