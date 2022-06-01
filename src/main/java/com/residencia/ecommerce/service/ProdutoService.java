@@ -83,16 +83,16 @@ public class ProdutoService {
 	}
 
 	public Produto saveProdutoComFoto(String produtoString, MultipartFile file) {
-		Produto novoProduto = new Produto();
+		ProdutoDTO novoProduto = new ProdutoDTO();
         
         try {
             ObjectMapper objMapper = new ObjectMapper();
-            novoProduto = objMapper.readValue(produtoString, Produto.class);
+            novoProduto = objMapper.readValue(produtoString, ProdutoDTO.class);
         }catch(IOException e) {
             System.out.println("Ocorreu um erro na conversão");
         }
         
-        Produto produtoSalvo = produtoRepository.save(novoProduto);
+        Produto produtoSalvo = produtoRepository.save(toEntity(novoProduto));
         
         String fileName = "produto." + produtoSalvo.getIdProduto() + ".image.png";
         
