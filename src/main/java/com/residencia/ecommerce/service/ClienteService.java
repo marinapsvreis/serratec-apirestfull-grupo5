@@ -31,13 +31,11 @@ public class ClienteService {
 
 	public Cliente saveCliente(Cliente cliente) throws Exception {
 		List<Cliente> clienteCpf = clienteRepository.findByCpf(cliente.getCpf());
-		if (clienteCpf.isEmpty()) {
-			clienteRepository.save(cliente);
-		} else {
+		if (!clienteCpf.isEmpty()) {
 			throw new CpfClienteException("CPF ja foi registrado");
+		} else {
+			return clienteRepository.save(cliente);
 		}
-
-		return null;
 	}
 
 	public Cliente updateCliente(Cliente cliente) {
