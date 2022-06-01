@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.residencia.ecommerce.dto.ClienteDTO;
-import com.residencia.ecommerce.entity.Cliente;
 import com.residencia.ecommerce.service.ClienteService;
 
 @RestController
@@ -25,15 +25,13 @@ public class ClienteController {
 	private ClienteService clienteService;
 
 	@GetMapping
-	public ResponseEntity<List<Cliente>> findAllCliente() {
-		List<Cliente> clienteList = clienteService.findAllCliente();
-		return new ResponseEntity<>(clienteList, HttpStatus.OK);
+	public ResponseEntity<List<ClienteDTO>> findAllCliente() {
+		return new ResponseEntity<>(clienteService.findAllCliente(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{idCliente}")
-	public ResponseEntity<Cliente> findClienteById(@PathVariable Integer idCliente) {
-		Cliente cliente = clienteService.findClienteById(idCliente);
-		return new ResponseEntity<>(cliente, HttpStatus.OK);
+	public ResponseEntity<ClienteDTO> findClienteById(@PathVariable Integer idCliente) {
+		return new ResponseEntity<>(clienteService.findClienteById(idCliente), HttpStatus.OK);
 	}
 
 	@PostMapping
@@ -42,13 +40,12 @@ public class ClienteController {
 	}
 
 	@PutMapping
-	public ResponseEntity<Cliente> updateCliente(@PathVariable Cliente Cliente) {
-		Cliente clienteAtualizado = clienteService.updateCliente(Cliente);
-		return new ResponseEntity<>(clienteAtualizado, HttpStatus.OK);
+	public ResponseEntity<ClienteDTO> updateCliente(@RequestBody ClienteDTO clienteDTO) {
+		return new ResponseEntity<>(clienteService.updateCliente(clienteDTO), HttpStatus.OK);
 	}
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deleteCliente(Integer idCliente) {
+	@DeleteMapping
+	public ResponseEntity<String> deleteCliente(@RequestParam Integer idCliente) {
 		clienteService.deleteClienteById(idCliente);
 		return new ResponseEntity<>("", HttpStatus.OK);
 	}

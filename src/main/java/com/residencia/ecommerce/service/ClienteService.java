@@ -1,12 +1,12 @@
 package com.residencia.ecommerce.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.residencia.ecommerce.dto.ClienteDTO;
-import com.residencia.ecommerce.dto.ConsultaCepDTO;
 import com.residencia.ecommerce.entity.Cliente;
 import com.residencia.ecommerce.entity.Endereco;
 import com.residencia.ecommerce.exception.CpfClienteException;
@@ -25,12 +25,20 @@ public class ClienteService {
 	@Autowired 
 	EnderecoService enderecoService;
 
-	public List<Cliente> findAllCliente() {
-		return clienteRepository.findAll();
+	public List<ClienteDTO> findAllCliente() {
+		List<Cliente> listClienteEntity = clienteRepository.findAll();
+		List<ClienteDTO> listClienteDTO = new ArrayList<>();
+		
+		for(Cliente cliente : listClienteEntity) {
+			listClienteDTO.add(toDTO(cliente));
+		}
+		
+		return listClienteDTO;
 	}
 
-	public Cliente findClienteById(Integer idCliente) {
-		return clienteRepository.findById(idCliente).isPresent() ? clienteRepository.findById(idCliente).get() : null;
+	public ClienteDTO findClienteById(Integer idCliente) {
+		return clienteRepository.findById(idCliente).isPresent() ? 
+				toDTO(clienteRepository.findById(idCliente).get()) : null;
 	}
 
 	public ClienteDTO saveCliente(ClienteDTO clienteDTO) throws Exception {
@@ -43,19 +51,35 @@ public class ClienteService {
 			throw new EmailClienteException("Email ja foi registrado");
 		}
 		else {
-			Cliente cliente = toEntity(clienteDTO);			
-			return toDTO(clienteRepository.save(cliente));
+			Cliente cliente = toEntity(clienteDTO);
+			cliente = clienteRepository.save(cliente);
+			atualizarEnderecoCliente(cliente.getIdCliente(), clienteDTO.getIdEndereco());
+			return toDTO(cliente);
 		}
 	}
 
-	public Cliente updateCliente(Cliente cliente) {
-		return clienteRepository.save(cliente);
+	public ClienteDTO updateCliente(ClienteDTO clienteDTO) {
+		return toDTO(clienteRepository.save(toEntity(clienteDTO)));
 	}
 
 	public void deleteClienteById(Integer idCliente) {
 		clienteRepository.deleteById(idCliente);
 	}
 
+	public Boolean atualizarEnderecoCliente(Integer idCliente, Integer idEndereco) {
+
+		if (clienteRepository.findById(idCliente).isPresent() == true) {
+			Cliente cliente = clienteRepository.findById(idCliente).get();
+			Endereco endereco = enderecoRepository.findById(idEndereco).get();
+			cliente.setEndereco(endereco);
+			clienteRepository.save(cliente);
+			return true;
+		} else {
+			enderecoRepository.deleteById(idEndereco);
+			return false;
+		}
+	}
+	
 	private Cliente toEntity(ClienteDTO clienteDTO) {
 		Cliente cliente = new Cliente();
 
@@ -82,22 +106,6 @@ public class ClienteService {
 			clienteDTO.setIdEndereco(cliente.getEndereco().getIdEndereco());
 		}
 		
-
 		return clienteDTO;
-	}
-
-	// endereço
-	public Boolean atualizarEnderecoCliente(Integer idCliente, Integer idEndereco) {
-
-		if (clienteRepository.findById(idCliente).isPresent() == true) {
-			Cliente cliente = clienteRepository.findById(idCliente).get();
-			Endereco endereco = enderecoRepository.findById(idEndereco).get();
-			cliente.setEndereco(endereco);
-			clienteRepository.save(cliente);
-			return true;
-		} else {
-			enderecoRepository.deleteById(idEndereco);
-			return false;
-		}
 	}
 }

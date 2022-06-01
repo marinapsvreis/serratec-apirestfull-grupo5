@@ -71,8 +71,7 @@ public class EnderecoService {
 		return toDTO(enderecoRepository.save(endereco));
 	}
 	
-	//conversão
-	private Endereco toEntity(EnderecoDTO enderecoDTO) {
+	public Endereco toEntity(EnderecoDTO enderecoDTO) {
 		Endereco endereco = new Endereco();
 
 		endereco.setIdEndereco(enderecoDTO.getIdEndereco());
@@ -86,7 +85,7 @@ public class EnderecoService {
 		return endereco;
 	}
 
-	private EnderecoDTO toDTO(Endereco endereco) {
+	public EnderecoDTO toDTO(Endereco endereco) {
 		EnderecoDTO enderecoDTO = new EnderecoDTO();
 
 		enderecoDTO.setIdEndereco(endereco.getIdEndereco());
