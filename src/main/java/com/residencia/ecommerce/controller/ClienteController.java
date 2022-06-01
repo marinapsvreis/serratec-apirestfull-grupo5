@@ -36,9 +36,8 @@ public class ClienteController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Cliente> saveCliente(@RequestBody Cliente cliente) {
-		clienteService.updateCliente(cliente);
-		return new ResponseEntity<>(clienteService.saveCliente(cliente), HttpStatus.OK);
+	public ResponseEntity<Cliente> saveCliente(@RequestBody Cliente cliente) throws Exception {
+		return new ResponseEntity<>(clienteService.saveCliente(cliente), HttpStatus.CREATED);
 	}
 
 	@PutMapping

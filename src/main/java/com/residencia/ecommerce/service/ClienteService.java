@@ -3,6 +3,7 @@ package com.residencia.ecommerce.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.residencia.ecommerce.exception.CpfClienteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class ClienteService {
 		if (clienteCpf.isEmpty()) {
 			clienteRepository.save(cliente);
 		} else {
-			throw new Exception("Ja existe um cliente cadrastado com o CPF utilizado");
+			throw new CpfClienteException("CPF ja foi registrado");
 		}
 
 		return null;
