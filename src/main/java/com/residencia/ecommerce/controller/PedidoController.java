@@ -40,8 +40,8 @@ public class PedidoController {
 	}
 
 	@PutMapping
-	public ResponseEntity<PedidoDTO> updatePedido(@RequestBody PedidoDTO pedidoDTO) {
-		return new ResponseEntity<>(pedidoService.updatePedido(pedidoDTO), HttpStatus.OK);
+	public ResponseEntity<PedidoDTO> updatePedido(@RequestParam Integer idPedido, @RequestBody PedidoDTO pedidoDTO) {
+		return new ResponseEntity<>(pedidoService.updatePedido(idPedido, pedidoDTO), HttpStatus.OK);
 	}
 
 	@DeleteMapping

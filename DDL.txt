@@ -53,7 +53,7 @@ CREATE TABLE item_pedido (
 id_item_pedido SERIAL PRIMARY KEY,
 quantidade INTEGER NOT NULL,
 preco_venda NUMERIC(10,2) NOT NULL,
-percentual_desconto NUMERIC(3,2),
+percentual_desconto NUMERIC(10,2),
 valor_bruto NUMERIC(10,2),
 valor_liquido NUMERIC(10,2),
 id_pedido INTEGER,

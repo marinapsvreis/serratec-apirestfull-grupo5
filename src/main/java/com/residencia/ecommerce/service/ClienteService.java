@@ -58,7 +58,8 @@ public class ClienteService {
 		}
 	}
 
-	public ClienteDTO updateCliente(ClienteDTO clienteDTO) {
+	public ClienteDTO updateCliente(Integer idCliente, ClienteDTO clienteDTO) {
+		clienteDTO.setIdEndereco(idCliente);
 		Cliente cliente = toEntity(clienteDTO);
 		atualizarEnderecoCliente(cliente.getIdCliente(), clienteDTO.getIdEndereco());
 		return toDTO(clienteRepository.save(cliente));

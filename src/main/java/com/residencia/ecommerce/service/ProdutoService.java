@@ -55,7 +55,8 @@ public class ProdutoService {
 			return produtoRepository.save(toEntity(produtoDTO));		
 	}
 	
-	public ProdutoDTO updateProdutoDTO(ProdutoDTO produtoDTO) {
+	public ProdutoDTO updateProdutoDTO(Integer idProduto, ProdutoDTO produtoDTO) {
+		produtoDTO.setIdProduto(idProduto);
 		return toDTO(produtoRepository.save(toEntity(produtoDTO)));
 	}
 	
@@ -63,7 +64,7 @@ public class ProdutoService {
 		produtoRepository.deleteById(idProduto);
 	}
 
-	private Produto toEntity(ProdutoDTO produtoDTO) {
+	public Produto toEntity(ProdutoDTO produtoDTO) {
 		Produto produto = new Produto();
 		
 		
@@ -79,7 +80,7 @@ public class ProdutoService {
 		return produto;
 	}
 	
-	private ProdutoDTO toDTO(Produto produto) {
+	public ProdutoDTO toDTO(Produto produto) {
 		ProdutoDTO produtoDTO = new ProdutoDTO();
 		
 		produtoDTO.setIdCategoria(produto.getCategoria().getIdCategoria());

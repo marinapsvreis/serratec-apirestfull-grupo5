@@ -16,6 +16,12 @@ public class ItemPedidoService {
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
 	
+	@Autowired
+	private ProdutoService produtoService;
+	
+	@Autowired
+	private PedidoService pedidoService;
+	
 	public List<ItemPedidoDTO> findAllItemPedido(){
 		List<ItemPedido> listItemPedidoEntity = itemPedidoRepository.findAll();
 		List<ItemPedidoDTO> listItemPedidoDTO = new ArrayList<>();
@@ -37,7 +43,8 @@ public class ItemPedidoService {
 		return toDTO(itemPedidoRepository.save(toEntity(itemPedidoDTO)));
 	}
 	
-	public ItemPedidoDTO updateItemPedido(ItemPedidoDTO itemPedidoDTO) {
+	public ItemPedidoDTO updateItemPedido(Integer idItemPedido, ItemPedidoDTO itemPedidoDTO) {
+		itemPedidoDTO.setIdItemPedido(idItemPedido);
 		return toDTO(itemPedidoRepository.save(toEntity(itemPedidoDTO)));
 	}
 	
@@ -48,6 +55,9 @@ public class ItemPedidoService {
 	private ItemPedido toEntity(ItemPedidoDTO itemPedidoDTO) {
 		ItemPedido itemPedido = new ItemPedido();
 		
+		itemPedido.setIdItemPedido(itemPedidoDTO.getIdItemPedido());
+		itemPedido.setProduto(produtoService.toEntity(produtoService.findByIdProduto(itemPedidoDTO.getIdProduto())));
+		itemPedido.setPedido(pedidoService.toEntity(pedidoService.findPedidoById(itemPedidoDTO.getIdPedido())));
 		itemPedido.setPercentualDescontoItemPedido(itemPedidoDTO.getPercentualDescontoItemPedido());
 		itemPedido.setPrecoVendaItemPedido(itemPedidoDTO.getPrecoVendaItemPedido());
 		itemPedido.setQuantidadeItemPedido(itemPedidoDTO.getQuantidadeItemPedido());
@@ -61,6 +71,8 @@ public class ItemPedidoService {
 		ItemPedidoDTO itemPedidoDTO = new ItemPedidoDTO();
 		
 		itemPedidoDTO.setIdItemPedido(itemPedido.getIdItemPedido());
+		itemPedidoDTO.setIdProduto(itemPedido.getProduto().getIdProduto());
+		itemPedidoDTO.setIdPedido(itemPedido.getPedido().getIdPedido());
 		itemPedidoDTO.setPercentualDescontoItemPedido(itemPedido.getPercentualDescontoItemPedido());
 		itemPedidoDTO.setPrecoVendaItemPedido(itemPedido.getPrecoVendaItemPedido());
 		itemPedidoDTO.setQuantidadeItemPedido(itemPedido.getQuantidadeItemPedido());

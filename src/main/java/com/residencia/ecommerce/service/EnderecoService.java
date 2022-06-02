@@ -40,7 +40,8 @@ public class EnderecoService {
 		return toDTO(enderecoRepository.save(toEntity(enderecoDTO)));
 	}
 
-	public EnderecoDTO updateEnderecoDTO(EnderecoDTO enderecoDTO) {
+	public EnderecoDTO updateEnderecoDTO(Integer idEndereco, EnderecoDTO enderecoDTO) {
+		enderecoDTO.setIdEndereco(idEndereco);
 		return toDTO(enderecoRepository.save(toEntity(enderecoDTO)));
 	}
 

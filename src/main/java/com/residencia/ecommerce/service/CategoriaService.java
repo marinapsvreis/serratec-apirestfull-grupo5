@@ -36,7 +36,8 @@ public class CategoriaService {
 		return categoriaRepository.save(toEntity(categoriaDTO));
 	}
 
-	public CategoriaDTO updateCategoria(CategoriaDTO categoriaDTO) {		
+	public CategoriaDTO updateCategoria(Integer idCategoria, CategoriaDTO categoriaDTO) {
+		categoriaDTO.setIdCategoria(idCategoria);
 		return toDTO(categoriaRepository.save(toEntity(categoriaDTO)));
 	}
 

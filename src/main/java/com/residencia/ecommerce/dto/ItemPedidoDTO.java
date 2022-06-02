@@ -11,10 +11,8 @@ public class ItemPedidoDTO {
 	private Integer idPedido;
 	private Integer idProduto;
 	private Integer quantidadeItemPedido;
-	private BigDecimal percentualDescontoItemPedido;
-
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Integer precoVendaItemPedido;
+	private BigDecimal percentualDescontoItemPedido;
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private BigDecimal valorBrutoItemPedido;
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)

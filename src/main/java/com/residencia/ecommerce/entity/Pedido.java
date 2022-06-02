@@ -24,7 +24,7 @@ public class Pedido {
 	private Integer idPedido;
 
 	@Column(name = "data_pedido")
-	private Date dataPedido = new Date();
+	private Date dataPedido;
 
 	@Column(name = "data_entrega")
 	private Date dataEntrega;
