@@ -39,7 +39,7 @@ public class EnderecoController {
 	@GetMapping("/{idEndereco}")
 	public ResponseEntity<EnderecoDTO> findEnderecoById(@PathVariable Integer idEndereco) throws EnderecoException{
 		if (enderecoService.findByIdEndereco(idEndereco) == null) {
-			throw new EnderecoException("Não existe classe com o id " + idEndereco);
+			throw new EnderecoException("Não existe endereço com o id " + idEndereco);
 		}
 		return new ResponseEntity<>(enderecoService.findByIdEndereco(idEndereco), HttpStatus.OK);
 	}
@@ -48,7 +48,7 @@ public class EnderecoController {
 	public ResponseEntity<EnderecoDTO> salvarEnderecoViaCep(@RequestParam Integer idCliente, @RequestParam String cep,
 			@RequestParam Integer numero) throws EnderecoException {
 		if (cep.length() != 9) {
-			throw new EnderecoException("Cep inválido.");
+			throw new EnderecoException("Cep inválido. Digite o cep com hífen: Ex 25660-004");
 		}
 		EnderecoDTO enderecoDTO = enderecoService.saveEnderecoDTO(cep, numero);
 		Boolean status = clienteService.atualizarEnderecoCliente(idCliente, enderecoDTO.getIdEndereco());
@@ -68,7 +68,7 @@ public class EnderecoController {
 	@DeleteMapping
 	public ResponseEntity<String> deleteCliente(@RequestParam Integer idEndereco) throws EnderecoException {
 		if (enderecoService.findByIdEndereco(idEndereco) == null) {
-			throw new EnderecoException("Não existe classe com o id " + idEndereco);
+			throw new EnderecoException("Não existe endereço com o id " + idEndereco);
 		}
 		enderecoService.deleteByIdEndereco(idEndereco);
 		return new ResponseEntity<>("", HttpStatus.OK);

@@ -23,17 +23,17 @@ public class EnderecoService {
 	public List<EnderecoDTO> findAllEndereco() {
 		List<Endereco> listEnderecoEntity = enderecoRepository.findAll();
 		List<EnderecoDTO> listEnderecoDTO = new ArrayList<>();
-		
-		for(Endereco endereco : listEnderecoEntity) {
+
+		for (Endereco endereco : listEnderecoEntity) {
 			listEnderecoDTO.add(toDTO(endereco));
 		}
-		
+
 		return listEnderecoDTO;
 	}
 
 	public EnderecoDTO findByIdEndereco(Integer idEndereco) {
-		return enderecoRepository.findById(idEndereco).isPresent() ?
-				toDTO(enderecoRepository.findById(idEndereco).get())
+		return enderecoRepository.findById(idEndereco).isPresent()
+				? toDTO(enderecoRepository.findById(idEndereco).get())
 				: null;
 	}
 
@@ -49,30 +49,30 @@ public class EnderecoService {
 	public void deleteByIdEndereco(Integer idEndereco) {
 		enderecoRepository.deleteById(idEndereco);
 	}
-	
-	//api externa
+
+	// api externa
 	public ConsultaCepDTO consultarCep(String cep) {
-        RestTemplate restTemplate = new RestTemplate();
-        String uri = "https://viacep.com.br/ws/{cep}/json/";
+		RestTemplate restTemplate = new RestTemplate();
+		String uri = "https://viacep.com.br/ws/{cep}/json/";
 
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("cep", cep);
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("cep", cep);
 
-        ConsultaCepDTO cadastroCepDTO = restTemplate.getForObject(uri,ConsultaCepDTO.class, params);
+		ConsultaCepDTO cadastroCepDTO = restTemplate.getForObject(uri, ConsultaCepDTO.class, params);
 
-        return cadastroCepDTO;
-    }
-	
-	//DTO
+		return cadastroCepDTO;
+	}
+
+	// DTO
 	public EnderecoDTO saveEnderecoDTO(String cep, Integer numero) throws EnderecoException {
 		String cepFormatado = cep.replaceAll("[.-]", "");
 		ConsultaCepDTO cepDTO = consultarCep(cepFormatado);
 		Endereco endereco = cepDTOtoEndereco(cepDTO);
 		endereco.setNumero(numero);
-		
+
 		return toDTO(enderecoRepository.save(endereco));
 	}
-	
+
 	public Endereco toEntity(EnderecoDTO enderecoDTO) {
 		Endereco endereco = new Endereco();
 
@@ -100,7 +100,7 @@ public class EnderecoService {
 
 		return enderecoDTO;
 	}
-	
+
 	public Endereco cepDTOtoEndereco(ConsultaCepDTO cepDTO) {
 		Endereco endereco = new Endereco();
 		endereco.setBairro(cepDTO.getBairro());
@@ -109,7 +109,7 @@ public class EnderecoService {
 		endereco.setComplemento(cepDTO.getComplemento());
 		endereco.setRua(cepDTO.getLogradouro());
 		endereco.setUf(cepDTO.getUf());
-		
+
 		return endereco;
 	}
 
