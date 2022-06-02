@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.residencia.ecommerce.dto.EnderecoDTO;
+import com.residencia.ecommerce.exception.EnderecoException;
 import com.residencia.ecommerce.exception.NoSuchElementFoundException;
 import com.residencia.ecommerce.service.ClienteService;
 import com.residencia.ecommerce.service.EnderecoService;
@@ -26,7 +27,7 @@ public class EnderecoController {
 
 	@Autowired
 	private EnderecoService enderecoService;
-	
+
 	@Autowired
 	private ClienteService clienteService;
 
@@ -36,28 +37,39 @@ public class EnderecoController {
 	}
 
 	@GetMapping("/{idEndereco}")
-	public ResponseEntity<EnderecoDTO> findEnderecoById(@PathVariable Integer idEndereco) {
+	public ResponseEntity<EnderecoDTO> findEnderecoById(@PathVariable Integer idEndereco) throws EnderecoException{
+		if (enderecoService.findByIdEndereco(idEndereco) == null) {
+			throw new EnderecoException("Não existe classe com o id " + idEndereco);
+		}
 		return new ResponseEntity<>(enderecoService.findByIdEndereco(idEndereco), HttpStatus.OK);
 	}
 
 	@PostMapping("/salvar")
-	public ResponseEntity<EnderecoDTO> salvarEnderecoViaCep(@RequestParam Integer idCliente, @RequestParam String cep, @RequestParam Integer numero){
+	public ResponseEntity<EnderecoDTO> salvarEnderecoViaCep(@RequestParam Integer idCliente, @RequestParam String cep,
+			@RequestParam Integer numero) throws EnderecoException {
+		if (cep.length() != 9) {
+			throw new EnderecoException("Cep inválido.");
+		}
 		EnderecoDTO enderecoDTO = enderecoService.saveEnderecoDTO(cep, numero);
 		Boolean status = clienteService.atualizarEnderecoCliente(idCliente, enderecoDTO.getIdEndereco());
-		if(!status) {
+		if (!status) {
 			throw new NoSuchElementFoundException("Não foi possível encontrar o cliente com o id " + idCliente);
-		}else {
+		} else {
 			return new ResponseEntity<>(enderecoDTO, HttpStatus.CREATED);
 		}
 	}
 
 	@PutMapping
-	public ResponseEntity<EnderecoDTO> updateEndereco(@RequestParam Integer idEndereco, @RequestBody EnderecoDTO enderecoDTO) {
+	public ResponseEntity<EnderecoDTO> updateEndereco(@RequestParam Integer idEndereco,
+			@RequestBody EnderecoDTO enderecoDTO) {
 		return new ResponseEntity<>(enderecoService.updateEnderecoDTO(idEndereco, enderecoDTO), HttpStatus.OK);
 	}
 
 	@DeleteMapping
-	public ResponseEntity<String> deleteCliente(@RequestParam Integer idEndereco) {
+	public ResponseEntity<String> deleteCliente(@RequestParam Integer idEndereco) throws EnderecoException {
+		if (enderecoService.findByIdEndereco(idEndereco) == null) {
+			throw new EnderecoException("Não existe classe com o id " + idEndereco);
+		}
 		enderecoService.deleteByIdEndereco(idEndereco);
 		return new ResponseEntity<>("", HttpStatus.OK);
 	}

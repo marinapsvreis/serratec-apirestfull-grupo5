@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import com.residencia.ecommerce.dto.ConsultaCepDTO;
 import com.residencia.ecommerce.dto.EnderecoDTO;
 import com.residencia.ecommerce.entity.Endereco;
+import com.residencia.ecommerce.exception.EnderecoException;
 import com.residencia.ecommerce.repository.EnderecoRepository;
 
 @Service
@@ -63,7 +64,7 @@ public class EnderecoService {
     }
 	
 	//DTO
-	public EnderecoDTO saveEnderecoDTO(String cep, Integer numero) {
+	public EnderecoDTO saveEnderecoDTO(String cep, Integer numero) throws EnderecoException {
 		String cepFormatado = cep.replaceAll("[.-]", "");
 		ConsultaCepDTO cepDTO = consultarCep(cepFormatado);
 		Endereco endereco = cepDTOtoEndereco(cepDTO);
