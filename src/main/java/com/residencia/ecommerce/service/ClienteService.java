@@ -85,13 +85,15 @@ public class ClienteService {
 	
 	public Cliente toEntity(ClienteDTO clienteDTO) {
 		Cliente cliente = new Cliente();
+		String cpfFormatado = clienteDTO.getCpf().replaceAll("[.-]", "");
+		String telefoneFormatado = clienteDTO.getTelefone().replaceAll("[()-]","");
 
 		cliente.setIdCliente(clienteDTO.getIdCliente());
-		cliente.setCpf(clienteDTO.getCpf());
+		cliente.setCpf(cpfFormatado);
 		cliente.setDataNascimento(clienteDTO.getDataNascimento());
 		cliente.setEmail(clienteDTO.getEmail());
 		cliente.setNomeCompleto(clienteDTO.getNomeCompleto());
-		cliente.setTelefone(clienteDTO.getTelefone());
+		cliente.setTelefone(telefoneFormatado);
 		if(clienteDTO.getIdEndereco() != null) {
 			cliente.setEndereco(enderecoService.toEntity(enderecoService.findByIdEndereco(clienteDTO.getIdEndereco())));
 		}
