@@ -13,9 +13,9 @@ public class ProdutoDTO {
 	private String nomeProduto;
 	private String descricaoProduto;
 	private Integer qtdEstoqueProduto;
-	
-	@JsonFormat(pattern="dd-MM-yyyy")
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)	
+
+	@JsonFormat(pattern = "dd-MM-yyyy")
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Date dataCadastroProduto;
 	private BigDecimal valorUnitario;
 	private String nomeImagemProduto;

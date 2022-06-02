@@ -40,7 +40,8 @@ public class ClienteController {
 	}
 
 	@PutMapping
-	public ResponseEntity<ClienteDTO> updateCliente(@RequestParam Integer idCliente, @RequestBody ClienteDTO clienteDTO) {
+	public ResponseEntity<ClienteDTO> updateCliente(@RequestParam Integer idCliente,
+			@RequestBody ClienteDTO clienteDTO) {
 		return new ResponseEntity<>(clienteService.updateCliente(idCliente, clienteDTO), HttpStatus.OK);
 	}
 

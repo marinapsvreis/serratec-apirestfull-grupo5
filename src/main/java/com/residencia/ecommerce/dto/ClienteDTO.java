@@ -5,15 +5,22 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class ClienteDTO {
 
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Integer idCliente;
 	private String email;
 	private String nomeCompleto;
+	
+	@Schema(example = "111.111.111-11", description = "CPF do cliente")
 	private String cpf;
+	@Schema(example = "(11)11111-1111", description = "Telefone do cliente")
 	private String telefone;
-	@JsonFormat(pattern="dd-MM-yyyy")
+	
+	@JsonFormat(pattern = "dd-MM-yyyy")
 	private Date dataNascimento;
 	private Integer idEndereco;
 

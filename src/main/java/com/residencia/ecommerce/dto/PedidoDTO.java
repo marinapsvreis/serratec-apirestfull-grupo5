@@ -24,7 +24,7 @@ public class PedidoDTO {
 
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Boolean status;
-	
+
 	private Integer idCliente;
 
 	public Integer getIdPedido() {
