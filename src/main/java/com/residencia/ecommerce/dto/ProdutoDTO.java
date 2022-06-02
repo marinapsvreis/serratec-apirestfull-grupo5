@@ -3,12 +3,19 @@ package com.residencia.ecommerce.dto;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ProdutoDTO {
 
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Integer idProduto;
 	private String nomeProduto;
 	private String descricaoProduto;
 	private Integer qtdEstoqueProduto;
+	
+	@JsonFormat(pattern="dd-MM-yyyy")
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)	
 	private Date dataCadastroProduto;
 	private BigDecimal valorUnitario;
 	private String nomeImagemProduto;

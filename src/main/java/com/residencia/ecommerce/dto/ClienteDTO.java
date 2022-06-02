@@ -2,13 +2,18 @@ package com.residencia.ecommerce.dto;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ClienteDTO {
 
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Integer idCliente;
 	private String email;
 	private String nomeCompleto;
 	private String cpf;
 	private String telefone;
+	@JsonFormat(pattern="dd-MM-yyyy")
 	private Date dataNascimento;
 	private Integer idEndereco;
 

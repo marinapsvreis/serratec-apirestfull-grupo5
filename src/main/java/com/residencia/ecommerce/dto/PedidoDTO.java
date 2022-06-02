@@ -1,13 +1,28 @@
 package com.residencia.ecommerce.dto;
 
-import java.sql.Date;
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PedidoDTO {
 
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Integer idPedido;
+
+	@JsonFormat(pattern = "dd-MM-yyyy")
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Date dataPedido;
+
+	@JsonFormat(pattern = "dd-MM-yyyy")
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Date dataEntrega;
+
+	@JsonFormat(pattern = "dd-MM-yyyy")
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Date dataEnvio;
+
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Boolean status;
 	private Integer idCliente;
 
@@ -58,6 +73,5 @@ public class PedidoDTO {
 	public void setIdCliente(Integer idCliente) {
 		this.idCliente = idCliente;
 	}
-	
 
 }

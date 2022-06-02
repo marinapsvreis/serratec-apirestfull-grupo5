@@ -1,7 +1,10 @@
 package com.residencia.ecommerce.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class CategoriaDTO {
 
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Integer idCategoria;
 	private String nomeCategoria;
 	private String descricaoCategoria;
