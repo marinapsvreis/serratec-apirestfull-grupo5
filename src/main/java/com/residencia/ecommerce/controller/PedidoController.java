@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.residencia.ecommerce.dto.PedidoDTO;
+import com.residencia.ecommerce.exception.PedidoFinalizadoException;
 import com.residencia.ecommerce.service.PedidoService;
 
 @RestController
@@ -40,8 +41,14 @@ public class PedidoController {
 	}
 
 	@PutMapping
-	public ResponseEntity<PedidoDTO> updatePedido(@RequestParam Integer idPedido, @RequestBody PedidoDTO pedidoDTO) {
+	public ResponseEntity<PedidoDTO> updatePedido(@RequestParam Integer idPedido, @RequestBody PedidoDTO pedidoDTO) throws PedidoFinalizadoException {
 		return new ResponseEntity<>(pedidoService.updatePedido(idPedido, pedidoDTO), HttpStatus.OK);
+	}
+	
+	@PutMapping("/finalizar")
+	public ResponseEntity<String> finalizarPedido(@RequestParam Integer idPedido) throws PedidoFinalizadoException {
+		pedidoService.finalizarPedido(idPedido);
+		return new ResponseEntity<>("Pedido finalizado", HttpStatus.OK);
 	}
 
 	@DeleteMapping

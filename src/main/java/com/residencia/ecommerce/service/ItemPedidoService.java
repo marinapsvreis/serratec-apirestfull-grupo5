@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.residencia.ecommerce.dto.ItemPedidoDTO;
 import com.residencia.ecommerce.entity.ItemPedido;
 import com.residencia.ecommerce.entity.Pedido;
+import com.residencia.ecommerce.exception.PedidoFinalizadoException;
 import com.residencia.ecommerce.repository.ItemPedidoRepository;
 
 @Service
@@ -41,7 +42,7 @@ public class ItemPedidoService {
 				: null;
 	}
 	
-	public ItemPedidoDTO saveItemPedido(ItemPedidoDTO itemPedidoDTO) {
+	public ItemPedidoDTO saveItemPedido(ItemPedidoDTO itemPedidoDTO) throws PedidoFinalizadoException {
 		itemPedidoDTO.setValorBrutoItemPedido(itemPedidoDTO.getPrecoVendaItemPedido().multiply(BigDecimal.valueOf(itemPedidoDTO.getQuantidadeItemPedido())));
 		itemPedidoDTO.setValorLiquidoItemPedido((itemPedidoDTO.getValorBrutoItemPedido()).multiply(BigDecimal.valueOf(1).subtract((itemPedidoDTO.getPercentualDescontoItemPedido()).divide(BigDecimal.valueOf(100)))));
 		
@@ -59,7 +60,7 @@ public class ItemPedidoService {
 		itemPedidoRepository.deleteById(idItemPedido);
 	}
 	
-	public void atualizarValoresTotaisPedido(ItemPedidoDTO itemPedidoDTO) {
+	public void atualizarValoresTotaisPedido(ItemPedidoDTO itemPedidoDTO) throws PedidoFinalizadoException {
 		Pedido pedido = pedidoService.toEntity(pedidoService.findPedidoById(itemPedidoDTO.getIdPedido()));
 		BigDecimal valorTotalBrutoAtual = pedido.getValorTotalPedidoBruto();
 		BigDecimal valorTotalDescontoAtual = pedido.getValorTotalDescontoPedido();
