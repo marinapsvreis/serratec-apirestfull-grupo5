@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.residencia.ecommerce.dto.PedidoDTO;
 import com.residencia.ecommerce.entity.Pedido;
+import com.residencia.ecommerce.exception.EnderecoException;
 import com.residencia.ecommerce.exception.PedidoFinalizadoException;
 import com.residencia.ecommerce.repository.PedidoRepository;
 
@@ -38,7 +39,7 @@ public class PedidoService {
 				: null;
 	}
 
-	public PedidoDTO savePedido(PedidoDTO pedidoDTO) {
+	public PedidoDTO savePedido(PedidoDTO pedidoDTO) throws EnderecoException {
 		pedidoDTO.setDataPedido(new Date());
 		pedidoDTO.setValorTotalPedidoBruto(BigDecimal.valueOf(0));
 		pedidoDTO.setValorTotalPedidoLiquido(BigDecimal.valueOf(0));
@@ -47,7 +48,7 @@ public class PedidoService {
 		return toDTO(pedidoRepository.save(toEntity(pedidoDTO)));
 	}
 
-	public PedidoDTO updatePedido(Integer idPedido, PedidoDTO pedidoDTO) throws PedidoFinalizadoException {
+	public PedidoDTO updatePedido(Integer idPedido, PedidoDTO pedidoDTO) throws PedidoFinalizadoException, EnderecoException {
 		if(pedidoDTO.getStatus() == true) {
 			throw new PedidoFinalizadoException("Pedido já finalizado não pode ser alterado");
 		}else {
@@ -60,7 +61,7 @@ public class PedidoService {
 		pedidoRepository.deleteById(id);
 	}
 	
-	public void finalizarPedido(Integer idPedido) throws PedidoFinalizadoException {
+	public void finalizarPedido(Integer idPedido) throws PedidoFinalizadoException, EnderecoException {
 		Pedido pedido = toEntity(findPedidoById(idPedido));
 		if(pedido.getStatus() == true) {
 			throw new PedidoFinalizadoException("Pedido já foi finalizado");
@@ -70,7 +71,7 @@ public class PedidoService {
 		}		
 	}
 
-	public Pedido toEntity(PedidoDTO pedidoDTO) {
+	public Pedido toEntity(PedidoDTO pedidoDTO) throws EnderecoException {
 		Pedido pedido = new Pedido();
 		
 		pedido.setCliente(clienteService.toEntity(clienteService.findClienteById(pedidoDTO.getIdCliente())));

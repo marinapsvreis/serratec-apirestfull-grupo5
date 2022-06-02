@@ -11,17 +11,14 @@ import com.residencia.ecommerce.entity.Cliente;
 import com.residencia.ecommerce.entity.Endereco;
 import com.residencia.ecommerce.exception.CpfClienteException;
 import com.residencia.ecommerce.exception.EmailClienteException;
+import com.residencia.ecommerce.exception.EnderecoException;
 import com.residencia.ecommerce.repository.ClienteRepository;
-import com.residencia.ecommerce.repository.EnderecoRepository;
 
 @Service
 public class ClienteService {
 	@Autowired
 	ClienteRepository clienteRepository;
 
-	@Autowired
-	EnderecoRepository enderecoRepository;
-	
 	@Autowired 
 	EnderecoService enderecoService;
 
@@ -58,7 +55,7 @@ public class ClienteService {
 		}
 	}
 
-	public ClienteDTO updateCliente(Integer idCliente, ClienteDTO clienteDTO) {
+	public ClienteDTO updateCliente(Integer idCliente, ClienteDTO clienteDTO) throws EnderecoException {
 		clienteDTO.setIdEndereco(idCliente);
 		Cliente cliente = toEntity(clienteDTO);
 		atualizarEnderecoCliente(cliente.getIdCliente(), clienteDTO.getIdEndereco());
@@ -69,21 +66,21 @@ public class ClienteService {
 		clienteRepository.deleteById(idCliente);
 	}
 
-	public Boolean atualizarEnderecoCliente(Integer idCliente, Integer idEndereco) {
+	public Boolean atualizarEnderecoCliente(Integer idCliente, Integer idEndereco) throws EnderecoException {
 
 		if (clienteRepository.findById(idCliente).isPresent() == true) {
 			Cliente cliente = clienteRepository.findById(idCliente).get();
-			Endereco endereco = enderecoRepository.findById(idEndereco).get();
+			Endereco endereco = enderecoService.toEntity(enderecoService.findByIdEndereco(idEndereco));
 			cliente.setEndereco(endereco);
 			clienteRepository.save(cliente);
 			return true;
 		} else {
-			enderecoRepository.deleteById(idEndereco);
+			enderecoService.deleteByIdEndereco(idEndereco);
 			return false;
 		}
 	}
 	
-	public Cliente toEntity(ClienteDTO clienteDTO) {
+	public Cliente toEntity(ClienteDTO clienteDTO) throws EnderecoException {
 		Cliente cliente = new Cliente();
 		String cpfFormatado = clienteDTO.getCpf().replaceAll("[.-]", "");
 		String telefoneFormatado = clienteDTO.getTelefone().replaceAll("[()-]","");

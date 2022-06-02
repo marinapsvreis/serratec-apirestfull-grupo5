@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.residencia.ecommerce.dto.ClienteDTO;
+import com.residencia.ecommerce.exception.EnderecoException;
 import com.residencia.ecommerce.service.ClienteService;
 
 @RestController
@@ -41,7 +42,7 @@ public class ClienteController {
 
 	@PutMapping
 	public ResponseEntity<ClienteDTO> updateCliente(@RequestParam Integer idCliente,
-			@RequestBody ClienteDTO clienteDTO) {
+			@RequestBody ClienteDTO clienteDTO) throws EnderecoException {
 		return new ResponseEntity<>(clienteService.updateCliente(idCliente, clienteDTO), HttpStatus.OK);
 	}
 

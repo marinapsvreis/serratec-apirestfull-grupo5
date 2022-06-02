@@ -13,12 +13,17 @@ import com.residencia.ecommerce.dto.ConsultaCepDTO;
 import com.residencia.ecommerce.dto.EnderecoDTO;
 import com.residencia.ecommerce.entity.Endereco;
 import com.residencia.ecommerce.exception.EnderecoException;
+import com.residencia.ecommerce.exception.NoSuchElementFoundException;
+import com.residencia.ecommerce.repository.ClienteRepository;
 import com.residencia.ecommerce.repository.EnderecoRepository;
 
 @Service
 public class EnderecoService {
 	@Autowired
 	EnderecoRepository enderecoRepository;
+
+	@Autowired
+	ClienteRepository clienteRepository;
 
 	public List<EnderecoDTO> findAllEndereco() {
 		List<Endereco> listEnderecoEntity = enderecoRepository.findAll();
@@ -31,26 +36,72 @@ public class EnderecoService {
 		return listEnderecoDTO;
 	}
 
-	public EnderecoDTO findByIdEndereco(Integer idEndereco) {
-		return enderecoRepository.findById(idEndereco).isPresent()
-				? toDTO(enderecoRepository.findById(idEndereco).get())
-				: null;
+	public EnderecoDTO findByIdEndereco(Integer idEndereco) throws EnderecoException {
+		if (!enderecoRepository.findById(idEndereco).isPresent()) {
+			throw new EnderecoException("Não existe endereço com o id " + idEndereco);
+		} else {
+			return enderecoRepository.findById(idEndereco).isPresent()
+					? toDTO(enderecoRepository.findById(idEndereco).get())
+					: null;
+		}
+
 	}
 
-	public EnderecoDTO saveEndereco(EnderecoDTO enderecoDTO) {
-		return toDTO(enderecoRepository.save(toEntity(enderecoDTO)));
+	public EnderecoDTO saveEnderecoDTO(String cep, Integer numero, Integer idCliente) throws EnderecoException {
+		String cepFormatado = cep.replaceAll("[.-]", "");
+		if (!cepFormatado.matches("[0-9]+")) {
+			throw new EnderecoException("O cep deve conter apenas números e 1 único hífen.");
+		}
+		if (cepFormatado.length() != 8) {
+			throw new EnderecoException(
+					"Cep inválido. Digite o cep com hífen (9 caracteres) ou somente números (8 caracteres): Ex 25660-004/25660004");
+		}
+
+		if (!clienteRepository.findById(idCliente).isPresent()) {
+			throw new NoSuchElementFoundException("Não foi possível encontrar o cliente com o id " + idCliente);
+		}
+		if (numero.toString().matches("[0-9]+")) {
+			throw new EnderecoException(
+					"No campo número deverá conter apenas números, qualquer informação adicional colocar no complemento.");
+		}
+
+		ConsultaCepDTO cepDTO = consultarCep(cepFormatado);
+		Endereco endereco = cepDTOtoEndereco(cepDTO);
+		endereco.setNumero(numero);
+
+		return toDTO(enderecoRepository.save(endereco));
 	}
 
-	public EnderecoDTO updateEnderecoDTO(Integer idEndereco, EnderecoDTO enderecoDTO) {
+	public EnderecoDTO updateEnderecoDTO(Integer idEndereco, EnderecoDTO enderecoDTO) throws EnderecoException {
+		if (!enderecoRepository.findById(idEndereco).isPresent()) {
+			throw new EnderecoException("Não existe endereço com o id " + idEndereco);
+		}
+
 		enderecoDTO.setIdEndereco(idEndereco);
+		String cepFormatado = enderecoDTO.getCep().replaceAll("[.-]", "");
+		if (!cepFormatado.matches("[0-9]+")) {
+			throw new EnderecoException("O cep deve conter apenas números e 1 único hífen.");
+		}
+		if (cepFormatado.length() != 8) {
+			throw new EnderecoException(
+					"Cep inválido. Digite o cep com hífen (9 caracteres) ou somente números (8 caracteres): Ex 25660-004/25660004");
+		}
+
+		if (!enderecoDTO.getNumero().toString().matches("[0-9]+")) {
+			throw new EnderecoException(
+					"No campo número deverá conter apenas números, qualquer informação adicional colocar no complemento.");
+		}
+
 		return toDTO(enderecoRepository.save(toEntity(enderecoDTO)));
 	}
 
-	public void deleteByIdEndereco(Integer idEndereco) {
+	public void deleteByIdEndereco(Integer idEndereco) throws EnderecoException {
+		if (!enderecoRepository.findById(idEndereco).isPresent()) {
+			throw new EnderecoException("Não existe endereço com o id " + idEndereco);
+		}
 		enderecoRepository.deleteById(idEndereco);
 	}
 
-	// api externa
 	public ConsultaCepDTO consultarCep(String cep) {
 		RestTemplate restTemplate = new RestTemplate();
 		String uri = "https://viacep.com.br/ws/{cep}/json/";
@@ -61,16 +112,6 @@ public class EnderecoService {
 		ConsultaCepDTO cadastroCepDTO = restTemplate.getForObject(uri, ConsultaCepDTO.class, params);
 
 		return cadastroCepDTO;
-	}
-
-	// DTO
-	public EnderecoDTO saveEnderecoDTO(String cep, Integer numero) throws EnderecoException {
-		String cepFormatado = cep.replaceAll("[.-]", "");
-		ConsultaCepDTO cepDTO = consultarCep(cepFormatado);
-		Endereco endereco = cepDTOtoEndereco(cepDTO);
-		endereco.setNumero(numero);
-
-		return toDTO(enderecoRepository.save(endereco));
 	}
 
 	public Endereco toEntity(EnderecoDTO enderecoDTO) {

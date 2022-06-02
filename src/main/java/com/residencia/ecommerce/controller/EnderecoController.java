@@ -2,6 +2,8 @@ package com.residencia.ecommerce.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,48 +30,34 @@ public class EnderecoController {
 	@Autowired
 	private EnderecoService enderecoService;
 
-	@Autowired
-	private ClienteService clienteService;
-
 	@GetMapping
 	public ResponseEntity<List<EnderecoDTO>> findAllEndereco() {
 		return new ResponseEntity<>(enderecoService.findAllEndereco(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{idEndereco}")
-	public ResponseEntity<EnderecoDTO> findEnderecoById(@PathVariable Integer idEndereco) throws EnderecoException{
-		if (enderecoService.findByIdEndereco(idEndereco) == null) {
-			throw new EnderecoException("Não existe endereço com o id " + idEndereco);
-		}
+	public ResponseEntity<EnderecoDTO> findEnderecoById(@PathVariable Integer idEndereco) throws EnderecoException {
+
 		return new ResponseEntity<>(enderecoService.findByIdEndereco(idEndereco), HttpStatus.OK);
 	}
 
 	@PostMapping("/salvar")
 	public ResponseEntity<EnderecoDTO> salvarEnderecoViaCep(@RequestParam Integer idCliente, @RequestParam String cep,
 			@RequestParam Integer numero) throws EnderecoException {
-		if (cep.length() != 9) {
-			throw new EnderecoException("Cep inválido. Digite o cep com hífen: Ex 25660-004");
-		}
-		EnderecoDTO enderecoDTO = enderecoService.saveEnderecoDTO(cep, numero);
-		Boolean status = clienteService.atualizarEnderecoCliente(idCliente, enderecoDTO.getIdEndereco());
-		if (!status) {
-			throw new NoSuchElementFoundException("Não foi possível encontrar o cliente com o id " + idCliente);
-		} else {
-			return new ResponseEntity<>(enderecoDTO, HttpStatus.CREATED);
-		}
+
+		return new ResponseEntity<>(enderecoService.saveEnderecoDTO(cep, numero, idCliente), HttpStatus.CREATED);
 	}
 
+	
 	@PutMapping
 	public ResponseEntity<EnderecoDTO> updateEndereco(@RequestParam Integer idEndereco,
-			@RequestBody EnderecoDTO enderecoDTO) {
+			@RequestBody @Valid EnderecoDTO enderecoDTO) throws EnderecoException {
 		return new ResponseEntity<>(enderecoService.updateEnderecoDTO(idEndereco, enderecoDTO), HttpStatus.OK);
 	}
 
 	@DeleteMapping
 	public ResponseEntity<String> deleteCliente(@RequestParam Integer idEndereco) throws EnderecoException {
-		if (enderecoService.findByIdEndereco(idEndereco) == null) {
-			throw new EnderecoException("Não existe endereço com o id " + idEndereco);
-		}
+
 		enderecoService.deleteByIdEndereco(idEndereco);
 		return new ResponseEntity<>("", HttpStatus.OK);
 	}
