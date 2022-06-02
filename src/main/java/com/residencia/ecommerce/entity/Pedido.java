@@ -1,5 +1,6 @@
 package com.residencia.ecommerce.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -38,6 +39,13 @@ public class Pedido {
 	@ManyToOne
 	@JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
 	private Cliente cliente;
+
+	@Column(name = "valor_bruto_total")
+	private BigDecimal valorTotalPedidoBruto;
+	@Column(name = "valor_desconto_total")
+	private BigDecimal valorTotalDescontoPedido;
+	@Column(name = "valor_liquido_total")
+	private BigDecimal valorTotalPedidoLiquido;
 
 	public Integer getIdPedido() {
 		return idPedido;
@@ -86,4 +94,29 @@ public class Pedido {
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
+
+	public BigDecimal getValorTotalPedidoBruto() {
+		return valorTotalPedidoBruto;
+	}
+
+	public void setValorTotalPedidoBruto(BigDecimal valorTotalPedidoBruto) {
+		this.valorTotalPedidoBruto = valorTotalPedidoBruto;
+	}
+
+	public BigDecimal getValorTotalDescontoPedido() {
+		return valorTotalDescontoPedido;
+	}
+
+	public void setValorTotalDescontoPedido(BigDecimal valorTotalDescontoPedido) {
+		this.valorTotalDescontoPedido = valorTotalDescontoPedido;
+	}
+
+	public BigDecimal getValorTotalPedidoLiquido() {
+		return valorTotalPedidoLiquido;
+	}
+
+	public void setValorTotalPedidoLiquido(BigDecimal valorTotalPedidoLiquido) {
+		this.valorTotalPedidoLiquido = valorTotalPedidoLiquido;
+	}
+
 }

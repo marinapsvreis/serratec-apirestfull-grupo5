@@ -11,7 +11,7 @@ public class ItemPedidoDTO {
 	private Integer idPedido;
 	private Integer idProduto;
 	private Integer quantidadeItemPedido;
-	private Integer precoVendaItemPedido;
+	private BigDecimal precoVendaItemPedido;
 	private BigDecimal percentualDescontoItemPedido;
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private BigDecimal valorBrutoItemPedido;
@@ -34,11 +34,11 @@ public class ItemPedidoDTO {
 		this.quantidadeItemPedido = quantidadeItemPedido;
 	}
 
-	public Integer getPrecoVendaItemPedido() {
+	public BigDecimal getPrecoVendaItemPedido() {
 		return precoVendaItemPedido;
 	}
 
-	public void setPrecoVendaItemPedido(Integer precoVendaItemPedido) {
+	public void setPrecoVendaItemPedido(BigDecimal precoVendaItemPedido) {
 		this.precoVendaItemPedido = precoVendaItemPedido;
 	}
 

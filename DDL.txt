@@ -27,6 +27,9 @@ data_entrega DATE,
 data_envio DATE,
 status boolean, --ativo/inativo,
 id_cliente INTEGER,
+valor_bruto_total NUMERIC(10,2),
+valor_liquido_total NUMERIC(10,2),
+valor_desconto_total NUMERIC(10,2),
 FOREIGN KEY(id_cliente) REFERENCES cliente(id_cliente)
 );
 

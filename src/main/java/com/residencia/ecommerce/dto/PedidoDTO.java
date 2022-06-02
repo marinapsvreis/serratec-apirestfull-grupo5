@@ -1,5 +1,6 @@
 package com.residencia.ecommerce.dto;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -26,6 +27,13 @@ public class PedidoDTO {
 	private Boolean status;
 
 	private Integer idCliente;
+
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	private BigDecimal valorTotalPedidoBruto;
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	private BigDecimal valorTotalDescontoPedido;
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	private BigDecimal valorTotalPedidoLiquido;
 
 	public Integer getIdPedido() {
 		return idPedido;
@@ -73,6 +81,30 @@ public class PedidoDTO {
 
 	public void setIdCliente(Integer idCliente) {
 		this.idCliente = idCliente;
+	}
+
+	public BigDecimal getValorTotalPedidoBruto() {
+		return valorTotalPedidoBruto;
+	}
+
+	public void setValorTotalPedidoBruto(BigDecimal valorTotalPedidoBruto) {
+		this.valorTotalPedidoBruto = valorTotalPedidoBruto;
+	}
+
+	public BigDecimal getValorTotalDescontoPedido() {
+		return valorTotalDescontoPedido;
+	}
+
+	public void setValorTotalDescontoPedido(BigDecimal valorTotalDescontoPedido) {
+		this.valorTotalDescontoPedido = valorTotalDescontoPedido;
+	}
+
+	public BigDecimal getValorTotalPedidoLiquido() {
+		return valorTotalPedidoLiquido;
+	}
+
+	public void setValorTotalPedidoLiquido(BigDecimal valorTotalPedidoLiquido) {
+		this.valorTotalPedidoLiquido = valorTotalPedidoLiquido;
 	}
 
 }

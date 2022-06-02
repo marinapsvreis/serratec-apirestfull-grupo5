@@ -26,7 +26,7 @@ public class ItemPedido {
 	@Column(name = "quantidade")
 	private Integer quantidadeItemPedido;
 	@Column(name = "preco_venda")
-	private Integer precoVendaItemPedido;
+	private BigDecimal precoVendaItemPedido;
 	@Column(name = "percentual_desconto")
 	private BigDecimal percentualDescontoItemPedido;
 	@Column(name = "valor_bruto")
@@ -58,11 +58,11 @@ public class ItemPedido {
 		this.quantidadeItemPedido = quantidadeItemPedido;
 	}
 
-	public Integer getPrecoVendaItemPedido() {
+	public BigDecimal getPrecoVendaItemPedido() {
 		return precoVendaItemPedido;
 	}
 
-	public void setPrecoVendaItemPedido(Integer precoVendaItemPedido) {
+	public void setPrecoVendaItemPedido(BigDecimal precoVendaItemPedido) {
 		this.precoVendaItemPedido = precoVendaItemPedido;
 	}
 

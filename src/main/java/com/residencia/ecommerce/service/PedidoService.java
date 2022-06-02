@@ -1,5 +1,6 @@
 package com.residencia.ecommerce.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +39,9 @@ public class PedidoService {
 
 	public PedidoDTO savePedido(PedidoDTO pedidoDTO) {
 		pedidoDTO.setDataPedido(new Date());
+		pedidoDTO.setValorTotalPedidoBruto(BigDecimal.valueOf(0));
+		pedidoDTO.setValorTotalPedidoLiquido(BigDecimal.valueOf(0));
+		pedidoDTO.setValorTotalDescontoPedido(BigDecimal.valueOf(0));
 		return toDTO(pedidoRepository.save(toEntity(pedidoDTO)));
 	}
 
@@ -58,7 +62,10 @@ public class PedidoService {
 		pedido.setDataEnvio(pedidoDTO.getDataEnvio());
 		pedido.setDataEntrega(pedidoDTO.getDataEnvio());
 		pedido.setDataPedido(pedidoDTO.getDataPedido());
-		pedido.setStatus(pedidoDTO.getStatus());	
+		pedido.setStatus(pedidoDTO.getStatus());
+		pedido.setValorTotalPedidoBruto(pedidoDTO.getValorTotalPedidoBruto());
+		pedido.setValorTotalDescontoPedido(pedidoDTO.getValorTotalDescontoPedido());
+		pedido.setValorTotalPedidoLiquido(pedidoDTO.getValorTotalPedidoLiquido());
 		
 		return pedido;
 	}
@@ -72,6 +79,9 @@ public class PedidoService {
 		pedidoDTO.setDataPedido(pedido.getDataPedido());
 		pedidoDTO.setStatus(pedido.getStatus());
 		pedidoDTO.setIdCliente(pedido.getCliente().getIdCliente());
+		pedidoDTO.setValorTotalPedidoBruto(pedido.getValorTotalPedidoBruto());
+		pedidoDTO.setValorTotalDescontoPedido(pedido.getValorTotalDescontoPedido());
+		pedidoDTO.setValorTotalPedidoLiquido(pedido.getValorTotalPedidoLiquido());
 		
 		return pedidoDTO;
 	}
