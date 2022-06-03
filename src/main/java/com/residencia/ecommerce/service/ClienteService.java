@@ -42,6 +42,9 @@ public class ClienteService {
 	}
 
 	public ClienteDTO saveCliente(ClienteDTO clienteDTO) throws Exception {
+		clienteDTO.setCpf(clienteDTO.getCpf().replaceAll("[.-]", ""));
+		clienteDTO.setTelefone(clienteDTO.getTelefone().replaceAll("[()-]", ""));
+
 		List<Cliente> clienteCpf = clienteRepository.findByCpf(clienteDTO.getCpf());
 		List<Cliente> clienteEmail = clienteRepository.findByEmail(clienteDTO.getEmail());
 
@@ -53,6 +56,8 @@ public class ClienteService {
 			throw new EmailClienteException("Email inválido");
 		} else if (!clienteDTO.getNomeCompleto().matches("[a-zA-Z][a-zA-Z ]*")) {
 			throw new ClienteException("Nome deve conter somente letras");
+		} else if (!clienteDTO.getTelefone().matches("[0-9]+")) {
+			throw new ClienteException("Numero de telefone deve corresponder ao formato: (11)11111-1111 ou somente numeros");
 		} else {
 			Cliente cliente = toEntity(clienteDTO);
 			cliente = clienteRepository.save(cliente);
@@ -64,6 +69,9 @@ public class ClienteService {
 	public ClienteDTO updateCliente(Integer idCliente, ClienteDTO clienteDTO)
 			throws EnderecoException, CpfClienteException, EmailClienteException, ClienteException {
 		clienteDTO.setIdCliente(idCliente);
+		clienteDTO.setCpf(clienteDTO.getCpf().replaceAll("[.-]", ""));
+		clienteDTO.setTelefone(clienteDTO.getTelefone().replaceAll("[()-]", ""));
+
 		List<Cliente> clienteCpf = clienteRepository.findByCpf(clienteDTO.getCpf());
 		List<Cliente> clienteEmail = clienteRepository.findByEmail(clienteDTO.getEmail());
 
@@ -75,6 +83,8 @@ public class ClienteService {
 			throw new EmailClienteException("Email inválido");
 		} else if (!clienteDTO.getNomeCompleto().matches("[a-zA-Z][a-zA-Z ]*")) {
 			throw new ClienteException("Nome deve conter somente letras");
+		} else if (clienteDTO.getTelefone().matches("[0-9]+")) {
+			throw new ClienteException("Numero de telefone deve corresponder ao formato: (11)11111-1111 ou somente numeros");
 		} else {
 			Cliente cliente = toEntity(clienteDTO);
 			atualizarEnderecoCliente(cliente.getIdCliente(), clienteDTO.getIdEndereco());
@@ -102,19 +112,13 @@ public class ClienteService {
 
 	public Cliente toEntity(ClienteDTO clienteDTO) throws EnderecoException, ClienteException {
 		Cliente cliente = new Cliente();
-		String cpfFormatado = clienteDTO.getCpf().replaceAll("[.-]", "");
-		String telefoneFormatado = clienteDTO.getTelefone().replaceAll("[()-]", "");
-		
-		if(!telefoneFormatado.matches("[0-9]+")) {
-			throw new ClienteException("Numero de telefone deve corresponder ao formato: (11)11111-1111 ou somente numeros");
-		}
 		
 		cliente.setIdCliente(clienteDTO.getIdCliente());
-		cliente.setCpf(cpfFormatado);
+		cliente.setCpf(clienteDTO.getCpf());
 		cliente.setDataNascimento(clienteDTO.getDataNascimento());
 		cliente.setEmail(clienteDTO.getEmail());
 		cliente.setNomeCompleto(clienteDTO.getNomeCompleto());
-		cliente.setTelefone(telefoneFormatado);
+		cliente.setTelefone(clienteDTO.getTelefone());
 		if (clienteDTO.getIdEndereco() != null) {
 			cliente.setEndereco(enderecoService.toEntity(enderecoService.findByIdEndereco(clienteDTO.getIdEndereco())));
 		}

@@ -50,9 +50,8 @@ public class EnderecoService {
 
 	public EnderecoDTO saveEnderecoDTO(String cep, Integer numero, Integer idCliente) throws EnderecoException {
 		String cepFormatado = "";
-		if(cep != null) {
-			cepFormatado = cep.replaceAll("[.-]", "");
-		}
+		cepFormatado = cep.replaceAll("[.-]", "");
+
 		
 		/*
 		if(!enderecoRepository.findByCep(cepFormatado).isEmpty()) {
