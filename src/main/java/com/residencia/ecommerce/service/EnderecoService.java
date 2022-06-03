@@ -39,7 +39,7 @@ public class EnderecoService {
 
 	public EnderecoDTO findByIdEndereco(Integer idEndereco) throws EnderecoException {
 		if (!enderecoRepository.findById(idEndereco).isPresent()) {
-			throw new EnderecoException("Não existe endereço com o id " + idEndereco);
+			throw new NoSuchElementFoundException("Não existe endereço com o id " + idEndereco);
 		} else {
 			return enderecoRepository.findById(idEndereco).isPresent()
 					? toDTO(enderecoRepository.findById(idEndereco).get())
@@ -89,7 +89,7 @@ public class EnderecoService {
 
 	public EnderecoDTO updateEnderecoDTO(Integer idEndereco, EnderecoDTO enderecoDTO) throws EnderecoException {
 		if (!enderecoRepository.findById(idEndereco).isPresent()) {
-			throw new EnderecoException("Não existe endereço com o id " + idEndereco);
+			throw new NoSuchElementFoundException("Não existe endereço com o id " + idEndereco);
 		}
 
 		enderecoDTO.setIdEndereco(idEndereco);
@@ -116,7 +116,7 @@ public class EnderecoService {
 
 	public void deleteByIdEndereco(Integer idEndereco) throws EnderecoException {
 		if (!enderecoRepository.findById(idEndereco).isPresent()) {
-			throw new EnderecoException("Não existe endereço com o id " + idEndereco);
+			throw new NoSuchElementFoundException("Não existe endereço com o id " + idEndereco);
 		}
 		enderecoRepository.deleteById(idEndereco);
 	}

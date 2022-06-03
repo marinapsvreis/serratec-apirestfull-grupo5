@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.residencia.ecommerce.exception.CategoriaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -48,14 +49,14 @@ public class ProdutoService {
 				: null;
 	}
 	
-	public Produto saveProdutoDTO(ProdutoDTO produtoDTO) throws DescricaoProdutoException {
+	public Produto saveProdutoDTO(ProdutoDTO produtoDTO) throws DescricaoProdutoException, CategoriaException {
 		if(!produtoRepository.findByDescricaoProduto(produtoDTO.getDescricaoProduto()).isEmpty()) {
 			throw new DescricaoProdutoException("Essa descrição ja foi utilizada em outro produto");
 		}
 			return produtoRepository.save(toEntity(produtoDTO));		
 	}
 	
-	public ProdutoDTO updateProdutoDTO(Integer idProduto, ProdutoDTO produtoDTO) {
+	public ProdutoDTO updateProdutoDTO(Integer idProduto, ProdutoDTO produtoDTO) throws CategoriaException {
 		produtoDTO.setIdProduto(idProduto);
 		return toDTO(produtoRepository.save(toEntity(produtoDTO)));
 	}
@@ -64,7 +65,7 @@ public class ProdutoService {
 		produtoRepository.deleteById(idProduto);
 	}
 
-	public Produto toEntity(ProdutoDTO produtoDTO) {
+	public Produto toEntity(ProdutoDTO produtoDTO) throws CategoriaException {
 		Produto produto = new Produto();
 		
 		
@@ -95,7 +96,7 @@ public class ProdutoService {
 		return produtoDTO;
 	}
 
-	public Produto saveProdutoComFoto(String produtoString, MultipartFile file) {
+	public Produto saveProdutoComFoto(String produtoString, MultipartFile file) throws CategoriaException {
 		ProdutoDTO novoProduto = new ProdutoDTO();
         
         try {

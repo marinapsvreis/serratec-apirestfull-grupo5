@@ -2,10 +2,14 @@ package com.residencia.ecommerce.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.NotBlank;
+
 public class CategoriaDTO {
 
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Integer idCategoria;
+
+	@NotBlank(message = "Nome da categoria não poder ser nulo")
 	private String nomeCategoria;
 	private String descricaoCategoria;
 
