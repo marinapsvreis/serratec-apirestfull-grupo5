@@ -35,7 +35,8 @@ public class ClienteService {
 	}
 
 	public ClienteDTO findClienteById(Integer idCliente) {
-		ClienteDTO clienteDTO =  clienteRepository.findById(idCliente).isPresent() ? toDTO(clienteRepository.findById(idCliente).get())
+		ClienteDTO clienteDTO = clienteRepository.findById(idCliente).isPresent()
+				? toDTO(clienteRepository.findById(idCliente).get())
 				: null;
 		if (clienteDTO == null) {
 			throw new NoSuchElementFoundException("Não existe cliente como id " + idCliente);
@@ -45,7 +46,8 @@ public class ClienteService {
 
 	}
 
-	public ClienteDTO saveCliente(ClienteDTO clienteDTO) throws CpfClienteException, EmailClienteException, ClienteException, EnderecoException  {
+	public ClienteDTO saveCliente(ClienteDTO clienteDTO)
+			throws CpfClienteException, EmailClienteException, ClienteException, EnderecoException {
 		clienteDTO.setCpf(clienteDTO.getCpf().replaceAll("[.-]", ""));
 		clienteDTO.setTelefone(clienteDTO.getTelefone().replaceAll("[()-]", ""));
 
@@ -61,13 +63,14 @@ public class ClienteService {
 		} else if (!clienteDTO.getNomeCompleto().matches("[a-zA-Z][a-zA-Z ]*")) {
 			throw new ClienteException("Nome deve conter somente letras");
 		} else if (!clienteDTO.getTelefone().matches("[0-9]+")) {
-			throw new ClienteException("Numero de telefone deve corresponder ao formato: (11)11111-1111 ou somente numeros");
+			throw new ClienteException(
+					"Numero de telefone deve corresponder ao formato: (11)11111-1111 ou somente numeros");
 		} else {
 			Cliente cliente = toEntity(clienteDTO);
 			cliente = clienteRepository.save(cliente);
-			if(cliente.getEndereco() != null) {
+			if (cliente.getEndereco() != null) {
 				atualizarEnderecoCliente(cliente.getIdCliente(), clienteDTO.getIdEndereco());
-			}			
+			}
 			return toDTO(cliente);
 		}
 	}
@@ -80,25 +83,28 @@ public class ClienteService {
 
 		Optional<Cliente> clienteAntigo = clienteRepository.findById(idCliente);
 
-		if (!(clienteAntigo.get().getEmail() == clienteDTO.getEmail() || clienteAntigo.get().getCpf() == clienteDTO.getCpf())) {
+		if (!(clienteAntigo.get().getEmail() == clienteDTO.getEmail()
+				|| clienteAntigo.get().getCpf() == clienteDTO.getCpf())) {
 			throw new ClienteException("Dados inseridos referentes a outro ususario");
 		} else if (!validate(clienteDTO.getEmail())) {
 			throw new ClienteException("Email inválido");
 		} else if (!clienteDTO.getNomeCompleto().matches("[a-zA-Z][a-zA-Z ]*")) {
 			throw new ClienteException("Nome deve conter somente letras");
 		} else if (!clienteDTO.getTelefone().matches("[0-9]+")) {
-			throw new ClienteException("Numero de telefone deve corresponder ao formato: (11)11111-1111 ou somente numeros");
+			throw new ClienteException(
+					"Numero de telefone deve corresponder ao formato: (11)11111-1111 ou somente numeros");
 		} else {
 			Cliente cliente = toEntity(clienteDTO);
-			if(cliente.getEndereco() != null) {
-				atualizarEnderecoCliente(cliente.getIdCliente(), clienteDTO.getIdEndereco());
-			}			
+			if (cliente.getEndereco() != null) {
+				atualizarEnderecoCliente(cliente.getIdCliente(), cliente.getEndereco().getIdEndereco());
+			}
 			return toDTO(clienteRepository.save(cliente));
 		}
 	}
 
 	public void deleteClienteById(Integer idCliente) {
-		ClienteDTO clienteDTO =  clienteRepository.findById(idCliente).isPresent() ? toDTO(clienteRepository.findById(idCliente).get())
+		ClienteDTO clienteDTO = clienteRepository.findById(idCliente).isPresent()
+				? toDTO(clienteRepository.findById(idCliente).get())
 				: null;
 		if (clienteDTO == null) {
 			throw new NoSuchElementFoundException("Não existe cliente como id " + idCliente);
@@ -117,17 +123,28 @@ public class ClienteService {
 			clienteRepository.save(cliente);
 			return true;
 		} else {
-			enderecoService.deleteByIdEndereco(idEndereco);
+			List<Integer> listaIdEnderecosCadastrados = new ArrayList<>();
+			for (Cliente cliente : clienteRepository.findAll()) {
+				if (cliente.getEndereco().getIdEndereco() == idEndereco) {
+					listaIdEnderecosCadastrados.add(cliente.getEndereco().getIdEndereco());
+				}
+
+			}
+			if (listaIdEnderecosCadastrados.isEmpty()) {
+				enderecoService.deleteByIdEndereco(idEndereco);
+			}
+
 			return false;
+
 		}
 	}
 
 	public Cliente toEntity(ClienteDTO clienteDTO) throws EnderecoException, ClienteException {
 		Cliente cliente = new Cliente();
-		
-		if(clienteDTO.getIdCliente() != null) {
+
+		if (clienteDTO.getIdCliente() != null) {
 			cliente.setIdCliente(clienteDTO.getIdCliente());
-		}		
+		}
 		cliente.setCpf(clienteDTO.getCpf());
 		cliente.setDataNascimento(clienteDTO.getDataNascimento());
 		cliente.setEmail(clienteDTO.getEmail());
@@ -155,10 +172,10 @@ public class ClienteService {
 
 		return clienteDTO;
 	}
-	
+
 	public String putMaskCPF(String cpf) {
 		String cpfWithMask = "";
-		
+
 		cpfWithMask += cpf.charAt(0);
 		cpfWithMask += cpf.charAt(1);
 		cpfWithMask += cpf.charAt(2);
@@ -173,13 +190,13 @@ public class ClienteService {
 		cpfWithMask += "-";
 		cpfWithMask += cpf.charAt(9);
 		cpfWithMask += cpf.charAt(10);
-		
+
 		return cpfWithMask;
 	}
-	
+
 	public String putMaskOnPhone(String telefone) {
 		String phoneWithMask = "";
-		
+
 		phoneWithMask += "(";
 		phoneWithMask += telefone.charAt(0);
 		phoneWithMask += telefone.charAt(1);
@@ -194,7 +211,7 @@ public class ClienteService {
 		phoneWithMask += telefone.charAt(8);
 		phoneWithMask += telefone.charAt(9);
 		phoneWithMask += telefone.charAt(10);
-		
+
 		return phoneWithMask;
 	}
 

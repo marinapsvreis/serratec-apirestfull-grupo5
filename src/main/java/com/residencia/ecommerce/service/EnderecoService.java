@@ -2,6 +2,7 @@ package com.residencia.ecommerce.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -52,16 +53,13 @@ public class EnderecoService {
 		String cepFormatado = "";
 		cepFormatado = cep.replaceAll("[.-]", "");
 
-		
-		/*
-		if(!enderecoRepository.findByCep(cepFormatado).isEmpty()) {
+		if (!enderecoRepository.findByCep(cepFormatado).isEmpty()) {
 			List<Endereco> listaEnderecoEncontrado = enderecoRepository.findByCep(cepFormatado);
 			Integer idEncontrado = listaEnderecoEncontrado.get(0).getIdEndereco();
-			
+
 			throw new EnderecoException("Já existe um endereço cadastrado nesse cep com o id: " + idEncontrado);
 		}
-		*/
-		
+
 		if (!cepFormatado.matches("[0-9]+")) {
 			throw new EnderecoException("O cep deve conter apenas números e 1 único hífen.");
 		}
@@ -82,9 +80,11 @@ public class EnderecoService {
 		Endereco endereco = cepDTOtoEndereco(cepDTO);
 		endereco.setNumero(numero);
 		Cliente cliente = clienteRepository.findById(idCliente).get();
-		cliente.setEndereco(endereco);
 
-		return toDTO(enderecoRepository.save(endereco));
+		Endereco endereco2 = cliente.getEndereco();
+		endereco2.setCep(cepFormatado);
+
+		return toDTO(enderecoRepository.save(endereco2));
 	}
 
 	public EnderecoDTO updateEnderecoDTO(Integer idEndereco, EnderecoDTO enderecoDTO) throws EnderecoException {
@@ -94,8 +94,8 @@ public class EnderecoService {
 
 		enderecoDTO.setIdEndereco(idEndereco);
 		String cepFormatado = "";
-		
-		if(enderecoDTO.getCep() != null) {
+
+		if (enderecoDTO.getCep() != null) {
 			cepFormatado = enderecoDTO.getCep().replaceAll("[.-]", "");
 		}
 		if (!cepFormatado.matches("[0-9]+")) {
@@ -110,15 +110,25 @@ public class EnderecoService {
 			throw new EnderecoException(
 					"No campo número deverá conter apenas números, qualquer informação adicional colocar no complemento.");
 		}
-	
+
 		return toDTO(enderecoRepository.save(toEntity(enderecoDTO)));
 	}
 
 	public void deleteByIdEndereco(Integer idEndereco) throws EnderecoException {
+		List<Integer> listaIdEnderecosCadastrados = new ArrayList<>();
+		for (Cliente cliente : clienteRepository.findAll()) {
+			if (cliente.getEndereco().getIdEndereco() == idEndereco) {
+				listaIdEnderecosCadastrados.add(cliente.getEndereco().getIdEndereco());
+			}
+
+		}
 		if (!enderecoRepository.findById(idEndereco).isPresent()) {
 			throw new NoSuchElementFoundException("Não existe endereço com o id " + idEndereco);
+		} else if (!listaIdEnderecosCadastrados.isEmpty()) {
+			throw new EnderecoException("Existem clientes ainda cadastrados com esse endereço!");
+		}else {
+			enderecoRepository.deleteById(idEndereco);
 		}
-		enderecoRepository.deleteById(idEndereco);
 	}
 
 	public ConsultaCepDTO consultarCep(String cep) {
