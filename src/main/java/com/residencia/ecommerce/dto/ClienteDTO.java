@@ -5,7 +5,6 @@ import java.util.Date;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;

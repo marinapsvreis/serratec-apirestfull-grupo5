@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.residencia.ecommerce.dto.CategoriaDTO;
 import com.residencia.ecommerce.service.CategoriaService;
 
-import io.swagger.annotations.ApiParam;
-
 @RestController
 @RequestMapping("/categoria")
 public class CategoriaController {

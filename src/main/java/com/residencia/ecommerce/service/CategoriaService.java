@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.residencia.ecommerce.dto.CategoriaDTO;
 import com.residencia.ecommerce.entity.Categoria;
-import com.residencia.ecommerce.entity.Produto;
 import com.residencia.ecommerce.repository.CategoriaRepository;
 
 @Service

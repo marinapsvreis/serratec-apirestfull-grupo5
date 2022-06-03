@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.residencia.ecommerce.dto.PedidoDTO;
 import com.residencia.ecommerce.entity.Pedido;
+import com.residencia.ecommerce.exception.ClienteException;
 import com.residencia.ecommerce.exception.EnderecoException;
 import com.residencia.ecommerce.exception.PedidoFinalizadoException;
 import com.residencia.ecommerce.repository.PedidoRepository;
@@ -21,6 +24,9 @@ public class PedidoService {
 	
 	@Autowired
 	ClienteService clienteService;
+	
+	@Autowired
+	MailService emailService;
 
 	public List<PedidoDTO> findAllPedido() {
 		List<Pedido> listPedidoEntity = pedidoRepository.findAll();
@@ -39,7 +45,7 @@ public class PedidoService {
 				: null;
 	}
 
-	public PedidoDTO savePedido(PedidoDTO pedidoDTO) throws EnderecoException {
+	public PedidoDTO savePedido(PedidoDTO pedidoDTO) throws EnderecoException, ClienteException {
 		pedidoDTO.setDataPedido(new Date());
 		pedidoDTO.setValorTotalPedidoBruto(BigDecimal.valueOf(0));
 		pedidoDTO.setValorTotalPedidoLiquido(BigDecimal.valueOf(0));
@@ -48,7 +54,7 @@ public class PedidoService {
 		return toDTO(pedidoRepository.save(toEntity(pedidoDTO)));
 	}
 
-	public PedidoDTO updatePedido(Integer idPedido, PedidoDTO pedidoDTO) throws PedidoFinalizadoException, EnderecoException {
+	public PedidoDTO updatePedido(Integer idPedido, PedidoDTO pedidoDTO) throws PedidoFinalizadoException, EnderecoException, ClienteException {
 		if(pedidoDTO.getStatus() == true) {
 			throw new PedidoFinalizadoException("Pedido já finalizado não pode ser alterado");
 		}else {
@@ -61,17 +67,24 @@ public class PedidoService {
 		pedidoRepository.deleteById(id);
 	}
 	
-	public void finalizarPedido(Integer idPedido) throws PedidoFinalizadoException, EnderecoException {
+	public void finalizarPedido(Integer idPedido) throws PedidoFinalizadoException, EnderecoException, ClienteException {
 		Pedido pedido = toEntity(findPedidoById(idPedido));
 		if(pedido.getStatus() == true) {
 			throw new PedidoFinalizadoException("Pedido já foi finalizado");
 		}else {
 			pedido.setStatus(true);
 			pedidoRepository.save(pedido);
+			
+			try {
+	            emailService.enviarEmailHTML("teste@teste.com", "Teste Email Pedido Finalizado", "<h1>Pedido Finalizado</h1><br><p>Muito <b>fácil!</b></p>");
+	        } catch (MessagingException e) {
+	            System.out.println("Erro ao enviar e-mail HTML.");
+	            e.printStackTrace();
+	        }
 		}		
 	}
 
-	public Pedido toEntity(PedidoDTO pedidoDTO) throws EnderecoException {
+	public Pedido toEntity(PedidoDTO pedidoDTO) throws EnderecoException, ClienteException {
 		Pedido pedido = new Pedido();
 		
 		pedido.setCliente(clienteService.toEntity(clienteService.findClienteById(pedidoDTO.getIdCliente())));

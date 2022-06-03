@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.residencia.ecommerce.dto.ItemPedidoDTO;
+import com.residencia.ecommerce.exception.ClienteException;
 import com.residencia.ecommerce.exception.EnderecoException;
 import com.residencia.ecommerce.exception.PedidoFinalizadoException;
 import com.residencia.ecommerce.service.ItemPedidoService;
@@ -38,12 +39,12 @@ public class ItemPedidoController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<ItemPedidoDTO> saveItemPedido(@RequestBody ItemPedidoDTO itemPedidoDTO) throws PedidoFinalizadoException, EnderecoException{
+	public ResponseEntity<ItemPedidoDTO> saveItemPedido(@RequestBody ItemPedidoDTO itemPedidoDTO) throws PedidoFinalizadoException, EnderecoException, ClienteException{
 		return new ResponseEntity<>(itemPedidoService.saveItemPedido(itemPedidoDTO), HttpStatus.OK);
 	}
 	
 	@PutMapping
-	public ResponseEntity<ItemPedidoDTO> updateItemPedido(@RequestParam Integer idItemPedido, @RequestBody ItemPedidoDTO itemPedidoDTO) throws EnderecoException{
+	public ResponseEntity<ItemPedidoDTO> updateItemPedido(@RequestParam Integer idItemPedido, @RequestBody ItemPedidoDTO itemPedidoDTO) throws EnderecoException, ClienteException{
 		return new ResponseEntity<>(itemPedidoService.updateItemPedido(idItemPedido, itemPedidoDTO), HttpStatus.OK);
 	}
 	
