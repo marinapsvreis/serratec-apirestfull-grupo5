@@ -42,7 +42,7 @@ public class MailService {
 		sMailMessage.setSubject(assunto);
 		sMailMessage.setText(mensagemEmail);
 		//Cuidado no momento de usar um servidor real, para setar um remetente valido abaixo
-		sMailMessage.setFrom("teste@teste.com");
+		sMailMessage.setFrom("g5serratec20221@gmail.com");
 		
 		emailSender.send(sMailMessage);
 	}
@@ -56,7 +56,7 @@ public class MailService {
 	        helper.setSubject(assunto);
 	        helper.setText(mensagemEmail, true);
 	        
-	        helper.setFrom("teste@teste.com");
+	        helper.setFrom("g5serratec20221@gmail.com");
 	        
 	        emailSender.send(mimeMessage);
 	}

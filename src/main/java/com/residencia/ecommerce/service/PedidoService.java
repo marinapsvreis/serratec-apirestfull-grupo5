@@ -76,7 +76,7 @@ public class PedidoService {
 			pedidoRepository.save(pedido);
 			
 			try {
-	            emailService.enviarEmailHTML("teste@teste.com", "Teste Email Pedido Finalizado", "<h1>Pedido Finalizado</h1><br><p>Muito <b>fácil!</b></p>");
+	            emailService.enviarEmailHTML("marinapsvreis@gmail.com", "Teste Email Pedido Finalizado", "<h1>Pedido Finalizado</h1><br><p>Muito <b>fácil!</b></p>");
 	        } catch (MessagingException e) {
 	            System.out.println("Erro ao enviar e-mail HTML.");
 	            e.printStackTrace();
