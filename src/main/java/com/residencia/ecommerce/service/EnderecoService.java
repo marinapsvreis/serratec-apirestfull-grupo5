@@ -111,7 +111,7 @@ public class EnderecoService {
 	public void deleteByIdEndereco(Integer idEndereco) throws Exception {
 		List<Integer> listaIdEnderecosCadastrados = new ArrayList<>();
 		for (Cliente cliente : clienteRepository.findAll()) {
-			if (cliente.getEndereco().getIdEndereco() == idEndereco) {
+			if (cliente.getEndereco() != null && cliente.getEndereco().getIdEndereco() == idEndereco) {
 				listaIdEnderecosCadastrados.add(cliente.getEndereco().getIdEndereco());
 			}
 
@@ -136,22 +136,6 @@ public class EnderecoService {
 
 		return cadastroCepDTO;
 	}
-	
-	public String putMaskOnCep(String cep) {
-		String cepWithMask = "";
-		
-		cepWithMask += cep.charAt(0);
-		cepWithMask += cep.charAt(1);
-		cepWithMask += cep.charAt(2);
-		cepWithMask += cep.charAt(3);
-		cepWithMask += cep.charAt(4);
-		cepWithMask += "-";
-		cepWithMask += cep.charAt(5);
-		cepWithMask += cep.charAt(6);
-		cepWithMask += cep.charAt(7);		
-		
-		return cepWithMask;
-	}
 
 	public Endereco toEntity(EnderecoDTO enderecoDTO) {
 		Endereco endereco = new Endereco();
@@ -173,7 +157,7 @@ public class EnderecoService {
 
 		enderecoDTO.setIdEndereco(endereco.getIdEndereco());
 		enderecoDTO.setBairro(endereco.getBairro());
-		enderecoDTO.setCep(putMaskOnCep(endereco.getCep()));
+		enderecoDTO.setCep(endereco.getCep());
 		enderecoDTO.setCidade(endereco.getCidade());
 		enderecoDTO.setComplemento(endereco.getComplemento());
 		enderecoDTO.setNumero(endereco.getNumero());
