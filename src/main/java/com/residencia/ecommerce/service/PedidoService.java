@@ -17,6 +17,7 @@ import com.residencia.ecommerce.entity.ItemPedido;
 import com.residencia.ecommerce.entity.Pedido;
 import com.residencia.ecommerce.exception.ClienteException;
 import com.residencia.ecommerce.exception.EnderecoException;
+import com.residencia.ecommerce.exception.PedidoException;
 import com.residencia.ecommerce.exception.PedidoFinalizadoException;
 import com.residencia.ecommerce.repository.ItemPedidoRepository;
 import com.residencia.ecommerce.repository.PedidoRepository;
@@ -63,10 +64,18 @@ public class PedidoService {
 		pedidoDTO.setValorTotalPedidoLiquido(BigDecimal.valueOf(0));
 		pedidoDTO.setValorTotalDescontoPedido(BigDecimal.valueOf(0));
 		pedidoDTO.setStatus(false);
+		
+		if(clienteService.findClienteById(pedidoDTO.getIdCliente()).getIdEndereco() == null) {
+			throw new PedidoException("O cliente só pode criar um pedido depois de cadastrar seu endereço");
+		}
+		
 		return toDTO(pedidoRepository.save(toEntity(pedidoDTO)));
 	}
 
 	public PedidoDTO updatePedido(Integer idPedido, PedidoDTO pedidoDTO) throws Exception {
+		Pedido pedido = pedidoRepository.findById(idPedido).get();
+		pedidoDTO.setStatus(pedido.getStatus());
+		pedidoDTO.setDataPedido(pedido.getDataPedido());
 		if(pedidoDTO.getStatus() == true) {
 			throw new PedidoFinalizadoException("Pedido já finalizado não pode ser alterado");
 		}else {

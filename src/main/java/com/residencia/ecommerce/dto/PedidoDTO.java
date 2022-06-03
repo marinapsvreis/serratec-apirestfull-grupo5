@@ -15,7 +15,6 @@ public class PedidoDTO {
 
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
-	@NotBlank(message = "Data do pedido não pode ser nula")
 	private Date dataPedido;
 
 	@JsonFormat(pattern = "dd-MM-yyyy")

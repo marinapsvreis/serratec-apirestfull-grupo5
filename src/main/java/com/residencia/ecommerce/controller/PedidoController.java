@@ -2,6 +2,8 @@ package com.residencia.ecommerce.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.residencia.ecommerce.dto.PedidoDTO;
-import com.residencia.ecommerce.exception.ClienteException;
-import com.residencia.ecommerce.exception.EnderecoException;
-import com.residencia.ecommerce.exception.PedidoFinalizadoException;
 import com.residencia.ecommerce.service.PedidoService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/pedido")

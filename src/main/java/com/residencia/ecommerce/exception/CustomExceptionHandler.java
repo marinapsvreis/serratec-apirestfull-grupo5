@@ -45,6 +45,15 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		ErrorResponse error = new ErrorResponse(httpStatus.value(), "Registro Não Encontrado", details);
 		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
 	}
+	
+	@ExceptionHandler(PedidoException.class)
+	public final ResponseEntity<Object> handlePedidoException(PedidoException ex, WebRequest request) {
+		List<String> details = new ArrayList<>();
+		details.add(ex.getLocalizedMessage());
+		HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+		ErrorResponse error = new ErrorResponse(httpStatus.value(), "Ocorreu um erro no pedido", details);
+		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+	}
 
 	@ExceptionHandler(EnderecoException.class)
 	public final ResponseEntity<Object> handleEnderecoException(EnderecoException ex, WebRequest request) {
