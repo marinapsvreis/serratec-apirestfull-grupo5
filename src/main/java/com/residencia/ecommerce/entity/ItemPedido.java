@@ -108,12 +108,11 @@ public class ItemPedido {
 
 	@Override
 	public String toString() {
-		return "Item Pedido: " + idItemPedido + "<br>"
-				+ "Produto = " + produto.getNomeProduto() + "<br>"
+		return "Produto = " + produto.getNomeProduto() + "<br>"
 				+ "Quantidade = " + quantidadeItemPedido + "<br>"
 				+ "Preco Venda = R$" + String.format("%.2f", precoVendaItemPedido) + "<br>"
 				+ "Valor Bruto Pedido = R$" + String.format("%.2f", valorBrutoItemPedido) + "<br>" 
-				+ "Percentual Desconto = " + percentualDescontoItemPedido + "<br>"				  
+				+ "Percentual Desconto = " + percentualDescontoItemPedido + "%<br>"				  
 				+ "Valor Liquido Pedido = R$" + String.format("%.2f", valorLiquidoItemPedido) + "<br>";
 	}
 	
