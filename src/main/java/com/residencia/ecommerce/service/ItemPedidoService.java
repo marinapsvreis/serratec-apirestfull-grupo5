@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.residencia.ecommerce.exception.CategoriaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +45,7 @@ public class ItemPedidoService {
 				: null;
 	}
 	
-	public ItemPedidoDTO saveItemPedido(ItemPedidoDTO itemPedidoDTO) throws PedidoFinalizadoException, EnderecoException, ClienteException {
+	public ItemPedidoDTO saveItemPedido(ItemPedidoDTO itemPedidoDTO) throws PedidoFinalizadoException, EnderecoException, ClienteException, CategoriaException {
 		itemPedidoDTO.setValorBrutoItemPedido(itemPedidoDTO.getPrecoVendaItemPedido().multiply(BigDecimal.valueOf(itemPedidoDTO.getQuantidadeItemPedido())));
 		itemPedidoDTO.setValorLiquidoItemPedido((itemPedidoDTO.getValorBrutoItemPedido()).multiply(BigDecimal.valueOf(1).subtract((itemPedidoDTO.getPercentualDescontoItemPedido()).divide(BigDecimal.valueOf(100)))));
 		
@@ -53,7 +54,7 @@ public class ItemPedidoService {
 		return toDTO(itemPedidoRepository.save(toEntity(itemPedidoDTO)));
 	}
 	
-	public ItemPedidoDTO updateItemPedido(Integer idItemPedido, ItemPedidoDTO itemPedidoDTO) throws EnderecoException, ClienteException {
+	public ItemPedidoDTO updateItemPedido(Integer idItemPedido, ItemPedidoDTO itemPedidoDTO) throws EnderecoException, ClienteException, CategoriaException {
 		itemPedidoDTO.setIdItemPedido(idItemPedido);
 		return toDTO(itemPedidoRepository.save(toEntity(itemPedidoDTO)));
 	}
@@ -81,7 +82,7 @@ public class ItemPedidoService {
 		pedidoService.updatePedido(itemPedidoDTO.getIdPedido(), pedidoService.toDTO(pedido));
 	}
 	
-	private ItemPedido toEntity(ItemPedidoDTO itemPedidoDTO) throws EnderecoException, ClienteException {
+	private ItemPedido toEntity(ItemPedidoDTO itemPedidoDTO) throws EnderecoException, ClienteException, CategoriaException {
 		ItemPedido itemPedido = new ItemPedido();
 		
 		itemPedido.setIdItemPedido(itemPedidoDTO.getIdItemPedido());

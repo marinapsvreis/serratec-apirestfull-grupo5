@@ -2,19 +2,17 @@ package com.residencia.ecommerce.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.residencia.ecommerce.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.residencia.ecommerce.dto.ClienteDTO;
 import com.residencia.ecommerce.entity.Cliente;
 import com.residencia.ecommerce.entity.Endereco;
-import com.residencia.ecommerce.exception.ClienteException;
-import com.residencia.ecommerce.exception.CpfClienteException;
-import com.residencia.ecommerce.exception.EmailClienteException;
-import com.residencia.ecommerce.exception.EnderecoException;
 import com.residencia.ecommerce.repository.ClienteRepository;
 
 @Service
@@ -37,8 +35,14 @@ public class ClienteService {
 	}
 
 	public ClienteDTO findClienteById(Integer idCliente) {
-		return clienteRepository.findById(idCliente).isPresent() ? toDTO(clienteRepository.findById(idCliente).get())
+		ClienteDTO clienteDTO =  clienteRepository.findById(idCliente).isPresent() ? toDTO(clienteRepository.findById(idCliente).get())
 				: null;
+		if (clienteDTO == null) {
+			throw new NoSuchElementFoundException("Não existe cliente como id " + idCliente);
+		} else {
+			return clienteDTO;
+		}
+
 	}
 
 	public ClienteDTO saveCliente(ClienteDTO clienteDTO) throws CpfClienteException, EmailClienteException, ClienteException, EnderecoException  {
@@ -49,11 +53,11 @@ public class ClienteService {
 		List<Cliente> clienteEmail = clienteRepository.findByEmail(clienteDTO.getEmail());
 
 		if (!clienteCpf.isEmpty()) {
-			throw new CpfClienteException("CPF ja foi registrado");
+			throw new ClienteException("CPF ja foi registrado");
 		} else if (!clienteEmail.isEmpty()) {
-			throw new EmailClienteException("Email ja foi registrado");
+			throw new ClienteException("Email ja foi registrado");
 		} else if (!validate(clienteDTO.getEmail())) {
-			throw new EmailClienteException("Email inválido");
+			throw new ClienteException("Email inválido");
 		} else if (!clienteDTO.getNomeCompleto().matches("[a-zA-Z][a-zA-Z ]*")) {
 			throw new ClienteException("Nome deve conter somente letras");
 		} else if (!clienteDTO.getTelefone().matches("[0-9]+")) {
@@ -69,23 +73,20 @@ public class ClienteService {
 	}
 
 	public ClienteDTO updateCliente(Integer idCliente, ClienteDTO clienteDTO)
-			throws EnderecoException, CpfClienteException, EmailClienteException, ClienteException {
+			throws EnderecoException, ClienteException {
 		clienteDTO.setIdCliente(idCliente);
 		clienteDTO.setCpf(clienteDTO.getCpf().replaceAll("[.-]", ""));
 		clienteDTO.setTelefone(clienteDTO.getTelefone().replaceAll("[()-]", ""));
 
-		List<Cliente> clienteCpf = clienteRepository.findByCpf(clienteDTO.getCpf());
-		List<Cliente> clienteEmail = clienteRepository.findByEmail(clienteDTO.getEmail());
+		Optional<Cliente> clienteAntigo = clienteRepository.findById(idCliente);
 
-		if (!clienteCpf.isEmpty()) {
-			throw new CpfClienteException("CPF ja foi registrado");
-		} else if (!clienteEmail.isEmpty()) {
-			throw new EmailClienteException("Email ja foi registrado");
+		if (!(clienteAntigo.get().getEmail() == clienteDTO.getEmail() || clienteAntigo.get().getCpf() == clienteDTO.getCpf())) {
+			throw new ClienteException("Dados inseridos referentes a outro ususario");
 		} else if (!validate(clienteDTO.getEmail())) {
-			throw new EmailClienteException("Email inválido");
+			throw new ClienteException("Email inválido");
 		} else if (!clienteDTO.getNomeCompleto().matches("[a-zA-Z][a-zA-Z ]*")) {
 			throw new ClienteException("Nome deve conter somente letras");
-		} else if (clienteDTO.getTelefone().matches("[0-9]+")) {
+		} else if (!clienteDTO.getTelefone().matches("[0-9]+")) {
 			throw new ClienteException("Numero de telefone deve corresponder ao formato: (11)11111-1111 ou somente numeros");
 		} else {
 			Cliente cliente = toEntity(clienteDTO);
@@ -97,7 +98,14 @@ public class ClienteService {
 	}
 
 	public void deleteClienteById(Integer idCliente) {
-		clienteRepository.deleteById(idCliente);
+		ClienteDTO clienteDTO =  clienteRepository.findById(idCliente).isPresent() ? toDTO(clienteRepository.findById(idCliente).get())
+				: null;
+		if (clienteDTO == null) {
+			throw new NoSuchElementFoundException("Não existe cliente como id " + idCliente);
+		} else {
+			clienteRepository.deleteById(idCliente);
+		}
+
 	}
 
 	public Boolean atualizarEnderecoCliente(Integer idCliente, Integer idEndereco) throws EnderecoException {
