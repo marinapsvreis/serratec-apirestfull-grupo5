@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.residencia.ecommerce.dto.ConsultaCepDTO;
 import com.residencia.ecommerce.dto.EnderecoDTO;
+import com.residencia.ecommerce.entity.Cliente;
 import com.residencia.ecommerce.entity.Endereco;
 import com.residencia.ecommerce.exception.EnderecoException;
 import com.residencia.ecommerce.exception.NoSuchElementFoundException;
@@ -81,6 +82,8 @@ public class EnderecoService {
 		ConsultaCepDTO cepDTO = consultarCep(cepFormatado);
 		Endereco endereco = cepDTOtoEndereco(cepDTO);
 		endereco.setNumero(numero);
+		Cliente cliente = clienteRepository.findById(idCliente).get();
+		cliente.setEndereco(endereco);
 
 		return toDTO(enderecoRepository.save(endereco));
 	}

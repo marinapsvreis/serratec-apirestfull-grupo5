@@ -10,11 +10,15 @@ import javax.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.residencia.ecommerce.dto.ItemPedidoDTO;
 import com.residencia.ecommerce.dto.PedidoDTO;
+import com.residencia.ecommerce.entity.ItemPedido;
 import com.residencia.ecommerce.entity.Pedido;
 import com.residencia.ecommerce.exception.ClienteException;
 import com.residencia.ecommerce.exception.EnderecoException;
 import com.residencia.ecommerce.exception.PedidoFinalizadoException;
+import com.residencia.ecommerce.repository.EnderecoRepository;
+import com.residencia.ecommerce.repository.ItemPedidoRepository;
 import com.residencia.ecommerce.repository.PedidoRepository;
 
 @Service
@@ -24,6 +28,12 @@ public class PedidoService {
 	
 	@Autowired
 	ClienteService clienteService;
+	
+	@Autowired
+	EnderecoService enderecoService;
+	
+	@Autowired
+	ItemPedidoRepository itemPedidoRepository;
 	
 	@Autowired
 	MailService emailService;
@@ -73,10 +83,12 @@ public class PedidoService {
 			throw new PedidoFinalizadoException("Pedido já foi finalizado");
 		}else {
 			pedido.setStatus(true);
-			pedidoRepository.save(pedido);
+			pedido = pedidoRepository.save(pedido);
+			
+			String htmlEmail = gerarHTMLEmail(pedido);					
 			
 			try {
-	            emailService.enviarEmailHTML("marinapsvreis@gmail.com", "Teste Email Pedido Finalizado", "<h1>Pedido Finalizado</h1><br><p>Muito <b>fácil!</b></p>");
+	            emailService.enviarEmailHTML("marinapsvreis@gmail.com", "Teste Email Pedido Finalizado", htmlEmail);
 	        } catch (MessagingException e) {
 	            System.out.println("Erro ao enviar e-mail HTML.");
 	            e.printStackTrace();
@@ -114,5 +126,55 @@ public class PedidoService {
 		pedidoDTO.setValorTotalPedidoLiquido(pedido.getValorTotalPedidoLiquido());
 		
 		return pedidoDTO;
+	}
+	
+	public String gerarHTMLEmail(Pedido pedido) throws EnderecoException {
+		List<ItemPedido> listProdutosPedido = new ArrayList<>();
+		
+		List<ItemPedido> todosItemPedido = itemPedidoRepository.findAll();
+		
+		for(ItemPedido item : todosItemPedido) {
+			if(item.getPedido().getIdPedido() == pedido.getIdPedido()) {
+				listProdutosPedido.add(item);
+			}				
+		}
+		
+		String htmlEmail = "<h1>Pedido ID:" + pedido.getIdPedido() + " Finalizado</h1>";
+				htmlEmail += "<br>";
+				htmlEmail += "<p>Data do Pedido: " + toDTO(pedido).getDataPedido() + "</p>";
+				htmlEmail += "<p>Data do Envio: " + toDTO(pedido).getDataEnvio() +"</p>";
+				htmlEmail += "<p>Data da Entrega(previsão): " + toDTO(pedido).getDataEntrega() +"</p>";
+				htmlEmail += "<br>";
+				htmlEmail += "<h2>Produtos:</h2>";
+				htmlEmail += "<br>";
+				
+				for(ItemPedido itemPedido : listProdutosPedido) {
+					htmlEmail += "<p>"+ itemPedido.toString() +"</p>";
+				}
+				
+				
+				htmlEmail += "<br>";
+				htmlEmail += "<h2>Valores Totais:</h2>";
+				htmlEmail += "<p>Valor Bruto do Pedido: " + pedido.getValorTotalPedidoBruto() + "</p>";
+				htmlEmail += "<p>Valor de Desconto do Pedido: " + pedido.getValorTotalDescontoPedido() + "</p>";
+				htmlEmail += "<p><strong>Valor Liquido do Pedido: " + pedido.getValorTotalPedidoLiquido() + "</strong></p>";
+				htmlEmail += "<br>";
+				htmlEmail += "<h2>Dados do cliente:</h2>";
+				htmlEmail += "<br>";
+				htmlEmail += "<p>Cliente: " + pedido.getCliente().getNomeCompleto() +"</p>";
+				htmlEmail += "<p>CPF: " + pedido.getCliente().getCpf() +"</p>";
+				htmlEmail += "<p>E-mail: " + pedido.getCliente().getEmail() +"</p>";
+				htmlEmail += "<p>Telefone: " + pedido.getCliente().getTelefone() +"</p>";
+				htmlEmail += "<br>";
+				htmlEmail += "<h2>Endereço:</h2>";
+				htmlEmail += "<p>CEP: " + enderecoService.findByIdEndereco(clienteService.findClienteById(toDTO(pedido).getIdCliente()).getIdEndereco()).getCep() + "</p>";
+				htmlEmail += "<p>Rua: " + enderecoService.findByIdEndereco(clienteService.findClienteById(toDTO(pedido).getIdCliente()).getIdEndereco()).getRua() + "</p>";
+				htmlEmail += "<p>Numero: " + enderecoService.findByIdEndereco(clienteService.findClienteById(toDTO(pedido).getIdCliente()).getIdEndereco()).getNumero().toString() + "</p>";
+				htmlEmail += "<p>Bairro: " + enderecoService.findByIdEndereco(clienteService.findClienteById(toDTO(pedido).getIdCliente()).getIdEndereco()).getBairro() + "</p>";
+				htmlEmail += "<p>Cidade: " + enderecoService.findByIdEndereco(clienteService.findClienteById(toDTO(pedido).getIdCliente()).getIdEndereco()).getCidade() + "</p>";
+				htmlEmail += "<p>UF: " + enderecoService.findByIdEndereco(clienteService.findClienteById(toDTO(pedido).getIdCliente()).getIdEndereco()).getUf() + "</p>";
+				htmlEmail += "<p>Complemento: " + enderecoService.findByIdEndereco(clienteService.findClienteById(toDTO(pedido).getIdCliente()).getIdEndereco()).getComplemento() + "</p>";
+				
+				return htmlEmail;
 	}
 }
