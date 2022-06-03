@@ -11,11 +11,12 @@ import org.springframework.stereotype.Service;
 import com.residencia.ecommerce.dto.ClienteDTO;
 import com.residencia.ecommerce.entity.Cliente;
 import com.residencia.ecommerce.entity.Endereco;
+import com.residencia.ecommerce.entity.Pedido;
 import com.residencia.ecommerce.exception.ClienteException;
-import com.residencia.ecommerce.exception.CpfClienteException;
-import com.residencia.ecommerce.exception.EmailClienteException;
 import com.residencia.ecommerce.exception.EnderecoException;
+import com.residencia.ecommerce.exception.NoSuchElementFoundException;
 import com.residencia.ecommerce.repository.ClienteRepository;
+import com.residencia.ecommerce.repository.PedidoRepository;
 
 @Service
 public class ClienteService {
@@ -24,6 +25,9 @@ public class ClienteService {
 
 	@Autowired
 	EnderecoService enderecoService;
+	
+	@Autowired
+	PedidoRepository pedidoRepository;
 
 	public List<ClienteDTO> findAllCliente() {
 		List<Cliente> listClienteEntity = clienteRepository.findAll();
@@ -37,11 +41,19 @@ public class ClienteService {
 	}
 
 	public ClienteDTO findClienteById(Integer idCliente) {
-		return clienteRepository.findById(idCliente).isPresent() ? toDTO(clienteRepository.findById(idCliente).get())
+		ClienteDTO clienteDTO = clienteRepository.findById(idCliente).isPresent()
+				? toDTO(clienteRepository.findById(idCliente).get())
 				: null;
+		if (clienteDTO == null) {
+			throw new NoSuchElementFoundException("Não existe cliente como id " + idCliente);
+		} else {
+			return clienteDTO;
+		}
+
 	}
 
-	public ClienteDTO saveCliente(ClienteDTO clienteDTO) throws Exception {
+	public ClienteDTO saveCliente(ClienteDTO clienteDTO)
+			throws Exception {
 		clienteDTO.setCpf(clienteDTO.getCpf().replaceAll("[.-]", ""));
 		clienteDTO.setTelefone(clienteDTO.getTelefone().replaceAll("[()-]", ""));
 
@@ -49,54 +61,73 @@ public class ClienteService {
 		List<Cliente> clienteEmail = clienteRepository.findByEmail(clienteDTO.getEmail());
 
 		if (!clienteCpf.isEmpty()) {
-			throw new CpfClienteException("CPF ja foi registrado");
+			throw new ClienteException("CPF ja foi registrado");
 		} else if (!clienteEmail.isEmpty()) {
-			throw new EmailClienteException("Email ja foi registrado");
+			throw new ClienteException("Email ja foi registrado");
 		} else if (!validate(clienteDTO.getEmail())) {
-			throw new EmailClienteException("Email inválido");
+			throw new ClienteException("Email inválido");
 		} else if (!clienteDTO.getNomeCompleto().matches("[a-zA-Z][a-zA-Z ]*")) {
 			throw new ClienteException("Nome deve conter somente letras");
 		} else if (!clienteDTO.getTelefone().matches("[0-9]+")) {
-			throw new ClienteException("Numero de telefone deve corresponder ao formato: (11)11111-1111 ou somente numeros");
+			throw new ClienteException(
+					"Numero de telefone deve corresponder ao formato: (11)11111-1111 ou somente numeros");
 		} else {
 			Cliente cliente = toEntity(clienteDTO);
 			cliente = clienteRepository.save(cliente);
-			atualizarEnderecoCliente(cliente.getIdCliente(), clienteDTO.getIdEndereco());
+			if (cliente.getEndereco() != null) {
+				atualizarEnderecoCliente(cliente.getIdCliente(), clienteDTO.getIdEndereco());
+			}
 			return toDTO(cliente);
 		}
 	}
 
 	public ClienteDTO updateCliente(Integer idCliente, ClienteDTO clienteDTO)
-			throws EnderecoException, CpfClienteException, EmailClienteException, ClienteException {
+			throws Exception {
+		
 		clienteDTO.setIdCliente(idCliente);
 		clienteDTO.setCpf(clienteDTO.getCpf().replaceAll("[.-]", ""));
 		clienteDTO.setTelefone(clienteDTO.getTelefone().replaceAll("[()-]", ""));
+		
+		findClienteById(idCliente);
 
-		List<Cliente> clienteCpf = clienteRepository.findByCpf(clienteDTO.getCpf());
-		List<Cliente> clienteEmail = clienteRepository.findByEmail(clienteDTO.getEmail());
+		Cliente clienteAntigo = clienteRepository.findById(idCliente).get();
 
-		if (!clienteCpf.isEmpty()) {
-			throw new CpfClienteException("CPF ja foi registrado");
-		} else if (!clienteEmail.isEmpty()) {
-			throw new EmailClienteException("Email ja foi registrado");
+		if (!(clienteAntigo.getIdCliente() == clienteDTO.getIdCliente())) {
+			throw new ClienteException("Dados inseridos referentes a outro usuario");
 		} else if (!validate(clienteDTO.getEmail())) {
-			throw new EmailClienteException("Email inválido");
+			throw new ClienteException("Email inválido");
 		} else if (!clienteDTO.getNomeCompleto().matches("[a-zA-Z][a-zA-Z ]*")) {
 			throw new ClienteException("Nome deve conter somente letras");
-		} else if (clienteDTO.getTelefone().matches("[0-9]+")) {
-			throw new ClienteException("Numero de telefone deve corresponder ao formato: (11)11111-1111 ou somente numeros");
+		} else if (!clienteDTO.getTelefone().matches("[0-9]+")) {
+			throw new ClienteException(
+					"Numero de telefone deve corresponder ao formato: (11)11111-1111 ou somente numeros");
 		} else {
 			Cliente cliente = toEntity(clienteDTO);
-			atualizarEnderecoCliente(cliente.getIdCliente(), clienteDTO.getIdEndereco());
+			if (cliente.getEndereco() != null) {
+				atualizarEnderecoCliente(cliente.getIdCliente(), cliente.getEndereco().getIdEndereco());
+			}
 			return toDTO(clienteRepository.save(cliente));
 		}
 	}
 
-	public void deleteClienteById(Integer idCliente) {
-		clienteRepository.deleteById(idCliente);
+	public void deleteClienteById(Integer idCliente) throws Exception {
+		
+		if(!pedidoRepository.findByCliente(toEntity(findClienteById(idCliente))).isEmpty()) {
+			throw new ClienteException("Existem pedidos cadastrados para esse cliente, portanto ele não pode ser deletado");
+		}		
+		
+		ClienteDTO clienteDTO = clienteRepository.findById(idCliente).isPresent()
+				? toDTO(clienteRepository.findById(idCliente).get())
+				: null;
+		if (clienteDTO == null) {
+			throw new NoSuchElementFoundException("Não existe cliente como id " + idCliente);
+		} else {
+			clienteRepository.deleteById(idCliente);
+		}
+
 	}
 
-	public Boolean atualizarEnderecoCliente(Integer idCliente, Integer idEndereco) throws EnderecoException {
+	public Boolean atualizarEnderecoCliente(Integer idCliente, Integer idEndereco) throws Exception {
 
 		if (clienteRepository.findById(idCliente).isPresent() == true) {
 			Cliente cliente = clienteRepository.findById(idCliente).get();
@@ -105,15 +136,28 @@ public class ClienteService {
 			clienteRepository.save(cliente);
 			return true;
 		} else {
-			enderecoService.deleteByIdEndereco(idEndereco);
+			List<Integer> listaIdEnderecosCadastrados = new ArrayList<>();
+			for (Cliente cliente : clienteRepository.findAll()) {
+				if (cliente.getEndereco().getIdEndereco() == idEndereco) {
+					listaIdEnderecosCadastrados.add(cliente.getEndereco().getIdEndereco());
+				}
+
+			}
+			if (listaIdEnderecosCadastrados.isEmpty()) {
+				enderecoService.deleteByIdEndereco(idEndereco);
+			}
+
 			return false;
+
 		}
 	}
 
-	public Cliente toEntity(ClienteDTO clienteDTO) throws EnderecoException, ClienteException {
+	public Cliente toEntity(ClienteDTO clienteDTO) throws Exception {
 		Cliente cliente = new Cliente();
-		
-		cliente.setIdCliente(clienteDTO.getIdCliente());
+
+		if (clienteDTO.getIdCliente() != null) {
+			cliente.setIdCliente(clienteDTO.getIdCliente());
+		}
 		cliente.setCpf(clienteDTO.getCpf());
 		cliente.setDataNascimento(clienteDTO.getDataNascimento());
 		cliente.setEmail(clienteDTO.getEmail());
@@ -141,10 +185,10 @@ public class ClienteService {
 
 		return clienteDTO;
 	}
-	
+
 	public String putMaskCPF(String cpf) {
 		String cpfWithMask = "";
-		
+
 		cpfWithMask += cpf.charAt(0);
 		cpfWithMask += cpf.charAt(1);
 		cpfWithMask += cpf.charAt(2);
@@ -159,13 +203,13 @@ public class ClienteService {
 		cpfWithMask += "-";
 		cpfWithMask += cpf.charAt(9);
 		cpfWithMask += cpf.charAt(10);
-		
+
 		return cpfWithMask;
 	}
-	
+
 	public String putMaskOnPhone(String telefone) {
 		String phoneWithMask = "";
-		
+
 		phoneWithMask += "(";
 		phoneWithMask += telefone.charAt(0);
 		phoneWithMask += telefone.charAt(1);
@@ -180,7 +224,7 @@ public class ClienteService {
 		phoneWithMask += telefone.charAt(8);
 		phoneWithMask += telefone.charAt(9);
 		phoneWithMask += telefone.charAt(10);
-		
+
 		return phoneWithMask;
 	}
 

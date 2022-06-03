@@ -2,6 +2,7 @@ package com.residencia.ecommerce.controller;
 
 import java.util.List;
 
+import com.residencia.ecommerce.exception.CategoriaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import com.residencia.ecommerce.service.ItemPedidoService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/itemPedido")
@@ -46,13 +48,13 @@ public class ItemPedidoController {
 	
 	@PostMapping
 	@Operation(summary = "Cadastrar item pedido")
-	public ResponseEntity<ItemPedidoDTO> saveItemPedido(@RequestBody ItemPedidoDTO itemPedidoDTO) throws PedidoFinalizadoException, EnderecoException, ClienteException{
+	public ResponseEntity<ItemPedidoDTO> saveItemPedido(@Valid @RequestBody ItemPedidoDTO itemPedidoDTO) throws Exception {
 		return new ResponseEntity<>(itemPedidoService.saveItemPedido(itemPedidoDTO), HttpStatus.OK);
 	}
 	
 	@PutMapping
 	@Operation(summary = "Atualizar item pedido passando todos os dados")
-	public ResponseEntity<ItemPedidoDTO> updateItemPedido(@RequestParam Integer idItemPedido, @RequestBody ItemPedidoDTO itemPedidoDTO) throws EnderecoException, ClienteException{
+	public ResponseEntity<ItemPedidoDTO> updateItemPedido(@RequestParam Integer idItemPedido, @Valid  @RequestBody ItemPedidoDTO itemPedidoDTO) throws Exception {
 		return new ResponseEntity<>(itemPedidoService.updateItemPedido(idItemPedido, itemPedidoDTO), HttpStatus.OK);
 	}
 	

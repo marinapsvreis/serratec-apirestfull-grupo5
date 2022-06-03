@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 public class ItemPedidoDTO {
 
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -11,6 +14,7 @@ public class ItemPedidoDTO {
 	private Integer idPedido;
 	private Integer idProduto;
 	private Integer quantidadeItemPedido;
+	@NotBlank(message = "O preço de venda não pode ser nulo.")
 	private BigDecimal precoVendaItemPedido;
 	private BigDecimal percentualDescontoItemPedido;
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)

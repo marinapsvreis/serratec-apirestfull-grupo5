@@ -23,6 +23,7 @@ import com.residencia.ecommerce.service.PedidoService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/pedido")
@@ -45,19 +46,19 @@ public class PedidoController {
 
 	@PostMapping
 	@Operation(summary = "Cadastrar pedido")
-	public ResponseEntity<PedidoDTO> savePedido(@RequestBody PedidoDTO pedidoDTO) throws EnderecoException, ClienteException {
+	public ResponseEntity<PedidoDTO> savePedido(@Valid @RequestBody PedidoDTO pedidoDTO) throws Exception {
 		return new ResponseEntity<>(pedidoService.savePedido(pedidoDTO), HttpStatus.CREATED);
 	}
 
 	@PutMapping
 	@Operation(summary = "Atualizar pedido passando todos os dados")
-	public ResponseEntity<PedidoDTO> updatePedido(@RequestParam Integer idPedido, @RequestBody PedidoDTO pedidoDTO) throws PedidoFinalizadoException, EnderecoException, ClienteException {
+	public ResponseEntity<PedidoDTO> updatePedido(@RequestParam Integer idPedido, @Valid  @RequestBody PedidoDTO pedidoDTO) throws Exception {
 		return new ResponseEntity<>(pedidoService.updatePedido(idPedido, pedidoDTO), HttpStatus.OK);
 	}
 	
 	@PutMapping("/processar")
 	@Operation(summary = "Finalizar pedido")
-	public ResponseEntity<String> finalizarPedido(@RequestParam Integer idPedido) throws PedidoFinalizadoException, EnderecoException, ClienteException {
+	public ResponseEntity<String> finalizarPedido(@RequestParam Integer idPedido) throws Exception {
 		pedidoService.finalizarPedido(idPedido);
 		return new ResponseEntity<>("Pedido processado", HttpStatus.OK);
 	}

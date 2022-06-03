@@ -40,7 +40,7 @@ public class EnderecoController {
 
 	@GetMapping("/{idEndereco}")
 	@Operation(summary = "Listar endereço via ID Path")
-	public ResponseEntity<EnderecoDTO> findEnderecoById(@PathVariable Integer idEndereco) throws EnderecoException {
+	public ResponseEntity<EnderecoDTO> findEnderecoById(@PathVariable Integer idEndereco) throws Exception {
 
 		return new ResponseEntity<>(enderecoService.findByIdEndereco(idEndereco), HttpStatus.OK);
 	}
@@ -48,7 +48,7 @@ public class EnderecoController {
 	@PostMapping("/salvar")
 	@Operation(summary = "Cadastrar endereço através da API externa via CEP informando id do cliente para auto atualizar")
 	public ResponseEntity<EnderecoDTO> salvarEnderecoViaCep(@RequestParam Integer idCliente, @RequestParam String cep,
-			@RequestParam Integer numero) throws EnderecoException {
+			@RequestParam Integer numero) throws Exception {
 
 		return new ResponseEntity<>(enderecoService.saveEnderecoDTO(cep, numero, idCliente), HttpStatus.CREATED);
 	}
@@ -57,13 +57,13 @@ public class EnderecoController {
 	@PutMapping
 	@Operation(summary = "Atualizar endereço passando todos os dados")
 	public ResponseEntity<EnderecoDTO> updateEndereco(@RequestParam Integer idEndereco,
-			@Valid @RequestBody EnderecoDTO enderecoDTO) throws EnderecoException {
+			@Valid @RequestBody EnderecoDTO enderecoDTO) throws Exception {
 		return new ResponseEntity<>(enderecoService.updateEnderecoDTO(idEndereco, enderecoDTO), HttpStatus.OK);
 	}
 
 	@DeleteMapping
 	@Operation(summary = "Deletar endereço via ID")
-	public ResponseEntity<String> deleteCliente(@RequestParam Integer idEndereco) throws EnderecoException {
+	public ResponseEntity<String> deleteCliente(@RequestParam Integer idEndereco) throws Exception {
 
 		enderecoService.deleteByIdEndereco(idEndereco);
 		return new ResponseEntity<>("", HttpStatus.OK);

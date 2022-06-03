@@ -3,6 +3,7 @@ package com.residencia.ecommerce.exception;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,26 +46,6 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
 	}
 
-	@ExceptionHandler(CpfClienteException.class)
-	public final ResponseEntity<Object> handleCpfClienteException(CpfClienteException ex, WebRequest request) {
-		List<String> details = new ArrayList<>();
-		details.add(ex.getLocalizedMessage());
-		HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
-		ErrorResponse error = new ErrorResponse(httpStatus.value(), "Ja foi registrado um cliente com o CPF informado",
-				details);
-		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-	}
-
-	@ExceptionHandler(EmailClienteException.class)
-	public final ResponseEntity<Object> handleEmailClienteException(EmailClienteException ex, WebRequest request) {
-		List<String> details = new ArrayList<>();
-		details.add(ex.getLocalizedMessage());
-		HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
-		ErrorResponse error = new ErrorResponse(httpStatus.value(),
-				"Ocorreu um erro no email", details);
-		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-	}
-
 	@ExceptionHandler(EnderecoException.class)
 	public final ResponseEntity<Object> handleEnderecoException(EnderecoException ex, WebRequest request) {
 		List<String> details = new ArrayList<>();
@@ -80,6 +61,24 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		details.add(ex.getLocalizedMessage());
 		HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
 		ErrorResponse error = new ErrorResponse(httpStatus.value(), "Ocorreu um erro no cadastro do cliente", details);
+		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(CategoriaException.class)
+	public final ResponseEntity<Object> handleCategoriaException(CategoriaException ex, WebRequest request) {
+		List<String> details = new ArrayList<>();
+		details.add(ex.getLocalizedMessage());
+		HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+		ErrorResponse error = new ErrorResponse(httpStatus.value(), "Ocorreu um erro no cadastro da categoria", details);
+		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public final ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request) {
+		List<String> details = new ArrayList<>();
+		details.add(ex.getLocalizedMessage());
+		HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+		ErrorResponse error = new ErrorResponse(httpStatus.value(), "Ocorreu um erro nos dados", details);
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 

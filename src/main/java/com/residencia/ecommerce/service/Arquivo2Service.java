@@ -15,8 +15,6 @@ public class Arquivo2Service {
 	@Value("${pasta.arquivos.imagem}")
     private Path path;
 
-    private String diretorioArquivos;
-
     public void criarArquivo(String fileName, MultipartFile file) {
 
         try {

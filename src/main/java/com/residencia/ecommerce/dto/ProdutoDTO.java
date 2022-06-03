@@ -5,18 +5,31 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class ProdutoDTO {
 
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Integer idProduto;
+	@NotBlank(message = "Nome do produoto não pode ser null")
+	@Size(max = 30, message = "Nome do produto não pode passar de 30 caracteres")
 	private String nomeProduto;
+	@Size(max = 100, message = "Descrição do produto não pode ter mais que 100 caracteres")
 	private String descricaoProduto;
+	@Min(value = 0, message="Estoque do produto não pode ser menor que 0")
+	@NotNull(message = "Estoque do produto não pode ser nulo")
 	private Integer qtdEstoqueProduto;
 
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Date dataCadastroProduto;
+	@Min(value = 0, message="Valor unitario nao pode ser menor que 0")
+	@NotNull(message = "Valor unitario do produto não pode ser nulo")
 	private BigDecimal valorUnitario;
 	private String nomeImagemProduto;
 	private Integer idCategoria;

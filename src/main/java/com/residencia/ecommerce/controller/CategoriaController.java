@@ -2,6 +2,7 @@ package com.residencia.ecommerce.controller;
 
 import java.util.List;
 
+import com.residencia.ecommerce.exception.CategoriaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import com.residencia.ecommerce.service.CategoriaService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/categoria")
@@ -36,27 +38,27 @@ public class CategoriaController {
 
 	@GetMapping("/{idCategoria}")
 	@Operation(summary = "Listar categoria via ID Path")
-	public ResponseEntity<CategoriaDTO> findCategoriaById(@PathVariable Integer idCategoria) {
+	public ResponseEntity<CategoriaDTO> findCategoriaById(@Valid @PathVariable Integer idCategoria) throws Exception {
 		return new ResponseEntity<>(categoriaService.findCategoriaByIdDTO(idCategoria), HttpStatus.OK);
 	}
 
 	@PostMapping
 	@Operation(summary = "Cadastrar categoria")
-	public ResponseEntity<CategoriaDTO> saveCategoriaDTO(@RequestBody CategoriaDTO categoriaDTO) {
+	public ResponseEntity<CategoriaDTO> saveCategoriaDTO(@Valid @RequestBody CategoriaDTO categoriaDTO) throws Exception {
 		categoriaService.saveCategoriaDTO(categoriaDTO);
 		return new ResponseEntity<>(categoriaDTO, HttpStatus.CREATED);
 	}
 
 	@PutMapping
 	@Operation(summary = "Atualizar categoria passando todos os dados")
-	public ResponseEntity<CategoriaDTO> updateCategoriaDTO(@RequestParam Integer idCategoria, @RequestBody CategoriaDTO categoriaDTO) {
+	public ResponseEntity<CategoriaDTO> updateCategoriaDTO(@RequestParam Integer idCategoria, @RequestBody CategoriaDTO categoriaDTO) throws Exception {
 		return new ResponseEntity<>(categoriaService.updateCategoria(idCategoria, categoriaDTO), HttpStatus.OK);
 	}
 
 
 	@DeleteMapping("/{idCategoria}")
 	@Operation(summary = "Deletar categoria via ID")
-	public ResponseEntity<String> deleteCategoriaById(@PathVariable Integer idCategoria) {
+	public ResponseEntity<String> deleteCategoriaById(@PathVariable Integer idCategoria) throws Exception {
 		categoriaService.deleteCategoriaById(idCategoria);
 		return new ResponseEntity<>("", HttpStatus.OK);
 	}

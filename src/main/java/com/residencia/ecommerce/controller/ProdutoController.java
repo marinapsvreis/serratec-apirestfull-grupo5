@@ -2,6 +2,7 @@ package com.residencia.ecommerce.controller;
 
 import java.util.List;
 
+import com.residencia.ecommerce.exception.CategoriaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,6 +26,7 @@ import com.residencia.ecommerce.service.ProdutoService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/produto")
@@ -48,20 +50,20 @@ public class ProdutoController {
 	
 	@PostMapping
 	@Operation(summary = "Cadastrar produto")
-	public ResponseEntity<ProdutoDTO> saveProdutoDTO(@RequestBody ProdutoDTO produtoDTO) throws DescricaoProdutoException{
+	public ResponseEntity<ProdutoDTO> saveProdutoDTO(@Valid @RequestBody ProdutoDTO produtoDTO) throws Exception {
 		produtoService.saveProdutoDTO(produtoDTO);
 		return new ResponseEntity<>(produtoDTO, HttpStatus.CREATED);
 	}
 	
 	@PostMapping(value = "/com-foto", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	@Operation(summary = "Cadastrar produto com foto")
-	public ResponseEntity<Produto> saveProdutoComFoto(@RequestPart("produto") String produtoDTO, @RequestPart("file") MultipartFile file){
+	public ResponseEntity<Produto> saveProdutoComFoto(@Valid @RequestPart("produto") String produtoDTO, @RequestPart("file") MultipartFile file) throws Exception {
 		return new ResponseEntity<>(produtoService.saveProdutoComFoto(produtoDTO , file), HttpStatus.CREATED);
 	}
 	
 	@PutMapping
 	@Operation(summary = "Atualizar produto passando todos os dados")
-	public ResponseEntity<ProdutoDTO> updateProduto(@RequestParam Integer idProduto, @RequestBody ProdutoDTO produtoDTO){
+	public ResponseEntity<ProdutoDTO> updateProduto(@RequestParam Integer idProduto, @Valid @RequestBody ProdutoDTO produtoDTO) throws Exception {
 		return new ResponseEntity<>(produtoService.updateProdutoDTO(idProduto, produtoDTO), HttpStatus.OK);
 	}
 	

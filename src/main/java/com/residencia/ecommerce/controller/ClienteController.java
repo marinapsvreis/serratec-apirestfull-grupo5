@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.residencia.ecommerce.dto.ClienteDTO;
-import com.residencia.ecommerce.exception.EmailClienteException;
+import com.residencia.ecommerce.exception.ClienteException;
 import com.residencia.ecommerce.exception.EnderecoException;
 import com.residencia.ecommerce.service.ClienteService;
 
@@ -53,13 +53,13 @@ public class ClienteController {
 	@PutMapping
 	@Operation(summary = "Atualizar cliente passando todos os dados")
 	public ResponseEntity<ClienteDTO> updateCliente(@RequestParam Integer idCliente,
-			@Valid @RequestBody ClienteDTO clienteDTO) throws EnderecoException, Exception, EmailClienteException {
+			@Valid @RequestBody ClienteDTO clienteDTO) throws EnderecoException, Exception {
 		return new ResponseEntity<>(clienteService.updateCliente(idCliente, clienteDTO), HttpStatus.OK);
 	}
 
 	@DeleteMapping
 	@Operation(summary = "Deletar cliente via ID")
-	public ResponseEntity<String> deleteCliente(@RequestParam Integer idCliente) {
+	public ResponseEntity<String> deleteCliente(@RequestParam Integer idCliente) throws Exception {
 		clienteService.deleteClienteById(idCliente);
 		return new ResponseEntity<>("", HttpStatus.OK);
 	}

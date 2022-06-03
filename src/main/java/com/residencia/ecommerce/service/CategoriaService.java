@@ -3,6 +3,8 @@ package com.residencia.ecommerce.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.residencia.ecommerce.exception.CategoriaException;
+import com.residencia.ecommerce.exception.NoSuchElementFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +19,7 @@ public class CategoriaService {
 
 	public List<CategoriaDTO> findAllCategoria() {		
 		List<Categoria> categoriaEntityList = categoriaRepository.findAll();
-		List<CategoriaDTO> categoriaDTOList = new ArrayList();
+		List<CategoriaDTO> categoriaDTOList = new ArrayList<>();
 		
 		for(Categoria categoria : categoriaEntityList) {
 			categoriaDTOList.add(toDTO(categoria));
@@ -25,23 +27,37 @@ public class CategoriaService {
 		
 		return categoriaDTOList;
 	}
-	public CategoriaDTO findCategoriaByIdDTO(Integer idCategoria) {
-		return categoriaRepository.findById(idCategoria).isPresent() ? 
-				toDTO(categoriaRepository.findById(idCategoria).get()) 
+	public CategoriaDTO findCategoriaByIdDTO(Integer idCategoria) throws Exception {
+		CategoriaDTO categoriaDTO = categoriaRepository.findById(idCategoria).isPresent() ?
+				toDTO(categoriaRepository.findById(idCategoria).get())
 				: null;
+		if (categoriaDTO == null) {
+			throw new NoSuchElementFoundException("Não existe categoria com o id " + idCategoria);
+		}
+
+		return categoriaDTO;
 	}
 
-	public Categoria saveCategoriaDTO(CategoriaDTO categoriaDTO) {
+	public Categoria saveCategoriaDTO(CategoriaDTO categoriaDTO) throws Exception {
 		return categoriaRepository.save(toEntity(categoriaDTO));
 	}
 
-	public CategoriaDTO updateCategoria(Integer idCategoria, CategoriaDTO categoriaDTO) {
+	public CategoriaDTO updateCategoria(Integer idCategoria, CategoriaDTO categoriaDTO) throws Exception {
 		categoriaDTO.setIdCategoria(idCategoria);
 		return toDTO(categoriaRepository.save(toEntity(categoriaDTO)));
+
 	}
 
-	public void deleteCategoriaById(Integer id) {
-		categoriaRepository.deleteById(id);
+	public void deleteCategoriaById(Integer idCategoria) throws CategoriaException {
+		CategoriaDTO categoriaDTO = categoriaRepository.findById(idCategoria).isPresent() ?
+				toDTO(categoriaRepository.findById(idCategoria).get())
+				: null;
+		if (categoriaDTO == null) {
+			throw new NoSuchElementFoundException("Não existe categoria com o id " + idCategoria);
+		} else {
+			categoriaRepository.deleteById(idCategoria);
+		}
+
 	}
 	
 	public Categoria toEntity(CategoriaDTO categoriaDTO) {

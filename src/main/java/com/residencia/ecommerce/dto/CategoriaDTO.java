@@ -2,11 +2,18 @@ package com.residencia.ecommerce.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 public class CategoriaDTO {
 
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Integer idCategoria;
+
+	@NotBlank(message = "Nome da categoria não poder ser nulo")
+	@Size(max = 30, message = "Nome da categoria não pode ter mais que 30 caracteres")
 	private String nomeCategoria;
+	@Size(max = 150, message = "Nome da categoria não pode ter mais que 150 caracteres")
 	private String descricaoCategoria;
 
 	public Integer getIdCategoria() {

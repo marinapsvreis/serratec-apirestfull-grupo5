@@ -3,6 +3,7 @@ package com.residencia.ecommerce.dto;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -11,17 +12,23 @@ public class EnderecoDTO {
 
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Integer idEndereco;
+	@Size(max = 9, message = "Cep não pode ter mais que 9 caracteres")
 	@NotBlank(message = "O cep não pode ser nulo.")
 	private String cep;
 	@NotBlank(message = "A rua não pode ser nula.")
+	@Size(max = 100, message = "Rua não pode ter mais que 100 caracteres")
 	private String rua;
+	@Size(max = 30, message = "Bairro não pode ter mais que 30 caracteres")
 	@NotBlank(message = "O bairro não pode ser nulo.")
 	private String bairro;
+	@Size(max = 30, message = "Cidade não pode ter mais que 30 caracteres")
 	private String cidade;
 	@Min(value = 1, message="Numero nao pode ser menor que 1")
 	@NotNull(message = "Numero não pode ser nulo")
 	private Integer numero;
+	@Size(max = 20, message = "Complemento não pode ter mais que 20 caracteres")
 	private String complemento;
+	@Size(max = 2, message = "UF não pode ter mais que 2 caracteres")
 	private String uf;
 
 	public Integer getIdEndereco() {
