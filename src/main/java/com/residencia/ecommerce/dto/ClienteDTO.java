@@ -30,7 +30,7 @@ public class ClienteDTO {
 	private String cpf;
 
 	@Schema(example = "(11)11111-1111", description = "Telefone do cliente")
-	@Size(max = 11, message = "Telefone não pode ter mais que 11 caracteres")
+	@Size(max = 14, message = "Telefone não pode ter mais que 11 caracteres")
 	private String telefone;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")

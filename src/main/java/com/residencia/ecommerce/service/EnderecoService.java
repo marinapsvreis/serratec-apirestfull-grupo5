@@ -38,7 +38,7 @@ public class EnderecoService {
 		return listEnderecoDTO;
 	}
 
-	public EnderecoDTO findByIdEndereco(Integer idEndereco) throws EnderecoException {
+	public EnderecoDTO findByIdEndereco(Integer idEndereco) throws Exception {
 		if (!enderecoRepository.findById(idEndereco).isPresent()) {
 			throw new NoSuchElementFoundException("Não existe endereço com o id " + idEndereco);
 		} else {
@@ -49,7 +49,7 @@ public class EnderecoService {
 
 	}
 
-	public EnderecoDTO saveEnderecoDTO(String cep, Integer numero, Integer idCliente) throws EnderecoException {
+	public EnderecoDTO saveEnderecoDTO(String cep, Integer numero, Integer idCliente) throws Exception {
 		String cepFormatado = "";
 		cepFormatado = cep.replaceAll("[.-]", "");
 
@@ -81,7 +81,7 @@ public class EnderecoService {
 		return toDTO(enderecoRepository.save(endereco2));
 	}
 
-	public EnderecoDTO updateEnderecoDTO(Integer idEndereco, EnderecoDTO enderecoDTO) throws EnderecoException {
+	public EnderecoDTO updateEnderecoDTO(Integer idEndereco, EnderecoDTO enderecoDTO) throws Exception {
 		if (!enderecoRepository.findById(idEndereco).isPresent()) {
 			throw new NoSuchElementFoundException("Não existe endereço com o id " + idEndereco);
 		}
@@ -108,7 +108,7 @@ public class EnderecoService {
 		return toDTO(enderecoRepository.save(toEntity(enderecoDTO)));
 	}
 
-	public void deleteByIdEndereco(Integer idEndereco) throws EnderecoException {
+	public void deleteByIdEndereco(Integer idEndereco) throws Exception {
 		List<Integer> listaIdEnderecosCadastrados = new ArrayList<>();
 		for (Cliente cliente : clienteRepository.findAll()) {
 			if (cliente.getEndereco().getIdEndereco() == idEndereco) {

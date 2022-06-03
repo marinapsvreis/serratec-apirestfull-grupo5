@@ -33,24 +33,24 @@ public class CategoriaController {
 	}
 
 	@GetMapping("/{idCategoria}")
-	public ResponseEntity<CategoriaDTO> findCategoriaById(@Valid @PathVariable Integer idCategoria) throws CategoriaException {
+	public ResponseEntity<CategoriaDTO> findCategoriaById(@Valid @PathVariable Integer idCategoria) throws Exception {
 		return new ResponseEntity<>(categoriaService.findCategoriaByIdDTO(idCategoria), HttpStatus.OK);
 	}
 
 	@PostMapping
-	public ResponseEntity<CategoriaDTO> saveCategoriaDTO(@Valid @RequestBody CategoriaDTO categoriaDTO) throws CategoriaException {
+	public ResponseEntity<CategoriaDTO> saveCategoriaDTO(@Valid @RequestBody CategoriaDTO categoriaDTO) throws Exception {
 		categoriaService.saveCategoriaDTO(categoriaDTO);
 		return new ResponseEntity<>(categoriaDTO, HttpStatus.CREATED);
 	}
 
 	@PutMapping
-	public ResponseEntity<CategoriaDTO> updateCategoriaDTO(@RequestParam Integer idCategoria, @RequestBody CategoriaDTO categoriaDTO) throws CategoriaException {
+	public ResponseEntity<CategoriaDTO> updateCategoriaDTO(@RequestParam Integer idCategoria, @RequestBody CategoriaDTO categoriaDTO) throws Exception {
 		return new ResponseEntity<>(categoriaService.updateCategoria(idCategoria, categoriaDTO), HttpStatus.OK);
 	}
 
 
 	@DeleteMapping("/{idCategoria}")
-	public ResponseEntity<String> deleteCategoriaById(@PathVariable Integer idCategoria) throws CategoriaException {
+	public ResponseEntity<String> deleteCategoriaById(@PathVariable Integer idCategoria) throws Exception {
 		categoriaService.deleteCategoriaById(idCategoria);
 		return new ResponseEntity<>("", HttpStatus.OK);
 	}

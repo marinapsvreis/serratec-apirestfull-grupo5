@@ -34,14 +34,14 @@ public class EnderecoController {
 	}
 
 	@GetMapping("/{idEndereco}")
-	public ResponseEntity<EnderecoDTO> findEnderecoById(@PathVariable Integer idEndereco) throws EnderecoException {
+	public ResponseEntity<EnderecoDTO> findEnderecoById(@PathVariable Integer idEndereco) throws Exception {
 
 		return new ResponseEntity<>(enderecoService.findByIdEndereco(idEndereco), HttpStatus.OK);
 	}
 
 	@PostMapping("/salvar")
 	public ResponseEntity<EnderecoDTO> salvarEnderecoViaCep(@RequestParam Integer idCliente, @RequestParam String cep,
-			@RequestParam Integer numero) throws EnderecoException {
+			@RequestParam Integer numero) throws Exception {
 
 		return new ResponseEntity<>(enderecoService.saveEnderecoDTO(cep, numero, idCliente), HttpStatus.CREATED);
 	}
@@ -49,12 +49,12 @@ public class EnderecoController {
 	
 	@PutMapping
 	public ResponseEntity<EnderecoDTO> updateEndereco(@RequestParam Integer idEndereco,
-			@Valid @RequestBody EnderecoDTO enderecoDTO) throws EnderecoException {
+			@Valid @RequestBody EnderecoDTO enderecoDTO) throws Exception {
 		return new ResponseEntity<>(enderecoService.updateEnderecoDTO(idEndereco, enderecoDTO), HttpStatus.OK);
 	}
 
 	@DeleteMapping
-	public ResponseEntity<String> deleteCliente(@RequestParam Integer idEndereco) throws EnderecoException {
+	public ResponseEntity<String> deleteCliente(@RequestParam Integer idEndereco) throws Exception {
 
 		enderecoService.deleteByIdEndereco(idEndereco);
 		return new ResponseEntity<>("", HttpStatus.OK);

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.residencia.ecommerce.dto.ClienteDTO;
+import com.residencia.ecommerce.exception.ClienteException;
 import com.residencia.ecommerce.exception.EnderecoException;
 import com.residencia.ecommerce.service.ClienteService;
 
@@ -49,7 +50,7 @@ public class ClienteController {
 	}
 
 	@DeleteMapping
-	public ResponseEntity<String> deleteCliente(@RequestParam Integer idCliente) {
+	public ResponseEntity<String> deleteCliente(@RequestParam Integer idCliente) throws Exception {
 		clienteService.deleteClienteById(idCliente);
 		return new ResponseEntity<>("", HttpStatus.OK);
 	}

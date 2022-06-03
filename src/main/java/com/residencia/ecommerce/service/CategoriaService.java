@@ -19,7 +19,7 @@ public class CategoriaService {
 
 	public List<CategoriaDTO> findAllCategoria() {		
 		List<Categoria> categoriaEntityList = categoriaRepository.findAll();
-		List<CategoriaDTO> categoriaDTOList = new ArrayList();
+		List<CategoriaDTO> categoriaDTOList = new ArrayList<>();
 		
 		for(Categoria categoria : categoriaEntityList) {
 			categoriaDTOList.add(toDTO(categoria));
@@ -27,7 +27,7 @@ public class CategoriaService {
 		
 		return categoriaDTOList;
 	}
-	public CategoriaDTO findCategoriaByIdDTO(Integer idCategoria) throws CategoriaException {
+	public CategoriaDTO findCategoriaByIdDTO(Integer idCategoria) throws Exception {
 		CategoriaDTO categoriaDTO = categoriaRepository.findById(idCategoria).isPresent() ?
 				toDTO(categoriaRepository.findById(idCategoria).get())
 				: null;
@@ -38,11 +38,11 @@ public class CategoriaService {
 		return categoriaDTO;
 	}
 
-	public Categoria saveCategoriaDTO(CategoriaDTO categoriaDTO) throws CategoriaException {
+	public Categoria saveCategoriaDTO(CategoriaDTO categoriaDTO) throws Exception {
 		return categoriaRepository.save(toEntity(categoriaDTO));
 	}
 
-	public CategoriaDTO updateCategoria(Integer idCategoria, CategoriaDTO categoriaDTO) throws CategoriaException {
+	public CategoriaDTO updateCategoria(Integer idCategoria, CategoriaDTO categoriaDTO) throws Exception {
 		categoriaDTO.setIdCategoria(idCategoria);
 		return toDTO(categoriaRepository.save(toEntity(categoriaDTO)));
 

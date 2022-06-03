@@ -57,7 +57,7 @@ public class PedidoService {
 				: null;
 	}
 
-	public PedidoDTO savePedido(PedidoDTO pedidoDTO) throws EnderecoException, ClienteException {
+	public PedidoDTO savePedido(PedidoDTO pedidoDTO) throws Exception {
 		pedidoDTO.setDataPedido(new Date());
 		pedidoDTO.setValorTotalPedidoBruto(BigDecimal.valueOf(0));
 		pedidoDTO.setValorTotalPedidoLiquido(BigDecimal.valueOf(0));
@@ -66,7 +66,7 @@ public class PedidoService {
 		return toDTO(pedidoRepository.save(toEntity(pedidoDTO)));
 	}
 
-	public PedidoDTO updatePedido(Integer idPedido, PedidoDTO pedidoDTO) throws PedidoFinalizadoException, EnderecoException, ClienteException {
+	public PedidoDTO updatePedido(Integer idPedido, PedidoDTO pedidoDTO) throws Exception {
 		if(pedidoDTO.getStatus() == true) {
 			throw new PedidoFinalizadoException("Pedido já finalizado não pode ser alterado");
 		}else {
@@ -79,7 +79,7 @@ public class PedidoService {
 		pedidoRepository.deleteById(id);
 	}
 	
-	public void finalizarPedido(Integer idPedido) throws PedidoFinalizadoException, EnderecoException, ClienteException {
+	public void finalizarPedido(Integer idPedido) throws Exception {
 		Pedido pedido = toEntity(findPedidoById(idPedido));
 		if(pedido.getStatus() == true) {
 			throw new PedidoFinalizadoException("Pedido já foi finalizado");
@@ -115,7 +115,7 @@ public class PedidoService {
 		}		
 	}
 
-	public Pedido toEntity(PedidoDTO pedidoDTO) throws EnderecoException, ClienteException {
+	public Pedido toEntity(PedidoDTO pedidoDTO) throws Exception {
 		Pedido pedido = new Pedido();
 		
 		pedido.setCliente(clienteService.toEntity(clienteService.findClienteById(pedidoDTO.getIdCliente())));
@@ -147,7 +147,7 @@ public class PedidoService {
 		return pedidoDTO;
 	}
 	
-	public String gerarHTMLEmail(Pedido pedido) throws EnderecoException {
+	public String gerarHTMLEmail(Pedido pedido) throws Exception {
 		List<ItemPedido> listProdutosPedido = new ArrayList<>();
 		
 		List<ItemPedido> todosItemPedido = itemPedidoRepository.findAll();

@@ -40,17 +40,17 @@ public class PedidoController {
 	}
 
 	@PostMapping
-	public ResponseEntity<PedidoDTO> savePedido(@Valid @RequestBody PedidoDTO pedidoDTO) throws EnderecoException, ClienteException {
+	public ResponseEntity<PedidoDTO> savePedido(@Valid @RequestBody PedidoDTO pedidoDTO) throws Exception {
 		return new ResponseEntity<>(pedidoService.savePedido(pedidoDTO), HttpStatus.CREATED);
 	}
 
 	@PutMapping
-	public ResponseEntity<PedidoDTO> updatePedido(@RequestParam Integer idPedido, @Valid  @RequestBody PedidoDTO pedidoDTO) throws PedidoFinalizadoException, EnderecoException, ClienteException {
+	public ResponseEntity<PedidoDTO> updatePedido(@RequestParam Integer idPedido, @Valid  @RequestBody PedidoDTO pedidoDTO) throws Exception {
 		return new ResponseEntity<>(pedidoService.updatePedido(idPedido, pedidoDTO), HttpStatus.OK);
 	}
 	
 	@PutMapping("/processar")
-	public ResponseEntity<String> finalizarPedido(@RequestParam Integer idPedido) throws PedidoFinalizadoException, EnderecoException, ClienteException {
+	public ResponseEntity<String> finalizarPedido(@RequestParam Integer idPedido) throws Exception {
 		pedidoService.finalizarPedido(idPedido);
 		return new ResponseEntity<>("Pedido processado", HttpStatus.OK);
 	}

@@ -34,7 +34,7 @@ public class ProdutoService {
 	
 	public List<ProdutoDTO> findAllProduto(){
 		List<Produto> produtoListEntity = produtoRepository.findAll();
-		List<ProdutoDTO> produtoListDTO = new ArrayList();
+		List<ProdutoDTO> produtoListDTO = new ArrayList<>();
 		
 		for(Produto produto : produtoListEntity) {
 			produtoListDTO.add(toDTO(produto));
@@ -49,14 +49,14 @@ public class ProdutoService {
 				: null;
 	}
 	
-	public Produto saveProdutoDTO(ProdutoDTO produtoDTO) throws DescricaoProdutoException, CategoriaException {
+	public Produto saveProdutoDTO(ProdutoDTO produtoDTO) throws Exception {
 		if(!produtoRepository.findByDescricaoProduto(produtoDTO.getDescricaoProduto()).isEmpty()) {
 			throw new DescricaoProdutoException("Essa descrição ja foi utilizada em outro produto");
 		}
 			return produtoRepository.save(toEntity(produtoDTO));		
 	}
 	
-	public ProdutoDTO updateProdutoDTO(Integer idProduto, ProdutoDTO produtoDTO) throws CategoriaException {
+	public ProdutoDTO updateProdutoDTO(Integer idProduto, ProdutoDTO produtoDTO) throws Exception {
 		produtoDTO.setIdProduto(idProduto);
 		return toDTO(produtoRepository.save(toEntity(produtoDTO)));
 	}
@@ -65,7 +65,7 @@ public class ProdutoService {
 		produtoRepository.deleteById(idProduto);
 	}
 
-	public Produto toEntity(ProdutoDTO produtoDTO) throws CategoriaException {
+	public Produto toEntity(ProdutoDTO produtoDTO) throws Exception {
 		Produto produto = new Produto();
 		
 		
@@ -96,7 +96,7 @@ public class ProdutoService {
 		return produtoDTO;
 	}
 
-	public Produto saveProdutoComFoto(String produtoString, MultipartFile file) throws CategoriaException {
+	public Produto saveProdutoComFoto(String produtoString, MultipartFile file) throws Exception {
 		ProdutoDTO novoProduto = new ProdutoDTO();
         
         try {

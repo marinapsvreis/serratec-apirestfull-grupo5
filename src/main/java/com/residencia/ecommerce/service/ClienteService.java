@@ -2,18 +2,21 @@ package com.residencia.ecommerce.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.residencia.ecommerce.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.residencia.ecommerce.dto.ClienteDTO;
 import com.residencia.ecommerce.entity.Cliente;
 import com.residencia.ecommerce.entity.Endereco;
+import com.residencia.ecommerce.entity.Pedido;
+import com.residencia.ecommerce.exception.ClienteException;
+import com.residencia.ecommerce.exception.EnderecoException;
+import com.residencia.ecommerce.exception.NoSuchElementFoundException;
 import com.residencia.ecommerce.repository.ClienteRepository;
+import com.residencia.ecommerce.repository.PedidoRepository;
 
 @Service
 public class ClienteService {
@@ -22,6 +25,9 @@ public class ClienteService {
 
 	@Autowired
 	EnderecoService enderecoService;
+	
+	@Autowired
+	PedidoRepository pedidoRepository;
 
 	public List<ClienteDTO> findAllCliente() {
 		List<Cliente> listClienteEntity = clienteRepository.findAll();
@@ -47,7 +53,7 @@ public class ClienteService {
 	}
 
 	public ClienteDTO saveCliente(ClienteDTO clienteDTO)
-			throws CpfClienteException, EmailClienteException, ClienteException, EnderecoException {
+			throws Exception {
 		clienteDTO.setCpf(clienteDTO.getCpf().replaceAll("[.-]", ""));
 		clienteDTO.setTelefone(clienteDTO.getTelefone().replaceAll("[()-]", ""));
 
@@ -76,16 +82,18 @@ public class ClienteService {
 	}
 
 	public ClienteDTO updateCliente(Integer idCliente, ClienteDTO clienteDTO)
-			throws EnderecoException, ClienteException {
+			throws Exception {
+		
 		clienteDTO.setIdCliente(idCliente);
 		clienteDTO.setCpf(clienteDTO.getCpf().replaceAll("[.-]", ""));
 		clienteDTO.setTelefone(clienteDTO.getTelefone().replaceAll("[()-]", ""));
+		
+		findClienteById(idCliente);
 
-		Optional<Cliente> clienteAntigo = clienteRepository.findById(idCliente);
+		Cliente clienteAntigo = clienteRepository.findById(idCliente).get();
 
-		if (!(clienteAntigo.get().getEmail() == clienteDTO.getEmail()
-				|| clienteAntigo.get().getCpf() == clienteDTO.getCpf())) {
-			throw new ClienteException("Dados inseridos referentes a outro ususario");
+		if (!(clienteAntigo.getIdCliente() == clienteDTO.getIdCliente())) {
+			throw new ClienteException("Dados inseridos referentes a outro usuario");
 		} else if (!validate(clienteDTO.getEmail())) {
 			throw new ClienteException("Email inválido");
 		} else if (!clienteDTO.getNomeCompleto().matches("[a-zA-Z][a-zA-Z ]*")) {
@@ -102,7 +110,12 @@ public class ClienteService {
 		}
 	}
 
-	public void deleteClienteById(Integer idCliente) {
+	public void deleteClienteById(Integer idCliente) throws Exception {
+		
+		if(!pedidoRepository.findByCliente(toEntity(findClienteById(idCliente))).isEmpty()) {
+			throw new ClienteException("Existem pedidos cadastrados para esse cliente, portanto ele não pode ser deletado");
+		}		
+		
 		ClienteDTO clienteDTO = clienteRepository.findById(idCliente).isPresent()
 				? toDTO(clienteRepository.findById(idCliente).get())
 				: null;
@@ -114,7 +127,7 @@ public class ClienteService {
 
 	}
 
-	public Boolean atualizarEnderecoCliente(Integer idCliente, Integer idEndereco) throws EnderecoException {
+	public Boolean atualizarEnderecoCliente(Integer idCliente, Integer idEndereco) throws Exception {
 
 		if (clienteRepository.findById(idCliente).isPresent() == true) {
 			Cliente cliente = clienteRepository.findById(idCliente).get();
@@ -139,7 +152,7 @@ public class ClienteService {
 		}
 	}
 
-	public Cliente toEntity(ClienteDTO clienteDTO) throws EnderecoException, ClienteException {
+	public Cliente toEntity(ClienteDTO clienteDTO) throws Exception {
 		Cliente cliente = new Cliente();
 
 		if (clienteDTO.getIdCliente() != null) {
