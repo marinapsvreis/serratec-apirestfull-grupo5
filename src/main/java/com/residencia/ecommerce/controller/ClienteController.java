@@ -2,6 +2,8 @@ package com.residencia.ecommerce.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.residencia.ecommerce.dto.ClienteDTO;
+import com.residencia.ecommerce.exception.EmailClienteException;
 import com.residencia.ecommerce.exception.EnderecoException;
 import com.residencia.ecommerce.service.ClienteService;
 
@@ -36,13 +39,13 @@ public class ClienteController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ClienteDTO> saveCliente(@RequestBody ClienteDTO clienteDTO) throws Exception {
+	public ResponseEntity<ClienteDTO> saveCliente(@Valid @RequestBody ClienteDTO clienteDTO) throws Exception {
 		return new ResponseEntity<>(clienteService.saveCliente(clienteDTO), HttpStatus.CREATED);
 	}
 
 	@PutMapping
 	public ResponseEntity<ClienteDTO> updateCliente(@RequestParam Integer idCliente,
-			@RequestBody ClienteDTO clienteDTO) throws EnderecoException {
+			@Valid @RequestBody ClienteDTO clienteDTO) throws EnderecoException, Exception, EmailClienteException {
 		return new ResponseEntity<>(clienteService.updateCliente(idCliente, clienteDTO), HttpStatus.OK);
 	}
 

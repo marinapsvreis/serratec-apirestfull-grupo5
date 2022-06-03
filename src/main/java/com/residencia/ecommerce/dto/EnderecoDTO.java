@@ -1,10 +1,9 @@
 package com.residencia.ecommerce.dto;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
@@ -12,13 +11,18 @@ public class EnderecoDTO {
 
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Integer idEndereco;
-	@NotNull(message = "O cep não pode ser nulo.")
+	@NotBlank(message = "O cep não pode ser nulo.")
 	private String cep;
+	@NotBlank(message = "A rua não pode ser nula.")
 	private String rua;
+	@NotBlank(message = "O bairro não pode ser nulo.")
 	private String bairro;
 	private String cidade;
+	@Min(value = 1, message="Numero nao pode ser menor que 1")
+	@NotNull(message = "Numero não pode ser nulo")
 	private Integer numero;
 	private String complemento;
+	private String uf;
 
 	public Integer getIdEndereco() {
 		return idEndereco;
@@ -76,10 +80,20 @@ public class EnderecoDTO {
 		this.complemento = complemento;
 	}
 
+	public String getUf() {
+		return uf;
+	}
+
+	public void setUf(String uf) {
+		this.uf = uf;
+	}
+
 	@Override
 	public String toString() {
 		return "EnderecoDTO [idEndereco=" + idEndereco + ", cep=" + cep + ", rua=" + rua + ", bairro=" + bairro
-				+ ", cidade=" + cidade + ", numero=" + numero + ", complemento=" + complemento + "]";
+				+ ", cidade=" + cidade + ", numero=" + numero + ", complemento=" + complemento + ", uf=" + uf + "]";
 	}
+	
+	
 
 }

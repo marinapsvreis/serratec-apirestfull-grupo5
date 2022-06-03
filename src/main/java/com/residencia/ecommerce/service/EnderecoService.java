@@ -48,7 +48,20 @@ public class EnderecoService {
 	}
 
 	public EnderecoDTO saveEnderecoDTO(String cep, Integer numero, Integer idCliente) throws EnderecoException {
-		String cepFormatado = cep.replaceAll("[.-]", "");
+		String cepFormatado = "";
+		if(cep != null) {
+			cepFormatado = cep.replaceAll("[.-]", "");
+		}
+		
+		/*
+		if(!enderecoRepository.findByCep(cepFormatado).isEmpty()) {
+			List<Endereco> listaEnderecoEncontrado = enderecoRepository.findByCep(cepFormatado);
+			Integer idEncontrado = listaEnderecoEncontrado.get(0).getIdEndereco();
+			
+			throw new EnderecoException("Já existe um endereço cadastrado nesse cep com o id: " + idEncontrado);
+		}
+		*/
+		
 		if (!cepFormatado.matches("[0-9]+")) {
 			throw new EnderecoException("O cep deve conter apenas números e 1 único hífen.");
 		}
@@ -60,7 +73,7 @@ public class EnderecoService {
 		if (!clienteRepository.findById(idCliente).isPresent()) {
 			throw new NoSuchElementFoundException("Não foi possível encontrar o cliente com o id " + idCliente);
 		}
-		if (numero.toString().matches("[0-9]+")) {
+		if (!numero.toString().matches("[0-9]+")) {
 			throw new EnderecoException(
 					"No campo número deverá conter apenas números, qualquer informação adicional colocar no complemento.");
 		}
@@ -78,7 +91,11 @@ public class EnderecoService {
 		}
 
 		enderecoDTO.setIdEndereco(idEndereco);
-		String cepFormatado = enderecoDTO.getCep().replaceAll("[.-]", "");
+		String cepFormatado = "";
+		
+		if(enderecoDTO.getCep() != null) {
+			cepFormatado = enderecoDTO.getCep().replaceAll("[.-]", "");
+		}
 		if (!cepFormatado.matches("[0-9]+")) {
 			throw new EnderecoException("O cep deve conter apenas números e 1 único hífen.");
 		}
@@ -91,7 +108,7 @@ public class EnderecoService {
 			throw new EnderecoException(
 					"No campo número deverá conter apenas números, qualquer informação adicional colocar no complemento.");
 		}
-
+	
 		return toDTO(enderecoRepository.save(toEntity(enderecoDTO)));
 	}
 
@@ -124,6 +141,7 @@ public class EnderecoService {
 		endereco.setComplemento(enderecoDTO.getComplemento());
 		endereco.setNumero(enderecoDTO.getNumero());
 		endereco.setRua(enderecoDTO.getRua());
+		endereco.setUf(enderecoDTO.getUf());
 
 		return endereco;
 	}
@@ -138,6 +156,7 @@ public class EnderecoService {
 		enderecoDTO.setComplemento(endereco.getComplemento());
 		enderecoDTO.setNumero(endereco.getNumero());
 		enderecoDTO.setRua(endereco.getRua());
+		enderecoDTO.setUf(endereco.getUf());
 
 		return enderecoDTO;
 	}
