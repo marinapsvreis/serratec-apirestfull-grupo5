@@ -53,13 +53,6 @@ public class EnderecoService {
 		String cepFormatado = "";
 		cepFormatado = cep.replaceAll("[.-]", "");
 
-		if (!enderecoRepository.findByCep(cepFormatado).isEmpty()) {
-			List<Endereco> listaEnderecoEncontrado = enderecoRepository.findByCep(cepFormatado);
-			Integer idEncontrado = listaEnderecoEncontrado.get(0).getIdEndereco();
-
-			throw new EnderecoException("Já existe um endereço cadastrado nesse cep com o id: " + idEncontrado);
-		}
-
 		if (!cepFormatado.matches("[0-9]+")) {
 			throw new EnderecoException("O cep deve conter apenas números e 1 único hífen.");
 		}
@@ -79,9 +72,8 @@ public class EnderecoService {
 		ConsultaCepDTO cepDTO = consultarCep(cepFormatado);
 		Endereco endereco = cepDTOtoEndereco(cepDTO);
 		endereco.setNumero(numero);
-		Cliente cliente = clienteRepository.findById(idCliente).get();
 
-		Endereco endereco2 = cliente.getEndereco();
+		Endereco endereco2 = endereco;
 		endereco2.setCep(cepFormatado);
 
 		return toDTO(enderecoRepository.save(endereco2));
@@ -142,6 +134,22 @@ public class EnderecoService {
 
 		return cadastroCepDTO;
 	}
+	
+	public String putMaskOnCep(String cep) {
+		String cepWithMask = "";
+		
+		cepWithMask += cep.charAt(0);
+		cepWithMask += cep.charAt(1);
+		cepWithMask += cep.charAt(2);
+		cepWithMask += cep.charAt(3);
+		cepWithMask += cep.charAt(4);
+		cepWithMask += "-";
+		cepWithMask += cep.charAt(5);
+		cepWithMask += cep.charAt(6);
+		cepWithMask += cep.charAt(7);		
+		
+		return cepWithMask;
+	}
 
 	public Endereco toEntity(EnderecoDTO enderecoDTO) {
 		Endereco endereco = new Endereco();
@@ -163,7 +171,7 @@ public class EnderecoService {
 
 		enderecoDTO.setIdEndereco(endereco.getIdEndereco());
 		enderecoDTO.setBairro(endereco.getBairro());
-		enderecoDTO.setCep(endereco.getCep());
+		enderecoDTO.setCep(putMaskOnCep(endereco.getCep()));
 		enderecoDTO.setCidade(endereco.getCidade());
 		enderecoDTO.setComplemento(endereco.getComplemento());
 		enderecoDTO.setNumero(endereco.getNumero());
