@@ -21,25 +21,32 @@ import com.residencia.ecommerce.dto.EnderecoDTO;
 import com.residencia.ecommerce.exception.EnderecoException;
 import com.residencia.ecommerce.service.EnderecoService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/endereco")
+@Tag(name = "Endereço", description = "endpoints")
 public class EnderecoController {
 
 	@Autowired
 	private EnderecoService enderecoService;
 
 	@GetMapping
+	@Operation(summary = "Listar todos os endereços")
 	public ResponseEntity<List<EnderecoDTO>> findAllEndereco() {
 		return new ResponseEntity<>(enderecoService.findAllEndereco(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{idEndereco}")
+	@Operation(summary = "Listar endereço via ID Path")
 	public ResponseEntity<EnderecoDTO> findEnderecoById(@PathVariable Integer idEndereco) throws EnderecoException {
 
 		return new ResponseEntity<>(enderecoService.findByIdEndereco(idEndereco), HttpStatus.OK);
 	}
 
 	@PostMapping("/salvar")
+	@Operation(summary = "Cadastrar endereço através da API externa via CEP informando id do cliente para auto atualizar")
 	public ResponseEntity<EnderecoDTO> salvarEnderecoViaCep(@RequestParam Integer idCliente, @RequestParam String cep,
 			@RequestParam Integer numero) throws EnderecoException {
 
@@ -48,12 +55,14 @@ public class EnderecoController {
 
 	
 	@PutMapping
+	@Operation(summary = "Atualizar endereço passando todos os dados")
 	public ResponseEntity<EnderecoDTO> updateEndereco(@RequestParam Integer idEndereco,
 			@Valid @RequestBody EnderecoDTO enderecoDTO) throws EnderecoException {
 		return new ResponseEntity<>(enderecoService.updateEnderecoDTO(idEndereco, enderecoDTO), HttpStatus.OK);
 	}
 
 	@DeleteMapping
+	@Operation(summary = "Deletar endereço via ID")
 	public ResponseEntity<String> deleteCliente(@RequestParam Integer idEndereco) throws EnderecoException {
 
 		enderecoService.deleteByIdEndereco(idEndereco);

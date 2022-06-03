@@ -21,39 +21,49 @@ import com.residencia.ecommerce.exception.EnderecoException;
 import com.residencia.ecommerce.exception.PedidoFinalizadoException;
 import com.residencia.ecommerce.service.PedidoService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/pedido")
+@Tag(name = "Pedido", description = "endpoints")
 public class PedidoController {
 	@Autowired
 	PedidoService pedidoService;
 
 	@GetMapping
+	@Operation(summary = "Listar todos os pedidos")
 	public ResponseEntity<List<PedidoDTO>> findAllPedido() { 
 		return new ResponseEntity<>(pedidoService.findAllPedido(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{idPedido}")
+	@Operation(summary = "Listar pedido via ID Path")
 	public ResponseEntity<PedidoDTO> findPedidoById(@PathVariable Integer idPedido) {
 		return new ResponseEntity<>(pedidoService.findPedidoById(idPedido), HttpStatus.OK);
 	}
 
 	@PostMapping
+	@Operation(summary = "Cadastrar pedido")
 	public ResponseEntity<PedidoDTO> savePedido(@RequestBody PedidoDTO pedidoDTO) throws EnderecoException, ClienteException {
 		return new ResponseEntity<>(pedidoService.savePedido(pedidoDTO), HttpStatus.CREATED);
 	}
 
 	@PutMapping
+	@Operation(summary = "Atualizar pedido passando todos os dados")
 	public ResponseEntity<PedidoDTO> updatePedido(@RequestParam Integer idPedido, @RequestBody PedidoDTO pedidoDTO) throws PedidoFinalizadoException, EnderecoException, ClienteException {
 		return new ResponseEntity<>(pedidoService.updatePedido(idPedido, pedidoDTO), HttpStatus.OK);
 	}
 	
 	@PutMapping("/processar")
+	@Operation(summary = "Finalizar pedido")
 	public ResponseEntity<String> finalizarPedido(@RequestParam Integer idPedido) throws PedidoFinalizadoException, EnderecoException, ClienteException {
 		pedidoService.finalizarPedido(idPedido);
 		return new ResponseEntity<>("Pedido processado", HttpStatus.OK);
 	}
 
 	@DeleteMapping
+	@Operation(summary = "Deletar pedido via ID")
 	public ResponseEntity<String> deletePedidoById(@RequestParam Integer id) {
 		pedidoService.deletePedidoById(id);
 		return new ResponseEntity<>("", HttpStatus.OK);

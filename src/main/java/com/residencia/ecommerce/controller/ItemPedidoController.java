@@ -21,34 +21,43 @@ import com.residencia.ecommerce.exception.EnderecoException;
 import com.residencia.ecommerce.exception.PedidoFinalizadoException;
 import com.residencia.ecommerce.service.ItemPedidoService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/itemPedido")
+@Tag(name = "Item Pedido", description = "endpoints")
 public class ItemPedidoController {
 
 	@Autowired
 	private ItemPedidoService itemPedidoService;
 	
 	@GetMapping
+	@Operation(summary = "Listar todos os itens pedidos")
 	public ResponseEntity <List<ItemPedidoDTO>> findAllItemPedido(){
 		return new ResponseEntity<>(itemPedidoService.findAllItemPedido(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/{idItemPedido}")
+	@Operation(summary = "Listar item pedido via ID Path")
 	public ResponseEntity<ItemPedidoDTO> findItemPedidoById(@PathVariable Integer idItemPedido){
 		return new ResponseEntity<>(itemPedidoService.findByIdItemPedido(idItemPedido), HttpStatus.OK);
 	}
 	
 	@PostMapping
+	@Operation(summary = "Cadastrar item pedido")
 	public ResponseEntity<ItemPedidoDTO> saveItemPedido(@RequestBody ItemPedidoDTO itemPedidoDTO) throws PedidoFinalizadoException, EnderecoException, ClienteException{
 		return new ResponseEntity<>(itemPedidoService.saveItemPedido(itemPedidoDTO), HttpStatus.OK);
 	}
 	
 	@PutMapping
+	@Operation(summary = "Atualizar item pedido passando todos os dados")
 	public ResponseEntity<ItemPedidoDTO> updateItemPedido(@RequestParam Integer idItemPedido, @RequestBody ItemPedidoDTO itemPedidoDTO) throws EnderecoException, ClienteException{
 		return new ResponseEntity<>(itemPedidoService.updateItemPedido(idItemPedido, itemPedidoDTO), HttpStatus.OK);
 	}
 	
 	@DeleteMapping
+	@Operation(summary = "Deletar item pedido via ID")
 	public ResponseEntity<String> deleteItemPedido(Integer idItemPedido){
 		itemPedidoService.deleteByIdItemPedido(idItemPedido);
 		return new ResponseEntity<>("", HttpStatus.OK);

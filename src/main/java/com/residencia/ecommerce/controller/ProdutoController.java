@@ -23,40 +23,50 @@ import com.residencia.ecommerce.entity.Produto;
 import com.residencia.ecommerce.exception.DescricaoProdutoException;
 import com.residencia.ecommerce.service.ProdutoService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/produto")
+@Tag(name = "Produto", description = "endpoints")
 public class ProdutoController {
 
 	@Autowired
 	private ProdutoService produtoService;
 	
 	@GetMapping
+	@Operation(summary = "Listar todos os produtos")
 	public ResponseEntity <List<ProdutoDTO>> findAllProduto(){
 		return new ResponseEntity<>(produtoService.findAllProduto(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/{idProduto}")
+	@Operation(summary = "Listar produto via ID Path")
 	public ResponseEntity<ProdutoDTO> findProdutoById(@PathVariable Integer idProduto){
 		return new ResponseEntity<>(produtoService.findByIdProduto(idProduto), HttpStatus.OK);
 	}
 	
 	@PostMapping
+	@Operation(summary = "Cadastrar produto")
 	public ResponseEntity<ProdutoDTO> saveProdutoDTO(@RequestBody ProdutoDTO produtoDTO) throws DescricaoProdutoException{
 		produtoService.saveProdutoDTO(produtoDTO);
 		return new ResponseEntity<>(produtoDTO, HttpStatus.CREATED);
 	}
 	
 	@PostMapping(value = "/com-foto", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+	@Operation(summary = "Cadastrar produto com foto")
 	public ResponseEntity<Produto> saveProdutoComFoto(@RequestPart("produto") String produtoDTO, @RequestPart("file") MultipartFile file){
 		return new ResponseEntity<>(produtoService.saveProdutoComFoto(produtoDTO , file), HttpStatus.CREATED);
 	}
 	
 	@PutMapping
+	@Operation(summary = "Atualizar produto passando todos os dados")
 	public ResponseEntity<ProdutoDTO> updateProduto(@RequestParam Integer idProduto, @RequestBody ProdutoDTO produtoDTO){
 		return new ResponseEntity<>(produtoService.updateProdutoDTO(idProduto, produtoDTO), HttpStatus.OK);
 	}
 	
 	@DeleteMapping
+	@Operation(summary = "Deletar produto via ID")
 	public ResponseEntity<String> deleteProduto(Integer idProduto){
 		produtoService.deleteByIdProduto(idProduto);
 		return new ResponseEntity<>("", HttpStatus.OK);

@@ -18,35 +18,44 @@ import org.springframework.web.bind.annotation.RestController;
 import com.residencia.ecommerce.dto.CategoriaDTO;
 import com.residencia.ecommerce.service.CategoriaService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/categoria")
+@Tag(name = "Categoria", description = "endpoints")
 public class CategoriaController {
 	@Autowired
 	CategoriaService categoriaService;
 
 	@GetMapping
+	@Operation(summary = "Listar todas as categorias")
 	public ResponseEntity<List<CategoriaDTO>> findAllCategoria() {	
 		return new ResponseEntity<>(categoriaService.findAllCategoria(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{idCategoria}")
+	@Operation(summary = "Listar categoria via ID Path")
 	public ResponseEntity<CategoriaDTO> findCategoriaById(@PathVariable Integer idCategoria) {
 		return new ResponseEntity<>(categoriaService.findCategoriaByIdDTO(idCategoria), HttpStatus.OK);
 	}
 
 	@PostMapping
+	@Operation(summary = "Cadastrar categoria")
 	public ResponseEntity<CategoriaDTO> saveCategoriaDTO(@RequestBody CategoriaDTO categoriaDTO) {
 		categoriaService.saveCategoriaDTO(categoriaDTO);
 		return new ResponseEntity<>(categoriaDTO, HttpStatus.CREATED);
 	}
 
 	@PutMapping
+	@Operation(summary = "Atualizar categoria passando todos os dados")
 	public ResponseEntity<CategoriaDTO> updateCategoriaDTO(@RequestParam Integer idCategoria, @RequestBody CategoriaDTO categoriaDTO) {
 		return new ResponseEntity<>(categoriaService.updateCategoria(idCategoria, categoriaDTO), HttpStatus.OK);
 	}
 
 
 	@DeleteMapping("/{idCategoria}")
+	@Operation(summary = "Deletar categoria via ID")
 	public ResponseEntity<String> deleteCategoriaById(@PathVariable Integer idCategoria) {
 		categoriaService.deleteCategoriaById(idCategoria);
 		return new ResponseEntity<>("", HttpStatus.OK);
