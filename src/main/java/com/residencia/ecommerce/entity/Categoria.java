@@ -21,7 +21,6 @@ public class Categoria {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_categoria")
-	//@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Integer idCategoria;
 
 	@Column(name = "nome")

@@ -29,6 +29,8 @@ public class ClienteDTO {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	@Past(message = "A data de nascimento deve estar no passado")
 	private Date dataNascimento;
+	
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Integer idEndereco;
 	
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
