@@ -24,6 +24,8 @@ import com.residencia.ecommerce.entity.Produto;
 import com.residencia.ecommerce.exception.DescricaoProdutoException;
 import com.residencia.ecommerce.service.ProdutoService;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/produto")
 public class ProdutoController {
@@ -42,18 +44,18 @@ public class ProdutoController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<ProdutoDTO> saveProdutoDTO(@RequestBody ProdutoDTO produtoDTO) throws DescricaoProdutoException, CategoriaException {
+	public ResponseEntity<ProdutoDTO> saveProdutoDTO(@Valid @RequestBody ProdutoDTO produtoDTO) throws DescricaoProdutoException, CategoriaException {
 		produtoService.saveProdutoDTO(produtoDTO);
 		return new ResponseEntity<>(produtoDTO, HttpStatus.CREATED);
 	}
 	
 	@PostMapping(value = "/com-foto", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-	public ResponseEntity<Produto> saveProdutoComFoto(@RequestPart("produto") String produtoDTO, @RequestPart("file") MultipartFile file) throws CategoriaException {
+	public ResponseEntity<Produto> saveProdutoComFoto(@Valid @RequestPart("produto") String produtoDTO, @RequestPart("file") MultipartFile file) throws CategoriaException {
 		return new ResponseEntity<>(produtoService.saveProdutoComFoto(produtoDTO , file), HttpStatus.CREATED);
 	}
 	
 	@PutMapping
-	public ResponseEntity<ProdutoDTO> updateProduto(@RequestParam Integer idProduto, @RequestBody ProdutoDTO produtoDTO) throws CategoriaException {
+	public ResponseEntity<ProdutoDTO> updateProduto(@RequestParam Integer idProduto, @Valid @RequestBody ProdutoDTO produtoDTO) throws CategoriaException {
 		return new ResponseEntity<>(produtoService.updateProdutoDTO(idProduto, produtoDTO), HttpStatus.OK);
 	}
 	

@@ -6,6 +6,8 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.NotBlank;
+
 public class PedidoDTO {
 
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -13,6 +15,7 @@ public class PedidoDTO {
 
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@NotBlank(message = "Data do pedido não pode ser nula")
 	private Date dataPedido;
 
 	@JsonFormat(pattern = "dd-MM-yyyy")

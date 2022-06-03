@@ -39,24 +39,12 @@ public class CategoriaService {
 	}
 
 	public Categoria saveCategoriaDTO(CategoriaDTO categoriaDTO) throws CategoriaException {
-		if (categoriaDTO.getNomeCategoria().length() > 30){
-			throw new CategoriaException("Nome da categoria deve ser menor que 30 caracteres");
-		} else if (categoriaDTO.getDescricaoCategoria().length() > 150){
-			throw new CategoriaException("Descrição da categoria deve ser menor que 150 caracteres");
-		}
-
 		return categoriaRepository.save(toEntity(categoriaDTO));
 	}
 
 	public CategoriaDTO updateCategoria(Integer idCategoria, CategoriaDTO categoriaDTO) throws CategoriaException {
 		categoriaDTO.setIdCategoria(idCategoria);
-		if (categoriaDTO.getNomeCategoria().length() > 30) {
-			throw new CategoriaException("Nome da categoria deve ser menor que 30 caracteres");
-		} else if (categoriaDTO.getDescricaoCategoria().length() > 150){
-			throw new CategoriaException("Descrição da categoria deve ser menor que 150 caracteres");
-		} else {
-			return toDTO(categoriaRepository.save(toEntity(categoriaDTO)));
-		}
+		return toDTO(categoriaRepository.save(toEntity(categoriaDTO)));
 
 	}
 

@@ -21,6 +21,8 @@ import com.residencia.ecommerce.exception.EnderecoException;
 import com.residencia.ecommerce.exception.PedidoFinalizadoException;
 import com.residencia.ecommerce.service.PedidoService;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/pedido")
 public class PedidoController {
@@ -38,12 +40,12 @@ public class PedidoController {
 	}
 
 	@PostMapping
-	public ResponseEntity<PedidoDTO> savePedido(@RequestBody PedidoDTO pedidoDTO) throws EnderecoException, ClienteException {
+	public ResponseEntity<PedidoDTO> savePedido(@Valid @RequestBody PedidoDTO pedidoDTO) throws EnderecoException, ClienteException {
 		return new ResponseEntity<>(pedidoService.savePedido(pedidoDTO), HttpStatus.CREATED);
 	}
 
 	@PutMapping
-	public ResponseEntity<PedidoDTO> updatePedido(@RequestParam Integer idPedido, @RequestBody PedidoDTO pedidoDTO) throws PedidoFinalizadoException, EnderecoException, ClienteException {
+	public ResponseEntity<PedidoDTO> updatePedido(@RequestParam Integer idPedido, @Valid  @RequestBody PedidoDTO pedidoDTO) throws PedidoFinalizadoException, EnderecoException, ClienteException {
 		return new ResponseEntity<>(pedidoService.updatePedido(idPedido, pedidoDTO), HttpStatus.OK);
 	}
 	

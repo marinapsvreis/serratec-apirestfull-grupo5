@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,14 +17,20 @@ public class ClienteDTO {
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Integer idCliente;
 	@NotBlank(message = "O email não pode ser nulo.")
+	@Size(max = 100, message = "Email da categoria não pode ter mais que 100 caracteres")
 	private String email;
 	@NotBlank(message = "O nome não pode ser nulo.")
+	@Size(max = 100, message = "Nome completo não pode ter mais que 100 caracteres")
 	private String nomeCompleto;
+
 
 	@Schema(example = "111.111.111-11", description = "CPF do cliente")
 	@NotBlank(message = "O cpf não pode ser nulo.")
+	@Size(max = 14, message = "CPF não pode ter mais que 34 caracteres")
 	private String cpf;
+
 	@Schema(example = "(11)11111-1111", description = "Telefone do cliente")
+	@Size(max = 11, message = "Telefone não pode ter mais que 11 caracteres")
 	private String telefone;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")

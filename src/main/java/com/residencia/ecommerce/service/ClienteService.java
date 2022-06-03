@@ -45,7 +45,7 @@ public class ClienteService {
 
 	}
 
-	public ClienteDTO saveCliente(ClienteDTO clienteDTO) throws CpfClienteException, EmailClienteException, ClienteException, EnderecoException  {
+	public ClienteDTO saveCliente(ClienteDTO clienteDTO) throws ClienteException, EnderecoException  {
 		clienteDTO.setCpf(clienteDTO.getCpf().replaceAll("[.-]", ""));
 		clienteDTO.setTelefone(clienteDTO.getTelefone().replaceAll("[()-]", ""));
 
