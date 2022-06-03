@@ -47,10 +47,10 @@ public class PedidoController {
 		return new ResponseEntity<>(pedidoService.updatePedido(idPedido, pedidoDTO), HttpStatus.OK);
 	}
 	
-	@PutMapping("/finalizar")
+	@PutMapping("/processar")
 	public ResponseEntity<String> finalizarPedido(@RequestParam Integer idPedido) throws PedidoFinalizadoException, EnderecoException, ClienteException {
 		pedidoService.finalizarPedido(idPedido);
-		return new ResponseEntity<>("Pedido finalizado", HttpStatus.OK);
+		return new ResponseEntity<>("Pedido processado", HttpStatus.OK);
 	}
 
 	@DeleteMapping

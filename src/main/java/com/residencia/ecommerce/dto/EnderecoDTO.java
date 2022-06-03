@@ -90,8 +90,13 @@ public class EnderecoDTO {
 
 	@Override
 	public String toString() {
-		return "EnderecoDTO [idEndereco=" + idEndereco + ", cep=" + cep + ", rua=" + rua + ", bairro=" + bairro
-				+ ", cidade=" + cidade + ", numero=" + numero + ", complemento=" + complemento + ", uf=" + uf + "]";
+		return "Rua = " + rua + "<br>"
+				+ "Numero = " + numero + "<br>"
+				+ "Bairro = " + bairro + "<br>"
+				+ "Cidade = " + cidade + "<br>"				
+				+ "UF = " + uf + "<br>"
+				+ "Cep = " + cep + "<br>"
+				+ "Complemento = " + complemento + "<br>";
 	}
 	
 	

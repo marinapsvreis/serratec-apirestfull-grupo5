@@ -1,7 +1,9 @@
 package com.residencia.ecommerce.service;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -10,14 +12,12 @@ import javax.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.residencia.ecommerce.dto.ItemPedidoDTO;
 import com.residencia.ecommerce.dto.PedidoDTO;
 import com.residencia.ecommerce.entity.ItemPedido;
 import com.residencia.ecommerce.entity.Pedido;
 import com.residencia.ecommerce.exception.ClienteException;
 import com.residencia.ecommerce.exception.EnderecoException;
 import com.residencia.ecommerce.exception.PedidoFinalizadoException;
-import com.residencia.ecommerce.repository.EnderecoRepository;
 import com.residencia.ecommerce.repository.ItemPedidoRepository;
 import com.residencia.ecommerce.repository.PedidoRepository;
 
@@ -37,6 +37,8 @@ public class PedidoService {
 	
 	@Autowired
 	MailService emailService;
+	
+	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
 	public List<PedidoDTO> findAllPedido() {
 		List<Pedido> listPedidoEntity = pedidoRepository.findAll();
@@ -81,8 +83,25 @@ public class PedidoService {
 		Pedido pedido = toEntity(findPedidoById(idPedido));
 		if(pedido.getStatus() == true) {
 			throw new PedidoFinalizadoException("Pedido já foi finalizado");
+		}else if((pedido.getValorTotalPedidoBruto()).doubleValue() == 0.0){
+			throw new PedidoFinalizadoException("Você não pode finalizar esse pedido porque nenhum produto foi adicionado!");
 		}else {
 			pedido.setStatus(true);
+			
+			//adicionando um dia a partir desse momento para data do envio
+			Date today = new Date();
+			Calendar c = Calendar.getInstance();
+			c.setTime(today);
+			c.add(Calendar.DATE, 1);
+			Date dataEnvio = c.getTime();
+			
+			//adicionando 7 dias a partir desse momento para data prevista de entrega
+			c.setTime(today);
+			c.add(Calendar.DATE, 7);
+			Date dataEntrega = c.getTime();
+			
+			pedido.setDataEnvio(dataEnvio);
+			pedido.setDataEntrega(dataEntrega);
 			pedido = pedidoRepository.save(pedido);
 			
 			String htmlEmail = gerarHTMLEmail(pedido);					
@@ -90,7 +109,7 @@ public class PedidoService {
 			try {
 	            emailService.enviarEmailHTML("marinapsvreis@gmail.com", "Teste Email Pedido Finalizado", htmlEmail);
 	        } catch (MessagingException e) {
-	            System.out.println("Erro ao enviar e-mail HTML.");
+	            System.out.println("Erro ao enviar e-mail HTML. Porém o pedido já foi processado!");
 	            e.printStackTrace();
 	        }
 		}		
@@ -139,41 +158,30 @@ public class PedidoService {
 			}				
 		}
 		
-		String htmlEmail = "<h1>Pedido ID:" + pedido.getIdPedido() + " Finalizado</h1>";
+		String htmlEmail = "<h2>Pedido ID: " + pedido.getIdPedido() + " Processado</h2>";
 				htmlEmail += "<br>";
-				htmlEmail += "<p>Data do Pedido: " + toDTO(pedido).getDataPedido() + "</p>";
-				htmlEmail += "<p>Data do Envio: " + toDTO(pedido).getDataEnvio() +"</p>";
-				htmlEmail += "<p>Data da Entrega(previsão): " + toDTO(pedido).getDataEntrega() +"</p>";
+				htmlEmail += "<p>Data do Pedido: " + simpleDateFormat.format(pedido.getDataPedido()) + "</p>";
+				htmlEmail += "<p>Data do Envio: " + simpleDateFormat.format(pedido.getDataEnvio()) +"</p>";
+				htmlEmail += "<p>Data da Entrega(previsão): " + simpleDateFormat.format(pedido.getDataEntrega()) +"</p>";
 				htmlEmail += "<br>";
-				htmlEmail += "<h2>Produtos:</h2>";
-				htmlEmail += "<br>";
-				
+				htmlEmail += "<h3>Produtos:</h3>";
+				htmlEmail += "<br>";				
 				for(ItemPedido itemPedido : listProdutosPedido) {
 					htmlEmail += "<p>"+ itemPedido.toString() +"</p>";
-				}
-				
-				
+				}				
 				htmlEmail += "<br>";
-				htmlEmail += "<h2>Valores Totais:</h2>";
-				htmlEmail += "<p>Valor Bruto do Pedido: " + pedido.getValorTotalPedidoBruto() + "</p>";
-				htmlEmail += "<p>Valor de Desconto do Pedido: " + pedido.getValorTotalDescontoPedido() + "</p>";
-				htmlEmail += "<p><strong>Valor Liquido do Pedido: " + pedido.getValorTotalPedidoLiquido() + "</strong></p>";
+				htmlEmail += "<h3>Valores Totais:</h3>";
+				htmlEmail += "<p>Valor Bruto do Pedido: R$" + String.format("%.2f", pedido.getValorTotalPedidoBruto()) + "</p>";
+				htmlEmail += "<p>Valor de Desconto do Pedido: R$" + String.format("%.2f", pedido.getValorTotalDescontoPedido()) + "</p>";
+				htmlEmail += "<p><strong>Valor Liquido do Pedido: R$" + String.format("%.2f", pedido.getValorTotalPedidoLiquido()) + "</strong></p>";
 				htmlEmail += "<br>";
-				htmlEmail += "<h2>Dados do cliente:</h2>";
+				htmlEmail += "<h3>Dados do cliente:</h3>";
 				htmlEmail += "<br>";
-				htmlEmail += "<p>Cliente: " + pedido.getCliente().getNomeCompleto() +"</p>";
-				htmlEmail += "<p>CPF: " + pedido.getCliente().getCpf() +"</p>";
-				htmlEmail += "<p>E-mail: " + pedido.getCliente().getEmail() +"</p>";
-				htmlEmail += "<p>Telefone: " + pedido.getCliente().getTelefone() +"</p>";
+				htmlEmail += "<h3>Cliente: </h3>";
+				htmlEmail += "<p>"+ (clienteService.toDTO(pedido.getCliente())).toString() +"</p>";				
 				htmlEmail += "<br>";
-				htmlEmail += "<h2>Endereço:</h2>";
-				htmlEmail += "<p>CEP: " + enderecoService.findByIdEndereco(clienteService.findClienteById(toDTO(pedido).getIdCliente()).getIdEndereco()).getCep() + "</p>";
-				htmlEmail += "<p>Rua: " + enderecoService.findByIdEndereco(clienteService.findClienteById(toDTO(pedido).getIdCliente()).getIdEndereco()).getRua() + "</p>";
-				htmlEmail += "<p>Numero: " + enderecoService.findByIdEndereco(clienteService.findClienteById(toDTO(pedido).getIdCliente()).getIdEndereco()).getNumero().toString() + "</p>";
-				htmlEmail += "<p>Bairro: " + enderecoService.findByIdEndereco(clienteService.findClienteById(toDTO(pedido).getIdCliente()).getIdEndereco()).getBairro() + "</p>";
-				htmlEmail += "<p>Cidade: " + enderecoService.findByIdEndereco(clienteService.findClienteById(toDTO(pedido).getIdCliente()).getIdEndereco()).getCidade() + "</p>";
-				htmlEmail += "<p>UF: " + enderecoService.findByIdEndereco(clienteService.findClienteById(toDTO(pedido).getIdCliente()).getIdEndereco()).getUf() + "</p>";
-				htmlEmail += "<p>Complemento: " + enderecoService.findByIdEndereco(clienteService.findClienteById(toDTO(pedido).getIdCliente()).getIdEndereco()).getComplemento() + "</p>";
+				htmlEmail += "<h3>Endereço:</h3>";
+				htmlEmail += "<p>" + (enderecoService.findByIdEndereco(clienteService.findClienteById(toDTO(pedido).getIdCliente()).getIdEndereco())).toString() + "</p>";
 				
 				return htmlEmail;
 	}

@@ -130,16 +130,58 @@ public class ClienteService {
 		ClienteDTO clienteDTO = new ClienteDTO();
 
 		clienteDTO.setIdCliente(cliente.getIdCliente());
-		clienteDTO.setCpf(cliente.getCpf());
+		clienteDTO.setCpf(putMaskCPF(cliente.getCpf()));
 		clienteDTO.setDataNascimento(cliente.getDataNascimento());
 		clienteDTO.setEmail(cliente.getEmail());
 		clienteDTO.setNomeCompleto(cliente.getNomeCompleto());
-		clienteDTO.setTelefone(cliente.getTelefone());
+		clienteDTO.setTelefone(putMaskOnPhone(cliente.getTelefone()));
 		if (cliente.getEndereco() != null) {
 			clienteDTO.setIdEndereco(cliente.getEndereco().getIdEndereco());
 		}
 
 		return clienteDTO;
+	}
+	
+	public String putMaskCPF(String cpf) {
+		String cpfWithMask = "";
+		
+		cpfWithMask += cpf.charAt(0);
+		cpfWithMask += cpf.charAt(1);
+		cpfWithMask += cpf.charAt(2);
+		cpfWithMask += ".";
+		cpfWithMask += cpf.charAt(3);
+		cpfWithMask += cpf.charAt(4);
+		cpfWithMask += cpf.charAt(5);
+		cpfWithMask += ".";
+		cpfWithMask += cpf.charAt(6);
+		cpfWithMask += cpf.charAt(7);
+		cpfWithMask += cpf.charAt(8);
+		cpfWithMask += "-";
+		cpfWithMask += cpf.charAt(9);
+		cpfWithMask += cpf.charAt(10);
+		
+		return cpfWithMask;
+	}
+	
+	public String putMaskOnPhone(String telefone) {
+		String phoneWithMask = "";
+		
+		phoneWithMask += "(";
+		phoneWithMask += telefone.charAt(0);
+		phoneWithMask += telefone.charAt(1);
+		phoneWithMask += ")";
+		phoneWithMask += telefone.charAt(2);
+		phoneWithMask += telefone.charAt(3);
+		phoneWithMask += telefone.charAt(4);
+		phoneWithMask += telefone.charAt(5);
+		phoneWithMask += telefone.charAt(6);
+		phoneWithMask += "-";
+		phoneWithMask += telefone.charAt(7);
+		phoneWithMask += telefone.charAt(8);
+		phoneWithMask += telefone.charAt(9);
+		phoneWithMask += telefone.charAt(10);
+		
+		return phoneWithMask;
 	}
 
 	public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$",
