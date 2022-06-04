@@ -3,12 +3,14 @@ package com.residencia.ecommerce.service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import com.residencia.ecommerce.exception.CategoriaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.residencia.ecommerce.dto.ItemPedidoDTO;
+import com.residencia.ecommerce.dto.PedidoDTO;
 import com.residencia.ecommerce.entity.ItemPedido;
 import com.residencia.ecommerce.entity.Pedido;
 import com.residencia.ecommerce.exception.ClienteException;
@@ -39,13 +41,23 @@ public class ItemPedidoService {
 		return listItemPedidoDTO;
 	}
 	
+
 	public ItemPedidoDTO findByIdItemPedido(Integer idItemPedido) {
-		return itemPedidoRepository.findById(idItemPedido).isPresent() ?
+		ItemPedidoDTO itemPedidoDTO = itemPedidoRepository.findById(idItemPedido).isPresent() ?
 				toDTO(itemPedidoRepository.findById(idItemPedido).get()) 
-				: null;
+				: null;		
+		
+		if(itemPedidoDTO == null) {
+			throw new NoSuchElementException("Não existe item_pedido com o id " + idItemPedido);
+		}else {
+			return itemPedidoDTO;
+		}
 	}
 	
 	public ItemPedidoDTO saveItemPedido(ItemPedidoDTO itemPedidoDTO) throws Exception {
+		if(pedidoService.findPedidoById(itemPedidoDTO.getIdPedido()).getStatus() == true) {
+			throw new PedidoFinalizadoException("O pedido referente a este item já foi finalizado e não pode ser alterado.");
+		}
 		itemPedidoDTO.setValorBrutoItemPedido(itemPedidoDTO.getPrecoVendaItemPedido().multiply(BigDecimal.valueOf(itemPedidoDTO.getQuantidadeItemPedido())));
 		itemPedidoDTO.setValorLiquidoItemPedido((itemPedidoDTO.getValorBrutoItemPedido()).multiply(BigDecimal.valueOf(1).subtract((itemPedidoDTO.getPercentualDescontoItemPedido()).divide(BigDecimal.valueOf(100)))));
 		
@@ -55,12 +67,29 @@ public class ItemPedidoService {
 	}
 	
 	public ItemPedidoDTO updateItemPedido(Integer idItemPedido, ItemPedidoDTO itemPedidoDTO) throws Exception {
+		findByIdItemPedido(idItemPedido);
 		itemPedidoDTO.setIdItemPedido(idItemPedido);
-		return toDTO(itemPedidoRepository.save(toEntity(itemPedidoDTO)));
+		if(pedidoService.findPedidoById(itemPedidoDTO.getIdPedido()).getStatus() == true) {
+			throw new PedidoFinalizadoException("O pedido referente a este item já foi finalizado e não pode ser alterado.");
+		}else {
+			itemPedidoDTO.setValorBrutoItemPedido(itemPedidoDTO.getPrecoVendaItemPedido().multiply(BigDecimal.valueOf(itemPedidoDTO.getQuantidadeItemPedido())));
+			itemPedidoDTO.setValorLiquidoItemPedido((itemPedidoDTO.getValorBrutoItemPedido()).multiply(BigDecimal.valueOf(1).subtract((itemPedidoDTO.getPercentualDescontoItemPedido()).divide(BigDecimal.valueOf(100)))));
+			return toDTO(itemPedidoRepository.save(toEntity(itemPedidoDTO)));
+		}
+		
 	}
 	
 	public void deleteByIdItemPedido(Integer idItemPedido) {
-		itemPedidoRepository.deleteById(idItemPedido);
+		ItemPedidoDTO itemPedidoDTO = itemPedidoRepository.findById(idItemPedido).isPresent() ?
+				toDTO(itemPedidoRepository.findById(idItemPedido).get()) 
+				: null;		
+		
+		if(itemPedidoDTO == null) {
+			throw new NoSuchElementException("Não existe pedido com o id " + idItemPedido);
+		}else {
+			itemPedidoRepository.deleteById(idItemPedido);
+		}
+		
 	}
 	
 	public void atualizarValoresTotaisPedido(ItemPedidoDTO itemPedidoDTO) throws Exception {

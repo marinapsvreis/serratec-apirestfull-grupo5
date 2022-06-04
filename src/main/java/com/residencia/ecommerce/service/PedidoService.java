@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.mail.MessagingException;
 
@@ -53,9 +54,14 @@ public class PedidoService {
 	}
 
 	public PedidoDTO findPedidoById(Integer idPedido) {
-		return pedidoRepository.findById(idPedido).isPresent() ?
+		PedidoDTO pedidoDTO = pedidoRepository.findById(idPedido).isPresent() ?
 				toDTO(pedidoRepository.findById(idPedido).get()) 
 				: null;
+		if(pedidoDTO == null) {
+			throw new NoSuchElementException("Não existe pedido com o id " + idPedido);
+		}else {
+			return pedidoDTO;
+		}
 	}
 
 	public PedidoDTO savePedido(PedidoDTO pedidoDTO) throws Exception {
@@ -73,6 +79,7 @@ public class PedidoService {
 	}
 
 	public PedidoDTO updatePedido(Integer idPedido, PedidoDTO pedidoDTO) throws Exception {
+		findPedidoById(idPedido);
 		Pedido pedido = pedidoRepository.findById(idPedido).get();
 		pedidoDTO.setStatus(pedido.getStatus());
 		pedidoDTO.setDataPedido(pedido.getDataPedido());
@@ -84,8 +91,16 @@ public class PedidoService {
 		}		
 	}
 
-	public void deletePedidoById(Integer id) {
-		pedidoRepository.deleteById(id);
+	public void deletePedidoById(Integer idPedido) {
+		PedidoDTO pedidoDTO = pedidoRepository.findById(idPedido).isPresent() ?
+				toDTO(pedidoRepository.findById(idPedido).get()) 
+				: null;
+		if(pedidoDTO == null) {
+			throw new NoSuchElementException("Não existe pedido com o id " + idPedido);
+		}else {
+			pedidoRepository.deleteById(idPedido);
+		}
+		
 	}
 	
 	public void finalizarPedido(Integer idPedido) throws Exception {

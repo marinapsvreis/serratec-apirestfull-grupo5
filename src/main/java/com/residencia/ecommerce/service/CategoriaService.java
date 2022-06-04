@@ -43,6 +43,7 @@ public class CategoriaService {
 	}
 
 	public CategoriaDTO updateCategoria(Integer idCategoria, CategoriaDTO categoriaDTO) throws Exception {
+		findCategoriaByIdDTO(idCategoria);
 		categoriaDTO.setIdCategoria(idCategoria);
 		return toDTO(categoriaRepository.save(toEntity(categoriaDTO)));
 

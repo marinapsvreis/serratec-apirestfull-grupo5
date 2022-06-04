@@ -2,10 +2,9 @@ package com.residencia.ecommerce.dto;
 
 import java.math.BigDecimal;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotNull;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ItemPedidoDTO {
 
@@ -14,7 +13,7 @@ public class ItemPedidoDTO {
 	private Integer idPedido;
 	private Integer idProduto;
 	private Integer quantidadeItemPedido;
-	@NotBlank(message = "O preço de venda não pode ser nulo.")
+	@NotNull(message = "O preço de venda não pode ser nulo.")
 	private BigDecimal precoVendaItemPedido;
 	private BigDecimal percentualDescontoItemPedido;
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
