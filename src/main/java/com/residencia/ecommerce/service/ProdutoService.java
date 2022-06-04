@@ -81,7 +81,6 @@ public class ProdutoService {
 	public Produto toEntity(ProdutoDTO produtoDTO) throws Exception {
 		Produto produto = new Produto();
 		
-		
 		produto.setCategoria(categoriaService.toEntity(categoriaService.findCategoriaByIdDTO(produtoDTO.getIdCategoria())));
 		produto.setIdProduto(produtoDTO.getIdProduto());
 		produto.setDataCadastroProduto(produtoDTO.getDataCadastroProduto());
