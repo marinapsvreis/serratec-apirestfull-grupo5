@@ -5,17 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import com.residencia.ecommerce.exception.CategoriaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.residencia.ecommerce.dto.ItemPedidoDTO;
-import com.residencia.ecommerce.dto.PedidoDTO;
+import com.residencia.ecommerce.dto.ProdutoDTO;
 import com.residencia.ecommerce.entity.ItemPedido;
 import com.residencia.ecommerce.entity.Pedido;
-import com.residencia.ecommerce.exception.ClienteException;
-import com.residencia.ecommerce.exception.EnderecoException;
+import com.residencia.ecommerce.exception.DescricaoProdutoException;
+import com.residencia.ecommerce.exception.ItemPedidoException;
 import com.residencia.ecommerce.exception.PedidoFinalizadoException;
+import com.residencia.ecommerce.exception.ProdutoException;
 import com.residencia.ecommerce.repository.ItemPedidoRepository;
 
 @Service
@@ -60,33 +60,53 @@ public class ItemPedidoService {
 		}
 		itemPedidoDTO.setValorBrutoItemPedido(itemPedidoDTO.getPrecoVendaItemPedido().multiply(BigDecimal.valueOf(itemPedidoDTO.getQuantidadeItemPedido())));
 		itemPedidoDTO.setValorLiquidoItemPedido((itemPedidoDTO.getValorBrutoItemPedido()).multiply(BigDecimal.valueOf(1).subtract((itemPedidoDTO.getPercentualDescontoItemPedido()).divide(BigDecimal.valueOf(100)))));
+		ProdutoDTO produtoDTO = produtoService.findByIdProduto(itemPedidoDTO.getIdProduto());
 		
-		atualizarValoresTotaisPedido(itemPedidoDTO);
+		if(produtoDTO.getQtdEstoqueProduto() < itemPedidoDTO.getQuantidadeItemPedido()) {
+			throw new ProdutoException("A loja não tem item suficientes para essa requisição.");
+		}else {
+			produtoDTO.setQtdEstoqueProduto(produtoDTO.getQtdEstoqueProduto()-itemPedidoDTO.getQuantidadeItemPedido());
+			
+			atualizarValoresTotaisPedido(itemPedidoDTO);
+			
+			return toDTO(itemPedidoRepository.save(toEntity(itemPedidoDTO)));
+		}
 		
-		return toDTO(itemPedidoRepository.save(toEntity(itemPedidoDTO)));
+		
 	}
 	
 	public ItemPedidoDTO updateItemPedido(Integer idItemPedido, ItemPedidoDTO itemPedidoDTO) throws Exception {
 		findByIdItemPedido(idItemPedido);
-		itemPedidoDTO.setIdItemPedido(idItemPedido);
+		itemPedidoDTO.setIdItemPedido(idItemPedido); 
 		if(pedidoService.findPedidoById(itemPedidoDTO.getIdPedido()).getStatus() == true) {
 			throw new PedidoFinalizadoException("O pedido referente a este item já foi finalizado e não pode ser alterado.");
 		}else {
 			itemPedidoDTO.setValorBrutoItemPedido(itemPedidoDTO.getPrecoVendaItemPedido().multiply(BigDecimal.valueOf(itemPedidoDTO.getQuantidadeItemPedido())));
 			itemPedidoDTO.setValorLiquidoItemPedido((itemPedidoDTO.getValorBrutoItemPedido()).multiply(BigDecimal.valueOf(1).subtract((itemPedidoDTO.getPercentualDescontoItemPedido()).divide(BigDecimal.valueOf(100)))));
+			
+			ItemPedidoDTO itemPedidoDTOAnterior = findByIdItemPedido(idItemPedido);
+			
+			if(itemPedidoDTOAnterior.getQuantidadeItemPedido() != itemPedidoDTO.getQuantidadeItemPedido()) {
+				throw new ItemPedidoException("Você não pode alterar a quantidade de items do produto, delete e refaza a requisicao do item_pedido");
+			}
+			
 			return toDTO(itemPedidoRepository.save(toEntity(itemPedidoDTO)));
 		}
 		
 	}
 	
+	@SuppressWarnings("unused")
 	public void deleteByIdItemPedido(Integer idItemPedido) {
 		ItemPedidoDTO itemPedidoDTO = itemPedidoRepository.findById(idItemPedido).isPresent() ?
 				toDTO(itemPedidoRepository.findById(idItemPedido).get()) 
 				: null;		
 		
+		ProdutoDTO produtoDTO = produtoService.findByIdProduto(itemPedidoDTO.getIdProduto());
+		
 		if(itemPedidoDTO == null) {
 			throw new NoSuchElementException("Não existe pedido com o id " + idItemPedido);
 		}else {
+			produtoDTO.setQtdEstoqueProduto(produtoDTO.getQtdEstoqueProduto() + itemPedidoDTO.getQuantidadeItemPedido());
 			itemPedidoRepository.deleteById(idItemPedido);
 		}
 		

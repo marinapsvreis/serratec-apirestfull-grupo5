@@ -33,7 +33,7 @@ public class ClienteDTO {
 	@Size(max = 14, message = "Telefone não pode ter mais que 11 caracteres")
 	private String telefone;
 
-	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd/MM/yyyy", timezone = "America/Sao_Paulo" )
 	@Past(message = "A data de nascimento deve estar no passado")
 	private Date dataNascimento;
 	
