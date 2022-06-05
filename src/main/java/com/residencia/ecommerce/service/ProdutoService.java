@@ -57,17 +57,34 @@ public class ProdutoService {
 	
 	public Produto saveProdutoDTO(ProdutoDTO produtoDTO) throws Exception {
 		produtoDTO.setDataCadastroProduto(new Date());
-		if(!produtoRepository.findByDescricaoProduto(produtoDTO.getDescricaoProduto()).isEmpty()) {
+		
+		List<Produto> listaProdutos = produtoRepository.findByDescricaoProduto(produtoDTO.getDescricaoProduto());
+		
+		if(!listaProdutos.isEmpty()) {
 			throw new DescricaoProdutoException("Essa descrição ja foi utilizada em outro produto");
 		}
 			return produtoRepository.save(toEntity(produtoDTO));		
 	}
 	
 	public ProdutoDTO updateProdutoDTO(Integer idProduto, ProdutoDTO produtoDTO) throws Exception {
+		produtoDTO.setIdProduto(idProduto);
+		produtoDTO.setDataCadastroProduto(new Date());
 		findByIdProduto(idProduto);
-		if(!produtoRepository.findByDescricaoProduto(produtoDTO.getDescricaoProduto()).isEmpty()) {
-			throw new DescricaoProdutoException("Essa descrição ja foi utilizada em outro produto");
+		List<Produto> listaProdutos = produtoRepository.findByDescricaoProduto(produtoDTO.getDescricaoProduto());
+		
+		List<Integer> listaIdProdutosCadastrados = new ArrayList<>();
+		
+		for(Produto produto : listaProdutos) {
+			if(produto.getIdProduto() != produtoDTO.getIdProduto()) {
+				listaIdProdutosCadastrados.add(idProduto);
+			}
 		}
+		
+		if(!listaIdProdutosCadastrados.isEmpty()) {
+			throw new DescricaoProdutoException("Essa descrição ja foi utilizada em outro produto de id:: " + listaIdProdutosCadastrados.get(0));
+		}		
+		
+		
 		produtoDTO.setIdProduto(idProduto);
 		return toDTO(produtoRepository.save(toEntity(produtoDTO)));
 	}
@@ -110,6 +127,13 @@ public class ProdutoService {
 
 	public Produto saveProdutoComFoto(String produtoString, MultipartFile file) throws Exception {
 		ProdutoDTO novoProduto = new ProdutoDTO();
+		novoProduto.setDataCadastroProduto(new Date());
+		
+		List<Produto> listaProdutos = produtoRepository.findByDescricaoProduto(novoProduto.getDescricaoProduto());
+		
+		if(!(listaProdutos.isEmpty())) {
+			throw new DescricaoProdutoException("Essa descrição ja foi utilizada em outro produto");
+		}
         
         try {
             ObjectMapper objMapper = new ObjectMapper();

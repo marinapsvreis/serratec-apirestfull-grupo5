@@ -25,7 +25,7 @@ public class ProdutoDTO {
 	@NotNull(message = "Estoque do produto não pode ser nulo")
 	private Integer qtdEstoqueProduto;
 
-	@JsonFormat(pattern = "dd-MM-yyyy")
+	@JsonFormat(pattern = "dd-MM-yyyy", timezone = "America/Sao_Paulo" )
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Date dataCadastroProduto;
 	@Min(value = 0, message="Valor unitario nao pode ser menor que 0")
