@@ -1,7 +1,10 @@
 package com.residencia.ecommerce.exception;
 
 public class CategoriaException extends Exception{
-    public CategoriaException(String message) {
+
+	private static final long serialVersionUID = 1L;
+
+	public CategoriaException(String message) {
         super(message);
     }
 }

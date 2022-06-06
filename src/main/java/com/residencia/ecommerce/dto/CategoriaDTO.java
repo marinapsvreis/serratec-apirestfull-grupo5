@@ -1,9 +1,9 @@
 package com.residencia.ecommerce.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CategoriaDTO {
 

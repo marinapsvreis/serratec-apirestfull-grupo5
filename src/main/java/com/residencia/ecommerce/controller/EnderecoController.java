@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.residencia.ecommerce.dto.EnderecoDTO;
-import com.residencia.ecommerce.exception.EnderecoException;
 import com.residencia.ecommerce.service.EnderecoService;
 
 import io.swagger.v3.oas.annotations.Operation;

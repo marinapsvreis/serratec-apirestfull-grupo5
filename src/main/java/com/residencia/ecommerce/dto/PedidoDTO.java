@@ -6,8 +6,6 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.validation.constraints.NotBlank;
-
 public class PedidoDTO {
 
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)

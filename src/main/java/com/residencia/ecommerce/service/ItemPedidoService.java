@@ -12,7 +12,6 @@ import com.residencia.ecommerce.dto.ItemPedidoDTO;
 import com.residencia.ecommerce.dto.ProdutoDTO;
 import com.residencia.ecommerce.entity.ItemPedido;
 import com.residencia.ecommerce.entity.Pedido;
-import com.residencia.ecommerce.exception.DescricaoProdutoException;
 import com.residencia.ecommerce.exception.ItemPedidoException;
 import com.residencia.ecommerce.exception.PedidoFinalizadoException;
 import com.residencia.ecommerce.exception.ProdutoException;
