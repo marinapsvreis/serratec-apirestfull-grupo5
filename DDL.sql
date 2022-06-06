@@ -5,7 +5,7 @@ rua varchar(100) NOT NULL,
 bairro varchar(50) NOT NULL,
 cidade varchar(30),
 numero INTEGER NOT NULL,
-complemento varchar(20),
+complemento varchar(40),
 uf varchar(2))
 ;
 
