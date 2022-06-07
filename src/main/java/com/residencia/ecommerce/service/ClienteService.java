@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.residencia.ecommerce.dto.ClienteDTO;
 import com.residencia.ecommerce.entity.Cliente;
 import com.residencia.ecommerce.entity.Endereco;
-import com.residencia.ecommerce.entity.Produto;
 import com.residencia.ecommerce.exception.ClienteException;
 import com.residencia.ecommerce.exception.NoSuchElementFoundException;
 import com.residencia.ecommerce.repository.ClienteRepository;

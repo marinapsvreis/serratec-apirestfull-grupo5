@@ -3,7 +3,6 @@ package com.residencia.ecommerce.service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -104,7 +103,7 @@ public class ItemPedidoService {
 		ProdutoDTO produtoDTO = produtoService.findByIdProduto(itemPedidoDTO.getIdProduto());
 		
 		if(itemPedidoDTO == null) {
-			throw new NoSuchElementException("Não existe pedido com o id " + idItemPedido);
+			throw new NoSuchElementFoundException("Não existe pedido com o id " + idItemPedido);
 		}else {
 			produtoDTO.setQtdEstoqueProduto(produtoDTO.getQtdEstoqueProduto() + itemPedidoDTO.getQuantidadeItemPedido());
 			itemPedidoRepository.deleteById(idItemPedido);

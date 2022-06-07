@@ -6,14 +6,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.residencia.ecommerce.dto.ItemPedidoDTO;
 import com.residencia.ecommerce.dto.PedidoDTO;
 import com.residencia.ecommerce.entity.ItemPedido;
 import com.residencia.ecommerce.entity.Pedido;
@@ -97,7 +95,7 @@ public class PedidoService {
 				toDTO(pedidoRepository.findById(idPedido).get()) 
 				: null;
 		if(pedidoDTO == null) {
-			throw new NoSuchElementException("Não existe pedido com o id " + idPedido);
+			throw new NoSuchElementFoundException("Não existe pedido com o id " + idPedido);
 		}else {
 			pedidoRepository.deleteById(idPedido);
 		}
