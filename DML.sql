@@ -4,7 +4,6 @@ values  ('22250040', 'Praia Botafogo', 'Botafogo', 'Rio de Janeiro', 777, 'de 28
         ('25629900', 'Rua Paulo Barbosa', 'Centro', 'Petrópolis', 222, '81', 'RJ'),
         ('22210903', 'Praia do Flamengo', 'Flamengo', 'Rio de Janeiro', 555, '66', 'RJ'),
         ('25620000', 'Rua do Imperador', 'Centro', 'Petrópolis', 888, 'até 552 - lado par', 'RJ'),
-        ('17560292', 'Avenida Paulista', 'Jardim Aeroporto I', 'Vera Cruz', 1500, 'de 1800/1801 a 1828/1829', 'SP'),
 
 insert into public.cliente (email, nome_completo, cpf, telefone, data_nascimento, id_endereco)
 values  ('sophia@gmail.com', 'Sophia Araujo', '22222222222', '22222222222', '2003-10-22', 1),

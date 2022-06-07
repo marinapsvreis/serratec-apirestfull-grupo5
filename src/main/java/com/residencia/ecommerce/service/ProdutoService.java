@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.residencia.ecommerce.exception.ClienteException;
+import com.residencia.ecommerce.repository.ItemPedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import com.residencia.ecommerce.dto.ProdutoDTO;
 import com.residencia.ecommerce.entity.Produto;
 import com.residencia.ecommerce.exception.DescricaoProdutoException;
 import com.residencia.ecommerce.exception.NoSuchElementFoundException;
+import com.residencia.ecommerce.exception.ProdutoException;
 import com.residencia.ecommerce.repository.ProdutoRepository;
 
 @Service
@@ -29,6 +32,9 @@ public class ProdutoService {
 
 	@Autowired
 	private CategoriaService categoriaService;
+
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 
 	@Value("${pasta.arquivos.imagem}")
 	private Path path;
@@ -55,6 +61,7 @@ public class ProdutoService {
 		}
 
 	}
+
 	public Produto saveProdutoDTO(ProdutoDTO produtoDTO) throws Exception {
 		produtoDTO.setDataCadastroProduto(new Date());
 
@@ -89,10 +96,12 @@ public class ProdutoService {
 		return toDTO(produtoRepository.save(toEntity(produtoDTO)));
 	}
 
-	public void deleteByIdProduto(Integer idProduto) {
+	public void deleteByIdProduto(Integer idProduto) throws Exception {
+		if (!itemPedidoRepository.findByProduto(toEntity(findByIdProduto(idProduto))).isEmpty()) {
+			throw new ProdutoException("Existem items_pedidos cadastrados para esse Produto, portanto ele não pode ser deletado");
+		}
 		findByIdProduto(idProduto);
 		produtoRepository.deleteById(idProduto);
-
 	}
 
 	public Produto toEntity(ProdutoDTO produtoDTO) throws Exception {
@@ -127,7 +136,7 @@ public class ProdutoService {
 	}
 
 	public Produto saveProdutoComFoto(String produtoString, MultipartFile file) throws Exception {
-		ProdutoDTO novoProduto = new ProdutoDTO();		
+		ProdutoDTO novoProduto = new ProdutoDTO();
 
 		try {
 			ObjectMapper objMapper = new ObjectMapper();
@@ -153,7 +162,7 @@ public class ProdutoService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		produtoSalvo.setDataCadastroProduto(new Date());
 
 		return produtoRepository.save(produtoSalvo);

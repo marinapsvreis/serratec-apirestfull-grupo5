@@ -117,7 +117,6 @@ public class EnderecoService {
 			if (cliente.getEndereco() != null && cliente.getEndereco().getIdEndereco() == idEndereco) {
 				listaIdEnderecosCadastrados.add(cliente.getEndereco().getIdEndereco());
 			}
-
 		}
 		if (!enderecoRepository.findById(idEndereco).isPresent()) {
 			throw new NoSuchElementFoundException("Não existe endereço com o id " + idEndereco);
