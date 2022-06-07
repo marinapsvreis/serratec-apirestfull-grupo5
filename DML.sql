@@ -3,7 +3,7 @@ insert into public.endereco (cep, rua, bairro, cidade, numero, complemento, uf)
 values  ('22250040', 'Praia Botafogo', 'Botafogo', 'Rio de Janeiro', 777, 'de 285/286 ao fim', 'RJ'),
         ('25629900', 'Rua Paulo Barbosa', 'Centro', 'Petrópolis', 222, '81', 'RJ'),
         ('22210903', 'Praia do Flamengo', 'Flamengo', 'Rio de Janeiro', 555, '66', 'RJ'),
-        ('25620000', 'Rua do Imperador', 'Centro', 'Petrópolis', 888, 'até 552 - lado par', 'RJ'),
+        ('25620000', 'Rua do Imperador', 'Centro', 'Petrópolis', 888, 'até 552 - lado par', 'RJ');
 
 insert into public.cliente (email, nome_completo, cpf, telefone, data_nascimento, id_endereco)
 values  ('sophia@gmail.com', 'Sophia Araujo', '22222222222', '22222222222', '2003-10-22', 1),
