@@ -103,6 +103,8 @@ public class ItemPedidoService {
         if (itemPedidoDTO == null) {
             throw new NoSuchElementFoundException("Não existe item_pedido com o id " + idItemPedido);
         } else {
+        	ProdutoDTO produtoDTO = produtoService.findByIdProduto(itemPedidoDTO.getIdProduto());
+        	produtoDTO.setQtdEstoqueProduto(produtoDTO.getQtdEstoqueProduto() + itemPedidoDTO.getQuantidadeItemPedido());
             itemPedidoRepository.deleteById(idItemPedido);
         }
 		
