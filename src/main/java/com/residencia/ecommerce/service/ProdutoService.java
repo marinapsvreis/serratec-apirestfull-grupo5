@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.residencia.ecommerce.dto.ProdutoDTO;
 import com.residencia.ecommerce.entity.Produto;
 import com.residencia.ecommerce.exception.DescricaoProdutoException;
+import com.residencia.ecommerce.exception.NoSuchElementFoundException;
 import com.residencia.ecommerce.repository.ProdutoRepository;
 
 @Service
@@ -49,12 +49,12 @@ public class ProdutoService {
 				? toDTO(produtoRepository.findById(idProduto).get())
 				: null;
 		if (produtoDTO == null) {
-			throw new NoSuchElementException("Não existe produto com o id " + idProduto);
+			throw new NoSuchElementFoundException("Não existe pedido como id " + idProduto);
 		} else {
 			return produtoDTO;
 		}
-	}
 
+	}
 	public Produto saveProdutoDTO(ProdutoDTO produtoDTO) throws Exception {
 		produtoDTO.setDataCadastroProduto(new Date());
 
@@ -127,8 +127,7 @@ public class ProdutoService {
 	}
 
 	public Produto saveProdutoComFoto(String produtoString, MultipartFile file) throws Exception {
-		ProdutoDTO novoProduto = new ProdutoDTO();
-		novoProduto.setDataCadastroProduto(new Date());
+		ProdutoDTO novoProduto = new ProdutoDTO();		
 
 		try {
 			ObjectMapper objMapper = new ObjectMapper();
@@ -154,6 +153,8 @@ public class ProdutoService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		produtoSalvo.setDataCadastroProduto(new Date());
 
 		return produtoRepository.save(produtoSalvo);
 	}

@@ -3,7 +3,6 @@ package com.residencia.ecommerce.service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +12,7 @@ import com.residencia.ecommerce.dto.ProdutoDTO;
 import com.residencia.ecommerce.entity.ItemPedido;
 import com.residencia.ecommerce.entity.Pedido;
 import com.residencia.ecommerce.exception.ItemPedidoException;
+import com.residencia.ecommerce.exception.NoSuchElementFoundException;
 import com.residencia.ecommerce.exception.PedidoFinalizadoException;
 import com.residencia.ecommerce.exception.ProdutoException;
 import com.residencia.ecommerce.repository.ItemPedidoRepository;
@@ -42,15 +42,15 @@ public class ItemPedidoService {
 	
 
 	public ItemPedidoDTO findByIdItemPedido(Integer idItemPedido) {
-		ItemPedidoDTO itemPedidoDTO = itemPedidoRepository.findById(idItemPedido).isPresent() ?
-				toDTO(itemPedidoRepository.findById(idItemPedido).get()) 
-				: null;		
-		
-		if(itemPedidoDTO == null) {
-			throw new NoSuchElementException("Não existe item_pedido com o id " + idItemPedido);
-		}else {
+		ItemPedidoDTO itemPedidoDTO = itemPedidoRepository.findById(idItemPedido).isPresent()
+				? toDTO(itemPedidoRepository.findById(idItemPedido).get())
+				: null;
+		if (itemPedidoDTO == null) {
+			throw new NoSuchElementFoundException("Não existe item_pedido como id " + idItemPedido);
+		} else {
 			return itemPedidoDTO;
 		}
+
 	}
 	
 	public ItemPedidoDTO saveItemPedido(ItemPedidoDTO itemPedidoDTO) throws Exception {
@@ -103,7 +103,7 @@ public class ItemPedidoService {
 		ProdutoDTO produtoDTO = produtoService.findByIdProduto(itemPedidoDTO.getIdProduto());
 		
 		if(itemPedidoDTO == null) {
-			throw new NoSuchElementException("Não existe pedido com o id " + idItemPedido);
+			throw new NoSuchElementFoundException("Não existe pedido com o id " + idItemPedido);
 		}else {
 			produtoDTO.setQtdEstoqueProduto(produtoDTO.getQtdEstoqueProduto() + itemPedidoDTO.getQuantidadeItemPedido());
 			itemPedidoRepository.deleteById(idItemPedido);
