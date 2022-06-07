@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -68,16 +69,19 @@ public class EnderecoService {
 					"No campo número deverá conter apenas números, qualquer informação adicional colocar no complemento.");
 		}
 
-		ConsultaCepDTO cepDTO = consultarCep(cepFormatado);
-		Endereco endereco = cepDTOtoEndereco(cepDTO);
-		endereco.setNumero(numero);		
+		try{
+			ConsultaCepDTO cepDTO = consultarCep(cepFormatado);
+			Endereco endereco = cepDTOtoEndereco(cepDTO);
+			endereco.setNumero(numero);		
 
-		Endereco endereco2 = endereco;
-		endereco2.setCep(cepFormatado);
-		
-		clienteRepository.findById(idCliente).get().setEndereco(endereco2);
+			Endereco endereco2 = endereco;
+			endereco2.setCep(cepFormatado);
+			clienteRepository.findById(idCliente).get().setEndereco(endereco2);
 
-		return toDTO(enderecoRepository.save(endereco2));
+			return toDTO(enderecoRepository.save(endereco2));
+		} catch (DataIntegrityViolationException e) {
+			throw new EnderecoException("CEP invalido, não foram encontrados dados nesse cep");
+		}
 	}
 
 	public EnderecoDTO updateEnderecoDTO(Integer idEndereco, EnderecoDTO enderecoDTO) throws Exception {
