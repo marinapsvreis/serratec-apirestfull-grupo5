@@ -127,8 +127,7 @@ public class ProdutoService {
 	}
 
 	public Produto saveProdutoComFoto(String produtoString, MultipartFile file) throws Exception {
-		ProdutoDTO novoProduto = new ProdutoDTO();
-		novoProduto.setDataCadastroProduto(new Date());
+		ProdutoDTO novoProduto = new ProdutoDTO();		
 
 		try {
 			ObjectMapper objMapper = new ObjectMapper();
@@ -154,6 +153,8 @@ public class ProdutoService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		produtoSalvo.setDataCadastroProduto(new Date());
 
 		return produtoRepository.save(produtoSalvo);
 	}
