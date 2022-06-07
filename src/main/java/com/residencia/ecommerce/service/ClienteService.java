@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.residencia.ecommerce.dto.ClienteDTO;
 import com.residencia.ecommerce.entity.Cliente;
 import com.residencia.ecommerce.entity.Endereco;
+import com.residencia.ecommerce.entity.Produto;
 import com.residencia.ecommerce.exception.ClienteException;
 import com.residencia.ecommerce.exception.NoSuchElementFoundException;
 import com.residencia.ecommerce.repository.ClienteRepository;
@@ -82,15 +83,37 @@ public class ClienteService {
 	public ClienteDTO updateCliente(Integer idCliente, ClienteDTO clienteDTO)
 			throws Exception {
 		
+		Cliente clienteAntigo = clienteRepository.findById(idCliente).get();
+		
 		clienteDTO.setIdCliente(idCliente);
+		clienteDTO.setIdEndereco(clienteAntigo.getEndereco().getIdEndereco());
 		clienteDTO.setCpf(clienteDTO.getCpf().replaceAll("[.-]", ""));
 		clienteDTO.setTelefone(clienteDTO.getTelefone().replaceAll("[()-]", ""));
 		
-		findClienteById(idCliente);
-
-		Cliente clienteAntigo = clienteRepository.findById(idCliente).get();
-
-		if (!(clienteAntigo.getIdCliente() == clienteDTO.getIdCliente())) {
+		findClienteById(idCliente);	
+		
+		List<Cliente> clienteCpf = clienteRepository.findByCpf(clienteDTO.getCpf());
+		List<Cliente> clienteEmail = clienteRepository.findByEmail(clienteDTO.getEmail());
+		List<Integer> idClientesComMesmoCPF = new ArrayList<>();
+		List<Integer> idClientesComMesmoEmail = new ArrayList<>();
+		
+		for (Cliente cliente : clienteCpf) {
+			if (cliente.getIdCliente() != clienteDTO.getIdCliente()) {
+				idClientesComMesmoCPF.add(cliente.getIdCliente());
+			}
+		}
+		
+		for (Cliente cliente : clienteEmail) {
+			if (cliente.getIdCliente() != clienteDTO.getIdCliente()) {
+				idClientesComMesmoEmail.add(cliente.getIdCliente());
+			}
+		}
+		
+		if (!idClientesComMesmoCPF.isEmpty()) {
+			throw new ClienteException("CPF ja foi registrado");
+		} else if (!idClientesComMesmoEmail.isEmpty()) {
+			throw new ClienteException("Email ja foi registrado");
+		}else if (!(clienteAntigo.getIdCliente() == clienteDTO.getIdCliente())) {
 			throw new ClienteException("Dados inseridos referentes a outro usuario");
 		} else if (!validate(clienteDTO.getEmail())) {
 			throw new ClienteException("Email inválido");
