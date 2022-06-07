@@ -5,13 +5,12 @@ values  ('22250040', 'Praia Botafogo', 'Botafogo', 'Rio de Janeiro', 777, 'de 28
         ('22210903', 'Praia do Flamengo', 'Flamengo', 'Rio de Janeiro', 555, '66', 'RJ'),
         ('25620000', 'Rua do Imperador', 'Centro', 'Petrópolis', 888, 'até 552 - lado par', 'RJ'),
         ('17560292', 'Avenida Paulista', 'Jardim Aeroporto I', 'Vera Cruz', 1500, 'de 1800/1801 a 1828/1829', 'SP'),
-        ('17560292', 'Avenida Paulista', 'Jardim Aeroporto I', 'Vera Cruz', 1810, 'de 1800/1801 a 1828/1829', 'SP');
 
 insert into public.cliente (email, nome_completo, cpf, telefone, data_nascimento, id_endereco)
-values  ('sophia@gmail.com', 'Sophia Araujo', '22222222222', '22222222222', '2003-10-22', 3),
-        ('ester@gmail.com', 'Ester Baltazar', '55555555555', '24555555555', '2000-12-30', 4),
-        ('breno@hotmail.com', 'Breno de Medeiros Seitz', '88888888888', '24888888888', '1994-03-28', 5),
-        ('marina@gmail.com', 'Marina Portugal', '77777777777', '77777777777', '1992-02-20', 7);
+values  ('sophia@gmail.com', 'Sophia Araujo', '22222222222', '22222222222', '2003-10-22', 1),
+        ('ester@gmail.com', 'Ester Baltazar', '55555555555', '24555555555', '2000-12-30', 2),
+        ('breno@hotmail.com', 'Breno de Medeiros Seitz', '88888888888', '24888888888', '1994-03-28', 3),
+        ('marina@gmail.com', 'Marina Portugal', '77777777777', '77777777777', '1992-02-20', 4);
 
 insert into public.categoria (nome, descricao)
 values  ('Funkos Harry Potter', 'Personagens de Harry Potter'),
