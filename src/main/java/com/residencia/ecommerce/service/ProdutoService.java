@@ -13,9 +13,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.residencia.ecommerce.dto.PedidoDTO;
 import com.residencia.ecommerce.dto.ProdutoDTO;
 import com.residencia.ecommerce.entity.Produto;
 import com.residencia.ecommerce.exception.DescricaoProdutoException;
+import com.residencia.ecommerce.exception.NoSuchElementFoundException;
 import com.residencia.ecommerce.repository.ProdutoRepository;
 
 @Service
@@ -49,12 +51,12 @@ public class ProdutoService {
 				? toDTO(produtoRepository.findById(idProduto).get())
 				: null;
 		if (produtoDTO == null) {
-			throw new NoSuchElementException("Não existe produto com o id " + idProduto);
+			throw new NoSuchElementFoundException("Não existe pedido como id " + idProduto);
 		} else {
 			return produtoDTO;
 		}
-	}
 
+	}
 	public Produto saveProdutoDTO(ProdutoDTO produtoDTO) throws Exception {
 		produtoDTO.setDataCadastroProduto(new Date());
 

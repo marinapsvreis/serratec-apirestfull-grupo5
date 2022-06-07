@@ -13,9 +13,11 @@ import javax.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.residencia.ecommerce.dto.ItemPedidoDTO;
 import com.residencia.ecommerce.dto.PedidoDTO;
 import com.residencia.ecommerce.entity.ItemPedido;
 import com.residencia.ecommerce.entity.Pedido;
+import com.residencia.ecommerce.exception.NoSuchElementFoundException;
 import com.residencia.ecommerce.exception.PedidoException;
 import com.residencia.ecommerce.exception.PedidoFinalizadoException;
 import com.residencia.ecommerce.repository.ItemPedidoRepository;
@@ -52,14 +54,15 @@ public class PedidoService {
 	}
 
 	public PedidoDTO findPedidoById(Integer idPedido) {
-		PedidoDTO pedidoDTO = pedidoRepository.findById(idPedido).isPresent() ?
-				toDTO(pedidoRepository.findById(idPedido).get()) 
+		PedidoDTO pedidoDTO = pedidoRepository.findById(idPedido).isPresent()
+				? toDTO(pedidoRepository.findById(idPedido).get())
 				: null;
-		if(pedidoDTO == null) {
-			throw new NoSuchElementException("Não existe pedido com o id " + idPedido);
-		}else {
+		if (pedidoDTO == null) {
+			throw new NoSuchElementFoundException("Não existe pedido como id " + idPedido);
+		} else {
 			return pedidoDTO;
 		}
+
 	}
 
 	public PedidoDTO savePedido(PedidoDTO pedidoDTO) throws Exception {
