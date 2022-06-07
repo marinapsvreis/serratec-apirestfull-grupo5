@@ -8,11 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.residencia.ecommerce.dto.ItemPedidoDTO;
+import com.residencia.ecommerce.dto.PedidoDTO;
 import com.residencia.ecommerce.dto.ProdutoDTO;
 import com.residencia.ecommerce.entity.ItemPedido;
 import com.residencia.ecommerce.entity.Pedido;
 import com.residencia.ecommerce.exception.ItemPedidoException;
 import com.residencia.ecommerce.exception.NoSuchElementFoundException;
+import com.residencia.ecommerce.exception.PedidoException;
 import com.residencia.ecommerce.exception.PedidoFinalizadoException;
 import com.residencia.ecommerce.exception.ProdutoException;
 import com.residencia.ecommerce.repository.ItemPedidoRepository;
@@ -94,20 +96,15 @@ public class ItemPedidoService {
 		
 	}
 	
-	@SuppressWarnings("unused")
 	public void deleteByIdItemPedido(Integer idItemPedido) {
-		ItemPedidoDTO itemPedidoDTO = itemPedidoRepository.findById(idItemPedido).isPresent() ?
-				toDTO(itemPedidoRepository.findById(idItemPedido).get()) 
-				: null;		
-		
-		ProdutoDTO produtoDTO = produtoService.findByIdProduto(itemPedidoDTO.getIdProduto());
-		
-		if(itemPedidoDTO == null) {
-			throw new NoSuchElementFoundException("Não existe pedido com o id " + idItemPedido);
-		}else {
-			produtoDTO.setQtdEstoqueProduto(produtoDTO.getQtdEstoqueProduto() + itemPedidoDTO.getQuantidadeItemPedido());
-			itemPedidoRepository.deleteById(idItemPedido);
-		}
+			ItemPedidoDTO itemPedidoDTO = itemPedidoRepository.findById(idItemPedido).isPresent() ?
+			        toDTO(itemPedidoRepository.findById(idItemPedido).get())
+			        : null;
+        if (itemPedidoDTO == null) {
+            throw new NoSuchElementFoundException("Não existe item_pedido com o id " + idItemPedido);
+        } else {
+            itemPedidoRepository.deleteById(idItemPedido);
+        }
 		
 	}
 	
