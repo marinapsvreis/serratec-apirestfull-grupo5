@@ -68,7 +68,7 @@ public class ProdutoController {
 	
 	@DeleteMapping
 	@Operation(summary = "Deletar produto via ID")
-	public ResponseEntity<String> deleteProduto(Integer idProduto){
+	public ResponseEntity<String> deleteProduto(Integer idProduto) throws Exception {
 		produtoService.deleteByIdProduto(idProduto);
 		return new ResponseEntity<>("", HttpStatus.OK);
 	}
