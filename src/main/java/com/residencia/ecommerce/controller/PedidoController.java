@@ -51,6 +51,7 @@ public class PedidoController {
 	}
 
 
+
 	@PostMapping
 	@Operation(summary = "Cadastrar pedido")
 	public ResponseEntity<PedidoDTO> savePedido(@Valid @RequestBody PedidoDTO pedidoDTO) throws Exception {

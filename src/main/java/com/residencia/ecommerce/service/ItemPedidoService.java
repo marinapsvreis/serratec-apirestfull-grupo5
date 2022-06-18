@@ -54,6 +54,18 @@ public class ItemPedidoService {
 		}
 
 	}
+
+	public List<ItemPedidoDTO> findByItemPedidoByPedidoId(Integer idPedido) throws Exception {
+		Pedido pedido = pedidoService.toEntity(pedidoService.findPedidoById(idPedido));
+
+		List<ItemPedido> itemPedidoList = itemPedidoRepository.findByPedido(pedido);
+
+		List<ItemPedidoDTO> itemPedidoDTOList = new ArrayList<>();
+		for(ItemPedido itemPedido: itemPedidoList) {
+			itemPedidoDTOList.add(toDTO(itemPedido));
+		}
+		return itemPedidoDTOList;
+	}
 	
 	public ItemPedidoDTO saveItemPedido(ItemPedidoDTO itemPedidoDTO) throws Exception {
 		if(pedidoService.findPedidoById(itemPedidoDTO.getIdPedido()).getStatus() == true) {

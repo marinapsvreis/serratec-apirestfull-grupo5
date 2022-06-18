@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.residencia.ecommerce.dto.PedidoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +44,12 @@ public class ItemPedidoController {
 	@Operation(summary = "Listar item pedido via ID Path")
 	public ResponseEntity<ItemPedidoDTO> findItemPedidoById(@PathVariable Integer idItemPedido){
 		return new ResponseEntity<>(itemPedidoService.findByIdItemPedido(idItemPedido), HttpStatus.OK);
+	}
+
+	@GetMapping("/pedido/{idPedido}")
+	@Operation(summary = "Listar itemPedido via ID do pedido Path")
+	public ResponseEntity<List<ItemPedidoDTO>> findPedidoByClienteId(@PathVariable Integer idPedido) throws Exception {
+		return new ResponseEntity<>(itemPedidoService.findByItemPedidoByPedidoId(idPedido), HttpStatus.OK);
 	}
 	
 	@PostMapping
