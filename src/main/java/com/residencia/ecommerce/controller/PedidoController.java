@@ -44,6 +44,13 @@ public class PedidoController {
 		return new ResponseEntity<>(pedidoService.findPedidoById(idPedido), HttpStatus.OK);
 	}
 
+	@GetMapping("/cliente/{idCliente}")
+	@Operation(summary = "Listar pedido via ID do cliente Path")
+	public ResponseEntity<List<PedidoDTO>> findPedidoByClienteId(@PathVariable Integer idCliente) throws Exception {
+		return new ResponseEntity<>(pedidoService.findPedidoByCliente(idCliente), HttpStatus.OK);
+	}
+
+
 	@PostMapping
 	@Operation(summary = "Cadastrar pedido")
 	public ResponseEntity<PedidoDTO> savePedido(@Valid @RequestBody PedidoDTO pedidoDTO) throws Exception {

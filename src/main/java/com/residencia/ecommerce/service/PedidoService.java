@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.mail.MessagingException;
 
+import com.residencia.ecommerce.dto.ClienteDTO;
 import com.residencia.ecommerce.exception.ClienteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,6 +62,18 @@ public class PedidoService {
         } else {
             return pedidoDTO;
         }
+
+    }
+
+    public List<PedidoDTO> findPedidoByCliente(Integer idCliente) throws Exception {
+        ClienteDTO clienteDTO = clienteService.findClienteById(idCliente);
+
+        List<Pedido> pedidos = pedidoRepository.findByCliente(clienteService.toEntity(clienteDTO));
+        List<PedidoDTO> pedidoDTO = new ArrayList<>();
+        for(Pedido pedido: pedidos){
+            pedidoDTO.add(toDTO(pedido));
+        }
+        return pedidoDTO;
 
     }
 
