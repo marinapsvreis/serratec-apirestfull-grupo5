@@ -15,6 +15,7 @@ public class CategoriaDTO {
 	private String nomeCategoria;
 	@Size(max = 150, message = "Nome da categoria não pode ter mais que 150 caracteres")
 	private String descricaoCategoria;
+	private String imagemCategoria;
 
 	public Integer getIdCategoria() {
 		return idCategoria;
@@ -40,4 +41,11 @@ public class CategoriaDTO {
 		this.descricaoCategoria = descricaoCategoria;
 	}
 
+	public String getImagemCategoria() {
+		return imagemCategoria;
+	}
+
+	public void setImagemCategoria(String imagemCategoria) {
+		this.imagemCategoria = imagemCategoria;
+	}
 }
