@@ -4,19 +4,13 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.residencia.ecommerce.entity.Categoria;
+import com.residencia.ecommerce.entity.Produto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.residencia.ecommerce.dto.CategoriaDTO;
 import com.residencia.ecommerce.service.CategoriaService;
@@ -50,6 +44,13 @@ public class CategoriaController {
 		categoriaService.saveCategoriaDTO(categoriaDTO);
 		return new ResponseEntity<>(categoriaDTO, HttpStatus.CREATED);
 	}
+
+	@PostMapping(value = "/com-foto", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+	@Operation(summary = "Cadastrar Categoria com foto")
+	public ResponseEntity<Categoria> saveCategoriaComFoto(@Valid @RequestPart("categoria") String categoriaDTO, @RequestPart("file") String file) throws Exception {
+		return new ResponseEntity<>(categoriaService.saveCategoriaComFoto(categoriaDTO , file), HttpStatus.CREATED);
+	}
+
 
 	@PutMapping
 	@Operation(summary = "Atualizar categoria passando todos os dados")

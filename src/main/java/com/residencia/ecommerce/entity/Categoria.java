@@ -29,6 +29,9 @@ public class Categoria {
 	@Column(name = "descricao")
 	private String descricaoCategoria;
 
+	@Column(name = "imagem")
+	private String imagemCategoria;
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "categoria")
 	private List<Produto> produtos;
@@ -55,6 +58,14 @@ public class Categoria {
 
 	public void setDescricaoCategoria(String descricaoCategoria) {
 		this.descricaoCategoria = descricaoCategoria;
+	}
+
+	public String getImagemCategoria() {
+		return imagemCategoria;
+	}
+
+	public void setImagemCategoria(String imagemCategoria) {
+		this.imagemCategoria = imagemCategoria;
 	}
 
 	public List<Produto> getProdutos() {

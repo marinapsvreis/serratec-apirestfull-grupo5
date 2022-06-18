@@ -1,8 +1,10 @@
 package com.residencia.ecommerce.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.residencia.ecommerce.exception.CategoriaException;
 import com.residencia.ecommerce.exception.NoSuchElementFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,20 @@ public class CategoriaService {
 		return categoriaRepository.save(toEntity(categoriaDTO));
 	}
 
+	public Categoria saveCategoriaComFoto(String categoriaString, String file) throws Exception {
+		CategoriaDTO novaCategoria = new CategoriaDTO();
+
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			novaCategoria = objectMapper.readValue(categoriaString, CategoriaDTO.class);
+		} catch (IOException e) {
+			System.out.println("Ocorreu um erro na conversão");
+		}
+
+		novaCategoria.setImagemCategoria(file);
+		return categoriaRepository.save(toEntity(novaCategoria));
+	}
+
 	public CategoriaDTO updateCategoria(Integer idCategoria, CategoriaDTO categoriaDTO) throws Exception {
 		findCategoriaByIdDTO(idCategoria);
 		categoriaDTO.setIdCategoria(idCategoria);
@@ -67,6 +83,7 @@ public class CategoriaService {
 		categoria.setIdCategoria(categoriaDTO.getIdCategoria());
 		categoria.setDescricaoCategoria(categoriaDTO.getDescricaoCategoria());
 		categoria.setNomeCategoria(categoriaDTO.getNomeCategoria());
+		categoria.setImagemCategoria(categoriaDTO.getImagemCategoria());
 		
 		return categoria;
 	}
@@ -77,7 +94,8 @@ public class CategoriaService {
 		categoriaDTO.setIdCategoria(categoria.getIdCategoria());
 		categoriaDTO.setDescricaoCategoria(categoria.getDescricaoCategoria());
 		categoriaDTO.setNomeCategoria(categoria.getNomeCategoria());
-		
+		categoriaDTO.setImagemCategoria(categoria.getImagemCategoria());
+
 		return categoriaDTO;
 	}
 } 

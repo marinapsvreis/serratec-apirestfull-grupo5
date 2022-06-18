@@ -153,18 +153,6 @@ public class ProdutoService {
 		
 		novoProduto.setNomeImagemProduto(file);
 
-//		Produto produtoSalvo = produtoRepository.save(toEntity(novoProduto));
-
-//		String fileName = "produto." + produtoSalvo.getIdProduto() + ".image.png";
-//
-//		arquivo2Service.criarArquivo(fileName, file);
-//
-//		try {
-//			produtoSalvo.setNomeImagemProduto(path.resolve(fileName).toRealPath().toString());
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-
 		novoProduto.setDataCadastroProduto(new Date());
 
 		return produtoRepository.save(toEntity(novoProduto));
