@@ -4,12 +4,12 @@ values  ('22250040', 'Praia Botafogo', 'Botafogo', 'Rio de Janeiro', 777, 'de 28
         ('22210903', 'Praia do Flamengo', 'Flamengo', 'Rio de Janeiro', 555, '66', 'RJ'),
         ('25620000', 'Rua do Imperador', 'Centro', 'Petrópolis', 888, 'até 552 - lado par', 'RJ');
 
-insert into public.cliente (email, password, nome_completo, cpf, telefone, data_nascimento, id_endereco)
-values  ('sophia@gmail.com', '123456', 'Sophia Araujo', '22222222222', '22222222222', '2003-10-22', 1),
-        ('ester@gmail.com', '123456', 'Ester Baltazar', '55555555555', '24555555555', '2000-12-30', 2),
-        ('breno@hotmail.com', '123456', 'Breno de Medeiros Seitz', '88888888888', '24888888888', '1994-03-28', 3),
-        ('marina@gmail.com', '123456', 'Marina Portugal', '77777777777', '77777777777', '1992-02-20', 4);
-
+INSERT INTO public.cliente (email,password,nome_completo,cpf,telefone,data_nascimento,id_endereco) 
+VALUES('marina@gmail.com','$2a$10$lZSZjgBxKFXP4pVXQk6XPOCRsZVLAUPKbEPCxGdIOfBBEVxveGgX2','Marina Portugal',
+    '77777777777', '77777777777','1992-02-20',1),
+	 ('sophia@gmail.com','$2a$10$gtZDjeo0JpOBzA/6lewi.ujQdtMATBV4iBqTWVW1AUAawuG4tDQnm','Sophia Araujo','22222222222','22222222222','2003-10-22',2),
+	 ('ester@gmail.com','$2a$10$P6ZxepPPYcfTAbuXpGaAlOBDIY/mOonhPv4ftuJ14kZl7sTXQMEBa','Ester Baltazar','55555555555','24555555555','2000-12-30',3),
+	 ('breno@hotmail.com','$2a$10$h2/1ZVPf7bII/WHEJT3e.uswVzODgniVyoswNc32Wamv9zbstFMP2','Breno de Medeiros Seitz','88888888888','24888888888','1994-03-28',4);
 insert into public.categoria (nome, descricao, imagem)
 values  ('Funkos Harry Potter', 'Personagens de Harry Potter', 'https://i.imgur.com/n2WIMQp.jpg'),
         ('Funkos Overwatch', 'Heróis de Overwatch', 'https://i.imgur.com/gy5s6WY.jpg'),
