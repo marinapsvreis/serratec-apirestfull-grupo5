@@ -28,6 +28,9 @@ public class Cliente {
 	@Column(name = "email")
 	private String email;
 	
+	@Column(name = "password")
+	private String password;
+	
 	@Column(name = "nome_completo")
 	private String nomeCompleto;
 	
@@ -39,7 +42,7 @@ public class Cliente {
 	
 	@Column(name = "data_nascimento")
 	private Date dataNascimento;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "id_endereco", referencedColumnName = "id_endereco")
 	private Endereco endereco;
@@ -58,6 +61,14 @@ public class Cliente {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getNomeCompleto() {

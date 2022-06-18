@@ -19,6 +19,9 @@ public class ClienteDTO {
 	@NotBlank(message = "O email não pode ser nulo.")
 	@Size(max = 100, message = "Email da categoria não pode ter mais que 100 caracteres")
 	private String email;
+	@NotBlank(message = "A senha não pode ser nula.")
+	@Size(max = 100, message = "A senha não pode ter mais que 100 caracteres")
+	private String password;
 	@NotBlank(message = "O nome não pode ser nulo.")
 	@Size(max = 100, message = "Nome completo não pode ter mais que 100 caracteres")
 	private String nomeCompleto;
@@ -56,6 +59,14 @@ public class ClienteDTO {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getNomeCompleto() {

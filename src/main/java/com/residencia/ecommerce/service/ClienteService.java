@@ -49,6 +49,11 @@ public class ClienteService {
 		}
 
 	}
+	
+	public Cliente findByEmail(String email) {
+		List<Cliente> clienteEmailLogin = clienteRepository.findByEmail(email);
+		return clienteEmailLogin.get(0);
+	}
 
 	public ClienteDTO saveCliente(ClienteDTO clienteDTO)
 			throws Exception {
@@ -181,6 +186,7 @@ public class ClienteService {
 		cliente.setCpf(clienteDTO.getCpf());
 		cliente.setDataNascimento(clienteDTO.getDataNascimento());
 		cliente.setEmail(clienteDTO.getEmail());
+		cliente.setPassword(clienteDTO.getPassword());
 		cliente.setNomeCompleto(clienteDTO.getNomeCompleto());
 		cliente.setTelefone(clienteDTO.getTelefone());
 		if (clienteDTO.getIdEndereco() != null) {
@@ -197,6 +203,7 @@ public class ClienteService {
 		clienteDTO.setCpf(putMaskCPF(cliente.getCpf()));
 		clienteDTO.setDataNascimento(cliente.getDataNascimento());
 		clienteDTO.setEmail(cliente.getEmail());
+		clienteDTO.setPassword(cliente.getPassword());
 		clienteDTO.setNomeCompleto(cliente.getNomeCompleto());
 		clienteDTO.setTelefone(putMaskOnPhone(cliente.getTelefone()));
 		if (cliente.getEndereco() != null) {

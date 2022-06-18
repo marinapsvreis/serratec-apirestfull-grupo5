@@ -12,6 +12,7 @@ uf varchar(2))
 CREATE TABLE cliente (
 id_cliente SERIAL PRIMARY KEY,
 email varchar(100) NOT NULL,
+password varchar(100) NOT NULL,
 nome_completo varchar(100) NOT NULL,
 cpf varchar(14) NOT NULL,
 telefone varchar(11),
