@@ -58,7 +58,7 @@ public class ProdutoController {
 	
 	@PostMapping(value = "/com-foto", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	@Operation(summary = "Cadastrar produto com foto")
-	public ResponseEntity<Produto> saveProdutoComFoto(@Valid @RequestPart("produto") String produtoDTO, @RequestPart("file") MultipartFile file) throws Exception {
+	public ResponseEntity<Produto> saveProdutoComFoto(@Valid @RequestPart("produto") String produtoDTO, @RequestPart("file") String file) throws Exception {
 		return new ResponseEntity<>(produtoService.saveProdutoComFoto(produtoDTO , file), HttpStatus.CREATED);
 	}
 	

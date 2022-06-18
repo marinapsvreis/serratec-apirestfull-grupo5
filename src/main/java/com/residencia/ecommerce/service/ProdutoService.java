@@ -135,7 +135,7 @@ public class ProdutoService {
 		return produtoDTO;
 	}
 
-	public Produto saveProdutoComFoto(String produtoString, MultipartFile file) throws Exception {
+	public Produto saveProdutoComFoto(String produtoString, String file) throws Exception {
 		ProdutoDTO novoProduto = new ProdutoDTO();
 
 		try {
@@ -150,22 +150,24 @@ public class ProdutoService {
 		if (!(listaProdutos.isEmpty())) {
 			throw new DescricaoProdutoException("Essa descrição ja foi utilizada em outro produto");
 		}
+		
+		novoProduto.setNomeImagemProduto(file);
 
-		Produto produtoSalvo = produtoRepository.save(toEntity(novoProduto));
+//		Produto produtoSalvo = produtoRepository.save(toEntity(novoProduto));
 
-		String fileName = "produto." + produtoSalvo.getIdProduto() + ".image.png";
+//		String fileName = "produto." + produtoSalvo.getIdProduto() + ".image.png";
+//
+//		arquivo2Service.criarArquivo(fileName, file);
+//
+//		try {
+//			produtoSalvo.setNomeImagemProduto(path.resolve(fileName).toRealPath().toString());
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 
-		arquivo2Service.criarArquivo(fileName, file);
+		novoProduto.setDataCadastroProduto(new Date());
 
-		try {
-			produtoSalvo.setNomeImagemProduto(path.resolve(fileName).toRealPath().toString());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		produtoSalvo.setDataCadastroProduto(new Date());
-
-		return produtoRepository.save(produtoSalvo);
+		return produtoRepository.save(toEntity(novoProduto));
 	}
 
 }
