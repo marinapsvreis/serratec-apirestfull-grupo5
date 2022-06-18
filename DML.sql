@@ -1,10 +1,22 @@
-insert into public.categoria (nome, descricao)
-values  ('Funkos Harry Potter', 'Personagens de Harry Potter'),
-        ('Funkos Overwatch', 'Heróis de Overwatch'),
-        ('Funkos Star Wars', 'Personagens do Star Wars'),
-        ('Funkos Disney', 'Personagens do fabuloso mundo da Disney'),
-        ('Funkos Genshin Impact', 'Personagens do jogo de RPG Genshin Impact'),
-        ('Funkos DC', 'Heróis da DC');
+insert into public.endereco (cep, rua, bairro, cidade, numero, complemento, uf)
+values  ('22250040', 'Praia Botafogo', 'Botafogo', 'Rio de Janeiro', 777, 'de 285/286 ao fim', 'RJ'),
+        ('25629900', 'Rua Paulo Barbosa', 'Centro', 'Petrópolis', 222, '81', 'RJ'),
+        ('22210903', 'Praia do Flamengo', 'Flamengo', 'Rio de Janeiro', 555, '66', 'RJ'),
+        ('25620000', 'Rua do Imperador', 'Centro', 'Petrópolis', 888, 'até 552 - lado par', 'RJ');
+
+insert into public.cliente (email, nome_completo, cpf, telefone, data_nascimento, id_endereco)
+values  ('sophia@gmail.com', 'Sophia Araujo', '22222222222', '22222222222', '2003-10-22', 1),
+        ('ester@gmail.com', 'Ester Baltazar', '55555555555', '24555555555', '2000-12-30', 2),
+        ('breno@hotmail.com', 'Breno de Medeiros Seitz', '88888888888', '24888888888', '1994-03-28', 3),
+        ('marina@gmail.com', 'Marina Portugal', '77777777777', '77777777777', '1992-02-20', 4);
+
+insert into public.categoria (nome, descricao, imagem)
+values  ('Funkos Harry Potter', 'Personagens de Harry Potter', 'https://i.imgur.com/n2WIMQp.jpg'),
+        ('Funkos Overwatch', 'Heróis de Overwatch', 'https://i.imgur.com/gy5s6WY.jpg'),
+        ('Funkos Star Wars', 'Personagens do Star Wars', 'https://i.imgur.com/nBSftus.jpg'),
+        ('Funkos Disney', 'Personagens do fabuloso mundo da Disney', 'https://i.imgur.com/EH2XSsd.jpg'),
+        ('Funkos Genshin Impact', 'Personagens do jogo de RPG Genshin Impact', 'https://i.imgur.com/ttLTcbS.jpg'),
+        ('Funkos DC', 'Heróis da DC', 'https://i.imgur.com/l6TeCD1.jpg');
 
 insert into public.produto (nome, descricao, qtd_estoque, data_cadastro, valor_unitario, imagem, id_categoria)
 values  ('Boba feet', 'Boneco Boba feet', 10, '2022-06-04', 110, 'https://i.imgur.com/soxgB88.jpg', 3),
