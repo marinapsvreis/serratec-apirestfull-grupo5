@@ -59,9 +59,9 @@ public class CategoriaController {
 	}
 
 
-	@DeleteMapping("/{idCategoria}")
+	@DeleteMapping
 	@Operation(summary = "Deletar categoria via ID")
-	public ResponseEntity<String> deleteCategoriaById(@PathVariable Integer idCategoria) throws Exception {
+	public ResponseEntity<String> deleteCategoriaById(@RequestParam Integer idCategoria) throws Exception {
 		categoriaService.deleteCategoriaById(idCategoria);
 		return new ResponseEntity<>("", HttpStatus.OK);
 	}
