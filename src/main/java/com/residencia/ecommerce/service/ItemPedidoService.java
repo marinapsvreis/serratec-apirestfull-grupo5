@@ -108,7 +108,7 @@ public class ItemPedidoService {
 		
 	}
 	
-	public void deleteByIdItemPedido(Integer idItemPedido) {
+	public void deleteByIdItemPedido(Integer idItemPedido) throws Exception {
 			ItemPedidoDTO itemPedidoDTO = itemPedidoRepository.findById(idItemPedido).isPresent() ?
 			        toDTO(itemPedidoRepository.findById(idItemPedido).get())
 			        : null;
@@ -117,6 +117,13 @@ public class ItemPedidoService {
         } else {
         	ProdutoDTO produtoDTO = produtoService.findByIdProduto(itemPedidoDTO.getIdProduto());
         	produtoDTO.setQtdEstoqueProduto(produtoDTO.getQtdEstoqueProduto() + itemPedidoDTO.getQuantidadeItemPedido());
+			Pedido pedido = pedidoService.toEntity(pedidoService.findPedidoById(itemPedidoDTO.getIdPedido()));
+
+			BigDecimal valorTotalBrutoAtual = pedido.getValorTotalPedidoBruto();
+			BigDecimal valorTotalDescontoAtual = pedido.getValorTotalDescontoPedido();
+			BigDecimal valorTotalLiquidoAtual = pedido.getValorTotalPedidoLiquido();
+			pedido.setValorTotalPedidoBruto(valorTotalBrutoAtual.subtract(itemPedidoDTO.getValorBrutoItemPedido()));
+			pedidoService.updatePedido(itemPedidoDTO.getIdPedido(), pedidoService.toDTO(pedido));
             itemPedidoRepository.deleteById(idItemPedido);
         }
 		

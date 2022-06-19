@@ -66,7 +66,7 @@ public class ItemPedidoController {
 	
 	@DeleteMapping
 	@Operation(summary = "Deletar item pedido via ID")
-	public ResponseEntity<String> deleteItemPedido(Integer idItemPedido){
+	public ResponseEntity<String> deleteItemPedido(Integer idItemPedido) throws Exception {
 		itemPedidoService.deleteByIdItemPedido(idItemPedido);
 		return new ResponseEntity<>("", HttpStatus.OK);
 	}	
