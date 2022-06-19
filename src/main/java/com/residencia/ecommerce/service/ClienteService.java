@@ -69,7 +69,7 @@ public class ClienteService {
 			throw new ClienteException("Email ja foi registrado");
 		} else if (!validate(clienteDTO.getEmail())) {
 			throw new ClienteException("Email inválido");
-		} else if (!clienteDTO.getNomeCompleto().matches("[a-zA-Z][a-zA-Z ]*")) {
+		} else if (!validateName(clienteDTO.getNomeCompleto())) {
 			throw new ClienteException("Nome deve conter somente letras");
 		} else if (!clienteDTO.getTelefone().matches("[0-9]+")) {
 			throw new ClienteException(
@@ -121,7 +121,7 @@ public class ClienteService {
 			throw new ClienteException("Dados inseridos referentes a outro usuario");
 		} else if (!validate(clienteDTO.getEmail())) {
 			throw new ClienteException("Email inválido");
-		} else if (!clienteDTO.getNomeCompleto().matches("[a-zA-Z][a-zA-Z ]*")) {
+		} else if (!validateName(clienteDTO.getNomeCompleto())) {
 			throw new ClienteException("Nome deve conter somente letras");
 		} else if (!clienteDTO.getTelefone().matches("[0-9]+")) {
 			throw new ClienteException(
@@ -260,6 +260,13 @@ public class ClienteService {
 
 	public static boolean validate(String emailStr) {
 		Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
+		return matcher.find();
+	}
+	
+	public static final Pattern NAME_REGEX = Pattern.compile("^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ]+$");
+	
+	public static boolean validateName(String nomeStr) {
+		Matcher matcher = NAME_REGEX.matcher(nomeStr);
 		return matcher.find();
 	}
 }
