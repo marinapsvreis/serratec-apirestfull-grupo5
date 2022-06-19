@@ -73,8 +73,8 @@ public class PedidoController {
 
 	@DeleteMapping
 	@Operation(summary = "Deletar pedido via ID")
-	public ResponseEntity<String> deletePedidoById(@RequestParam Integer id) throws Exception {
-		pedidoService.deletePedidoById(id);
+	public ResponseEntity<String> deletePedidoById(@RequestParam Integer idPedido) throws Exception {
+		pedidoService.deletePedidoById(idPedido);
 		return new ResponseEntity<>("", HttpStatus.OK);
 	}
 
