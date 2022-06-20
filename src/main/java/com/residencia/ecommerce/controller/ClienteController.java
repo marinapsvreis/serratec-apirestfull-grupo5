@@ -76,6 +76,10 @@ public class ClienteController {
 	@Operation(summary = "Atualizar cliente passando todos os dados")
 	public ResponseEntity<ClienteDTO> updateCliente(@RequestParam Integer idCliente,
 			@Valid @RequestBody ClienteDTO clienteDTO) throws EnderecoException, Exception {
+		ClienteDTO clienteDTOantigo = clienteService.findClienteById(idCliente);
+		if(clienteDTOantigo.getPassword() != clienteDTO.getPassword()) {
+			clienteDTO.setPassword(encoder.encode(clienteDTO.getPassword()));
+		}		
 		return new ResponseEntity<>(clienteService.updateCliente(idCliente, clienteDTO), HttpStatus.OK);
 	}
 
