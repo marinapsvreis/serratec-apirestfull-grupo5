@@ -123,6 +123,8 @@ public class ItemPedidoService {
 			BigDecimal valorTotalDescontoAtual = pedido.getValorTotalDescontoPedido();
 			BigDecimal valorTotalLiquidoAtual = pedido.getValorTotalPedidoLiquido();
 			pedido.setValorTotalPedidoBruto(valorTotalBrutoAtual.subtract(itemPedidoDTO.getValorBrutoItemPedido()));
+			pedido.setValorTotalPedidoLiquido(valorTotalLiquidoAtual.subtract(itemPedidoDTO.getValorLiquidoItemPedido()));
+			pedido.setValorTotalDescontoPedido(pedido.getValorTotalDescontoPedido().subtract(itemPedidoDTO.getValorBrutoItemPedido().subtract(itemPedidoDTO.getValorLiquidoItemPedido())));
 			pedidoService.updatePedido(itemPedidoDTO.getIdPedido(), pedidoService.toDTO(pedido));
             itemPedidoRepository.deleteById(idItemPedido);
         }
@@ -138,7 +140,7 @@ public class ItemPedidoService {
 		if(valorTotalBrutoAtual != null) {			
 			pedido.setValorTotalPedidoBruto((valorTotalBrutoAtual).add(itemPedidoDTO.getValorBrutoItemPedido()));
 			pedido.setValorTotalPedidoLiquido((valorTotalLiquidoAtual).add(itemPedidoDTO.getValorLiquidoItemPedido()));
-			pedido.setValorTotalDescontoPedido((valorTotalDescontoAtual).add((pedido.getValorTotalPedidoBruto()).subtract(pedido.getValorTotalPedidoLiquido())));
+			pedido.setValorTotalDescontoPedido((valorTotalDescontoAtual).add((itemPedidoDTO.getValorBrutoItemPedido()).subtract(itemPedidoDTO.getValorLiquidoItemPedido())));
 		}else {
 			pedido.setValorTotalPedidoBruto(itemPedidoDTO.getValorBrutoItemPedido());
 			pedido.setValorTotalPedidoLiquido(itemPedidoDTO.getValorLiquidoItemPedido());
