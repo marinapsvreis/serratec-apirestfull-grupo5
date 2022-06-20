@@ -13,11 +13,15 @@ import org.springframework.stereotype.Service;
 import com.residencia.ecommerce.dto.CategoriaDTO;
 import com.residencia.ecommerce.entity.Categoria;
 import com.residencia.ecommerce.repository.CategoriaRepository;
+import com.residencia.ecommerce.repository.ProdutoRepository;
 
 @Service
 public class CategoriaService {
 	@Autowired
 	CategoriaRepository categoriaRepository;
+	
+	@Autowired
+	ProdutoRepository produtoRepository;
 
 	public List<CategoriaDTO> findAllCategoria() {		
 		List<Categoria> categoriaEntityList = categoriaRepository.findAll();
@@ -65,7 +69,12 @@ public class CategoriaService {
 
 	}
 
-	public void deleteCategoriaById(Integer idCategoria) throws CategoriaException {
+	public void deleteCategoriaById(Integer idCategoria) throws Exception {
+		
+		if(!produtoRepository.findByCategoria(toEntity(findCategoriaByIdDTO(idCategoria))).isEmpty()) {
+			throw new CategoriaException("Existem produtos cadastrados para essa categoria, portando ela não pode ser deletada");
+		}
+		
 		CategoriaDTO categoriaDTO = categoriaRepository.findById(idCategoria).isPresent() ?
 				toDTO(categoriaRepository.findById(idCategoria).get())
 				: null;
